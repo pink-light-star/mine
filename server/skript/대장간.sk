@@ -1,0 +1,973 @@
+using equippable components
+
+# ─────────────────────────────────────────────
+#  별빛 대장간 — /대장간 (대장장이 길드장 하인츠 NPC)
+#  몹·보스 재료 + 돈으로 능력 무기·방어구 제작
+#  장비마다 요구 레벨·요구 능력치 → 부족하면 무기는 피해 1, 방어구는 벗겨짐
+# ─────────────────────────────────────────────
+
+options:
+    p: &6[대장간] &f
+    title: &f&6&l⚒ 특수 장비
+    home: &f&6&l⚒ 별빛 대장간
+    basic: &f&6&l⚒ 기본 장비
+
+# 레시피 등록: id, 이름(색 포함), 종류(w/a), 요구 레벨, 능력치 번호(1힘 2민첩 3지능 4체력 5행운), 요구 수치, 가격, 능력 설명, 세트
+function fReg(id: text, name: text, kind: text, lv: number, st: number, amt: number, price: number, desc: text, set: text):
+    set {-forge::%{_id}%::name} to {_name}
+    set {-forge::%{_id}%::kind} to {_kind}
+    set {-forge::%{_id}%::lv} to {_lv}
+    set {-forge::%{_id}%::st} to {_st}
+    set {-forge::%{_id}%::amt} to {_amt}
+    set {-forge::%{_id}%::price} to {_price}
+    set {-forge::%{_id}%::desc} to {_desc}
+    set {-forge::%{_id}%::set} to {_set}
+    set {-forge::byname::%uncolored {_name}%} to {_id}
+    set {-forge::%{_id}%::dmg} to 0
+    set {-forge::%{_id}%::def} to 0
+    delete {-forge::%{_id}%::cm::*}
+    delete {-forge::%{_id}%::vm::*}
+
+# 추가 능력치: "1:10,4:5" = 힘 +10, 체력 +5 (1힘 2민첩 3지능 4체력 5행운)
+function fBonus(id: text, spec: text):
+    set {-forge::%{_id}%::bonus} to {_spec}
+
+# 커스텀 재료(이름으로 셈)
+function fMat(id: text, mat: text, n: number):
+    set {-forge::%{_id}%::cm::%{_mat}%} to {_n}
+
+# 바닐라 재료
+function fVan(id: text, it: item):
+    add {_it} to {-forge::%{_id}%::vm::*}
+
+function fBase(id: text) :: item:
+    set {_b::fang_sword} to iron sword
+    set {_b::siren_blade} to diamond sword
+    set {_b::hound_sword} to diamond sword
+    set {_b::giant_crusher} to netherite sword
+    set {_b::dragon_greatsword} to netherite sword
+    set {_b::harpy_bow} to bow
+    set {_b::frost_bow} to bow
+    set {_b::dragon_bow} to bow
+    set {_b::frost_staff} to blaze rod
+    set {_b::moon_staff} to blaze rod
+    set {_b::tome_fire} to book
+    set {_b::tome_frost} to book
+    set {_b::tome_life} to book
+    set {_b::tome_thunder} to book
+    set {_b::tome_void} to book
+    set {_b::sun_staff} to blaze rod
+    set {_b::shadow_dagger} to diamond sword
+    set {_b::venom_dagger} to diamond sword
+    set {_b::void_dagger} to netherite sword
+    set {_b::lich_staff} to blaze rod
+    set {_b::star_staff} to blaze rod
+    set {_b::orc_helmet} to chainmail helmet
+    set {_b::orc_chest} to chainmail chestplate
+    set {_b::orc_legs} to chainmail leggings
+    set {_b::orc_boots} to chainmail boots
+    set {_b::siren_helmet} to iron helmet
+    set {_b::siren_chest} to iron chestplate
+    set {_b::siren_legs} to iron leggings
+    set {_b::siren_boots} to iron boots
+    set {_b::hound_helmet} to diamond helmet
+    set {_b::hound_chest} to diamond chestplate
+    set {_b::hound_legs} to diamond leggings
+    set {_b::hound_boots} to diamond boots
+    set {_b::dragon_helmet} to netherite helmet
+    set {_b::dragon_chest} to netherite chestplate
+    set {_b::dragon_legs} to netherite leggings
+    set {_b::dragon_boots} to netherite boots
+    set {_tw::*} to stone sword, iron sword, diamond sword, diamond sword, netherite sword and netherite sword
+    set {_th::*} to leather helmet, iron helmet, diamond helmet, diamond helmet, netherite helmet and netherite helmet
+    set {_tc::*} to leather chestplate, iron chestplate, diamond chestplate, diamond chestplate, netherite chestplate and netherite chestplate
+    set {_tl::*} to leather leggings, iron leggings, diamond leggings, diamond leggings, netherite leggings and netherite leggings
+    set {_tb::*} to leather boots, iron boots, diamond boots, diamond boots, netherite boots and netherite boots
+    loop 6 times:
+        set {_b::t%loop-value%_sword} to {_tw::%loop-value%}
+        set {_b::t%loop-value%_bow} to bow
+        set {_b::t%loop-value%_staff} to blaze rod
+        set {_b::t%loop-value%_dagger} to {_tw::%loop-value%}
+        set {_b::t%loop-value%_helmet} to {_th::%loop-value%}
+        set {_b::t%loop-value%_chest} to {_tc::%loop-value%}
+        set {_b::t%loop-value%_legs} to {_tl::%loop-value%}
+        set {_b::t%loop-value%_boots} to {_tb::%loop-value%}
+    return {_b::%{_id}%}
+
+function fArmorSet(id: text, setname: text, lv: number, st: number, amt: number, price: number, mat: text, m1: number, m2: number, m3: number, van: itemtype, desc: text):
+    set {_parts::*} to "helmet", "chest", "legs" and "boots"
+    set {_pk::*} to "투구", "갑옷", "각반" and "장화"
+    set {_w::*} to 4, 8, 7 and 3
+    loop 4 times:
+        set {_i} to loop-value
+        set {_pid} to "%{_id}%_%{_parts::%{_i}%}%"
+        set {_wt} to {_w::%{_i}%}
+        fReg({_pid}, "%{_setname}% %{_pk::%{_i}%}%", "a", {_lv}, {_st}, {_amt}, round({_price} * {_wt} / 5), {_desc}, {_id})
+        fMat({_pid}, {_mat}, max(1, ceil({_m1} * {_wt} / 5)))
+        if {_m2} > 0:
+            fMat({_pid}, "별의 조각", ceil({_m2} * {_wt} / 5))
+        set {_n} to max(1, ceil({_m3} * {_wt} / 5))
+        fVan({_pid}, {_n} of {_van})
+
+on load:
+    delete {-forge::*}
+    # ── 무기 ──
+    fReg("fang_sword", "&2&l송곳니 검", "w", 10, 1, 15, 5000, "공격 시 20%% 확률 &5출혈&7(위더 3초)", "")
+    fMat("fang_sword", "오크의 송곳니", 16)
+    fVan("fang_sword", 8 iron ingots)
+
+    fReg("siren_blade", "&b&l사이렌의 물결검", "w", 20, 2, 20, 20000, "15%% 확률 &b파도&7: 주변 4칸 적 밀쳐내기·둔화·피해 3", "")
+    fMat("siren_blade", "사이렌의 비늘", 8)
+    fMat("siren_blade", "별의 조각", 5)
+    fVan("siren_blade", 4 diamonds)
+
+    fReg("hound_sword", "&4&l지옥견 송곳검", "w", 25, 1, 35, 40000, "공격 시 &c불태우기&7 4초, 밤에는 피해 +15%%", "")
+    fMat("hound_sword", "지옥견의 이빨", 6)
+    fMat("hound_sword", "별의 조각", 8)
+    fVan("hound_sword", 16 gold ingots)
+
+    fReg("giant_crusher", "&6&l거인 파쇄검", "w", 30, 1, 50, 80000, "25%% 확률 &6대지 강타&7: 주변 3칸 적 피해 5", "")
+    fMat("giant_crusher", "거인의 눈", 3)
+    fMat("giant_crusher", "미노타우로스의 뿔", 1)
+    fMat("giant_crusher", "별의 조각", 12)
+    fVan("giant_crusher", 1 netherite ingot)
+
+    fReg("dragon_greatsword", "&c&l용린 대검", "w", 40, 1, 70, 200000, "15%% 확률 &c용의 숨결&7: 앞쪽 6칸 적 피해 8 + 불", "")
+    fMat("dragon_greatsword", "용의 비늘", 5)
+    fMat("dragon_greatsword", "별의 조각", 20)
+    fVan("dragon_greatsword", 2 netherite ingots)
+
+    fReg("harpy_bow", "&e&l하피의 바람활", "w", 20, 2, 30, 30000, "화살 피해 +25%%, 20%% 확률 화살 2발 추가", "")
+    fMat("harpy_bow", "하피의 깃털", 8)
+    fMat("harpy_bow", "별의 조각", 6)
+    fVan("harpy_bow", 16 strings)
+
+    fReg("star_staff", "&9&l별빛 지팡이", "w", 20, 3, 35, 50000, "우클릭 &9마력탄&7 (1.2초): 피해 5 + 지능×0.1", "")
+    fMat("star_staff", "하피의 깃털", 4)
+    fMat("star_staff", "거인의 눈", 1)
+    fMat("star_staff", "별의 조각", 10)
+    fVan("star_staff", 1 blaze rod)
+    set {-forge::star_staff::staff} to 5
+
+    fReg("frost_staff", "&b&l얼음 원혼의 지팡이", "w", 25, 3, 45, 60000, "우클릭 &b서리 마력탄&7: 피해 7 + 지능×0.12, 3초 둔화", "")
+    fMat("frost_staff", "원혼의 정수", 6)
+    fMat("frost_staff", "별의 조각", 8)
+    fVan("frost_staff", 2 blue ice)
+    set {-forge::frost_staff::staff} to 7
+
+    fReg("lich_staff", "&5&l리치의 해골 지팡이", "w", 35, 3, 65, 120000, "우클릭 &5저주 마력탄&7: 피해 10 + 지능×0.15, 위더 3초", "")
+    fMat("lich_staff", "망자의 뼈", 10)
+    fMat("lich_staff", "원혼의 정수", 8)
+    fMat("lich_staff", "별의 조각", 12)
+    fVan("lich_staff", 1 wither skeleton skull)
+    set {-forge::lich_staff::staff} to 10
+
+    fReg("moon_staff", "&d&l달의 지팡이", "w", 30, 3, 55, 70000, "우클릭 &d달빛 마력탄&7: 피해 8 + 지능×0.13, 밤에는 +30%%", "")
+    fMat("moon_staff", "원혼의 정수", 6)
+    fMat("moon_staff", "사이렌의 비늘", 4)
+    fMat("moon_staff", "별의 조각", 10)
+    fVan("moon_staff", 1 blaze rod)
+    set {-forge::moon_staff::staff} to 8
+
+    fReg("sun_staff", "&6&l태양의 지팡이", "w", 40, 3, 70, 150000, "우클릭 &6태양 마력탄&7: 피해 11 + 지능×0.14, 불태우기 4초", "")
+    fMat("sun_staff", "지옥견의 이빨", 5)
+    fMat("sun_staff", "별의 조각", 14)
+    fVan("sun_staff", 2 gold blocks)
+    set {-forge::sun_staff::staff} to 11
+
+    fReg("shadow_dagger", "&8&l그림자 단검", "w", 20, 2, 30, 30000, "뒤치기 피해 +60%%, 15%% 확률 실명 2초", "")
+    fMat("shadow_dagger", "원혼의 정수", 3)
+    fMat("shadow_dagger", "별의 조각", 5)
+    fVan("shadow_dagger", 6 iron ingots)
+    set {-forge::shadow_dagger::dagger} to 60
+
+    fReg("venom_dagger", "&2&l독니 단검", "w", 30, 2, 50, 60000, "뒤치기 피해 +50%%, 30%% 확률 독 3초", "")
+    fMat("venom_dagger", "망자의 뼈", 6)
+    fMat("venom_dagger", "별의 조각", 8)
+    fVan("venom_dagger", 4 spider eyes)
+    set {-forge::venom_dagger::dagger} to 50
+
+    fReg("void_dagger", "&5&l공허의 쌍단검", "w", 45, 2, 80, 200000, "뒤치기 피해 +100%%, 처치하면 3초 투명", "")
+    fMat("void_dagger", "원혼의 정수", 10)
+    fMat("void_dagger", "별의 조각", 18)
+    fVan("void_dagger", 1 netherite ingot)
+    set {-forge::void_dagger::dagger} to 100
+
+    # ── 고서 (지능, 우클릭 마법) ──
+    fReg("tome_fire", "&c&l화염의 고서", "w", 15, 3, 25, 20000, "우클릭 &c화염구&7 (1초): 피해 6 + 지능×0.1, 불태우기", "")
+    fMat("tome_fire", "지옥견의 이빨", 2)
+    fMat("tome_fire", "별의 조각", 4)
+    fVan("tome_fire", 1 book)
+    set {-forge::tome_fire::tome} to 1
+    fReg("tome_frost", "&b&l서리의 고서", "w", 20, 3, 35, 30000, "우클릭 &b서리 폭발&7 (4초): 주변 5칸 피해 5 + 지능×0.1, 둔화", "")
+    fMat("tome_frost", "원혼의 정수", 3)
+    fMat("tome_frost", "별의 조각", 5)
+    fVan("tome_frost", 1 book)
+    set {-forge::tome_frost::tome} to 4
+    fReg("tome_life", "&a&l생명의 고서", "w", 25, 3, 40, 40000, "우클릭 &a생명의 빛&7 (8초): 나와 주변 6칸 사람 회복", "")
+    fMat("tome_life", "하피의 깃털", 4)
+    fMat("tome_life", "별의 조각", 5)
+    fVan("tome_life", 1 golden apple)
+    set {-forge::tome_life::tome} to 8
+    fReg("tome_thunder", "&e&l뇌전의 고서", "w", 30, 3, 50, 60000, "우클릭 &e낙뢰&7 (5초): 바라보는 적 피해 10 + 지능×0.15", "")
+    fMat("tome_thunder", "거인의 눈", 1)
+    fMat("tome_thunder", "별의 조각", 8)
+    fVan("tome_thunder", 1 book)
+    set {-forge::tome_thunder::tome} to 5
+    fReg("tome_void", "&4&l공허의 금서", "w", 45, 3, 80, 180000, "우클릭 &4저주의 소용돌이&7 (10초): 앞쪽 적을 끌어당겨 피해 12 + 지능×0.2, 위더", "")
+    fMat("tome_void", "원혼의 정수", 8)
+    fMat("tome_void", "별의 조각", 15)
+    fVan("tome_void", 1 ender eye)
+    set {-forge::tome_void::tome} to 10
+
+    fReg("frost_bow", "&b&l서리 원혼의 활", "w", 25, 2, 40, 45000, "화살 피해 +20%%, 맞으면 3초 둔화", "")
+    fMat("frost_bow", "원혼의 정수", 5)
+    fMat("frost_bow", "별의 조각", 6)
+    fVan("frost_bow", 16 strings)
+
+    fReg("dragon_bow", "&c&l적룡의 활", "w", 45, 2, 75, 220000, "화살 피해 +30%%, 맞으면 불태우기 4초", "")
+    fMat("dragon_bow", "용의 비늘", 3)
+    fMat("dragon_bow", "별의 조각", 15)
+    fVan("dragon_bow", 1 netherite ingot)
+
+    # ── 방어구 세트 (재료 수는 갑옷 기준, 부위별로 조절) ──
+    fArmorSet("orc", "&2오크 전사의", 10, 4, 10, 3000, "오크의 송곳니", 5, 0, 5, iron ingot, "4세트: 최대 체력 +4")
+    fArmorSet("siren", "&b사이렌 비늘", 20, 2, 25, 15000, "사이렌의 비늘", 4, 3, 2, prismarine shard, "4세트: 신속 I · 수중 호흡")
+    fArmorSet("hound", "&4지옥견", 30, 4, 40, 40000, "지옥견의 이빨", 3, 5, 5, diamond, "4세트: 화염 저항 · 힘 I")
+    fArmorSet("dragon", "&c용린", 40, 4, 60, 120000, "용의 비늘", 2, 8, 1, netherite ingot, "4세트: 저항 I · 화염 저항")
+    # ── 기본 장비: 레벨 10마다 무기 1 + 방어구 4 ──
+    # 무기 요구: 주 능력치(힘·민첩·지능 중 가장 높은 것), 방어구 요구: 체력
+    fTier(1, 1, "&f견습 모험가의", 0, 0, 0, 0, 800, "", 0, cobblestone, 8, leather, 4)
+    fTier(2, 10, "&7철기병의", 10, 6, 5, 0, 8000, "오크의 송곳니", 4, iron ingot, 6, iron ingot, 5)
+    fTier(3, 20, "&b미스릴", 20, 12, 8, 1, 25000, "망자의 뼈", 6, diamond, 3, diamond, 4)
+    fTier(4, 30, "&3아다만", 30, 18, 20, 3, 60000, "원혼의 정수", 5, diamond, 5, diamond, 6)
+    fTier(5, 40, "&8흑요", 40, 24, 15, 2, 120000, "별의 조각", 10, netherite ingot, 1, netherite ingot, 1)
+    fTier(6, 50, "&6&l별빛", 50, 30, 35, 5, 250000, "용의 비늘", 1, netherite ingot, 2, netherite ingot, 1)
+    set {-forge::dragon_greatsword::dmg} to 25
+    set {-forge::giant_crusher::dmg} to 15
+    set {-forge::hound_sword::dmg} to 10
+    set {-forge::siren_blade::dmg} to 5
+    loop "dragon_helmet", "dragon_chest", "dragon_legs" and "dragon_boots":
+        set {-forge::%loop-value%::def} to 3
+    loop "hound_helmet", "hound_chest", "hound_legs" and "hound_boots":
+        set {-forge::%loop-value%::def} to 1
+    # ── 추가 능력치 ──
+    fBonus("fang_sword", "1:6,5:2")
+    fBonus("siren_blade", "2:8,1:4")
+    fBonus("hound_sword", "1:12,4:4")
+    fBonus("giant_crusher", "1:18,4:8")
+    fBonus("dragon_greatsword", "1:25,5:5")
+    fBonus("harpy_bow", "2:15,5:5")
+    fBonus("star_staff", "3:20,5:4")
+    fBonus("frost_staff", "3:26,4:4")
+    fBonus("lich_staff", "3:38,5:6")
+    fBonus("frost_bow", "2:22,3:4")
+    fBonus("moon_staff", "3:30,5:6")
+    fBonus("tome_fire", "3:14,5:3")
+    fBonus("tome_frost", "3:18,4:4")
+    fBonus("tome_life", "3:20,4:8")
+    fBonus("tome_thunder", "3:28,2:4")
+    fBonus("tome_void", "3:45,5:10")
+    fBonus("sun_staff", "3:36,4:6")
+    fBonus("shadow_dagger", "2:16,5:6")
+    fBonus("venom_dagger", "2:24,5:8")
+    fBonus("void_dagger", "2:40,5:12")
+    fBonus("dragon_bow", "2:40,1:8")
+    loop "helmet", "chest", "legs" and "boots":
+        fBonus("orc_%loop-value%", "4:3,1:1")
+        fBonus("siren_%loop-value%", "2:3,4:2")
+        fBonus("hound_%loop-value%", "4:5,1:2")
+        fBonus("dragon_%loop-value%", "4:7,1:3")
+    loop 6 times:
+        set {_t} to loop-value
+        fBonus("t%{_t}%_sword", "1:%{_t} * 2%,2:%{_t}%")
+        fBonus("t%{_t}%_bow", "2:%{_t} * 2%,5:%{_t}%")
+        fBonus("t%{_t}%_staff", "3:%{_t} * 2%,4:%{_t}%")
+        fBonus("t%{_t}%_dagger", "2:%{_t} * 2%,5:%{_t}%")
+        loop "helmet", "chest", "legs" and "boots":
+            fBonus("t%{_t}%_%loop-value-2%", "4:%{_t}%")
+    # ── 히든 퀘스트 전용 (대장간에서 못 만듦, NPC 히든 퀘스트 보상) ──
+    set {-forge::tome_void::hidden} to "신화학자가 금지된 책에 대해 무언가 숨기고 있다..."
+    set {-forge::moon_staff::hidden} to "신전 사제가 달에 관한 꿈을 꾸었다고 한다..."
+    set {-forge::void_dagger::hidden} to "사냥꾼은 그림자를 걷는 법을 알고 있다..."
+    set {-forge::giant_crusher::hidden} to "경비대장은 맹세하는 자에게만 검을 내준다..."
+    set {-forge::siren_blade::hidden} to "어부 할아버지는 바다 이야기를 좋아한다..."
+    set {-forge::sun_staff::hidden} to "길 잃은 아이가 별을 모으고 있다..."
+    loop "helmet", "chest", "legs" and "boots":
+        set {-forge::dragon_%loop-value%::hidden} to "대장장이는 평생 용의 갑옷을 만들고 싶어 했다..."
+    set {-forge::ids::*} to "fang_sword", "siren_blade", "hound_sword", "giant_crusher", "dragon_greatsword", "harpy_bow", "star_staff", "frost_staff", "lich_staff", "moon_staff", "sun_staff", "frost_bow", "dragon_bow", "shadow_dagger", "venom_dagger", "void_dagger", "tome_fire", "tome_frost", "tome_life", "tome_thunder" and "tome_void"
+
+# 기본 장비 한 단계: 번호, 레벨, 이름 앞말, 무기 요구치, 방어구(체력) 요구치, 무기 피해 보너스%, 방어 보너스%(부위당), 가격(무기 기준),
+#   특수 재료 이름, 특수 재료 수, 무기 바닐라 재료/수, 방어구 바닐라 재료/수(갑옷 기준)
+function fTier(t: number, lv: number, pre: text, wreq: number, areq: number, dmg: number, def: number, price: number, mat: text, mn: number, wv: itemtype, wn: number, av: itemtype, an: number):
+    set {_id} to "t%{_t}%_sword"
+    fReg({_id}, "%{_pre}% 검", "w", {_lv}, 0, {_wreq}, {_price}, "기본 장비 · 공격력 +%{_dmg}%%%", "")
+    set {-forge::%{_id}%::dmg} to {_dmg}
+    set {-forge::%{_id}%::tier} to {_t}
+    if {_mn} > 0:
+        fMat({_id}, {_mat}, {_mn})
+    fVan({_id}, {_wn} of {_wv})
+    # 단검(민첩, 뒤치기)
+    set {_did} to "t%{_t}%_dagger"
+    fReg({_did}, "%{_pre}% 단검", "w", {_lv}, 2, {_wreq}, {_price}, "기본 장비 · 공격력 +%{_dmg}%%%, 뒤치기 +40%%", "")
+    set {-forge::%{_did}%::dmg} to {_dmg}
+    set {-forge::%{_did}%::tier} to {_t}
+    set {-forge::%{_did}%::dagger} to 40
+    if {_mn} > 0:
+        fMat({_did}, {_mat}, {_mn})
+    fVan({_did}, max(1, {_wn} - 1) of {_wv})
+    # 활(민첩)·지팡이(지능)
+    set {_bid} to "t%{_t}%_bow"
+    fReg({_bid}, "%{_pre}% 활", "w", {_lv}, 2, {_wreq}, {_price}, "기본 장비 · 화살 피해 +%{_dmg}%%%", "")
+    set {-forge::%{_bid}%::dmg} to {_dmg}
+    set {-forge::%{_bid}%::tier} to {_t}
+    if {_mn} > 0:
+        fMat({_bid}, {_mat}, {_mn})
+    fVan({_bid}, 8 of string)
+    set {_sid} to "t%{_t}%_staff"
+    set {_sd} to 3 + {_t} * 2
+    fReg({_sid}, "%{_pre}% 지팡이", "w", {_lv}, 3, {_wreq}, {_price}, "기본 장비 · 우클릭 마력탄: 피해 %{_sd}% + 지능×0.1", "")
+    set {-forge::%{_sid}%::staff} to {_sd}
+    set {-forge::%{_sid}%::tier} to {_t}
+    if {_mn} > 0:
+        fMat({_sid}, {_mat}, {_mn})
+    fVan({_sid}, 1 of blaze rod)
+    set {_parts::*} to "helmet", "chest", "legs" and "boots"
+    set {_pk::*} to "투구", "갑옷", "각반" and "장화"
+    set {_w::*} to 4, 8, 7 and 3
+    loop 4 times:
+        set {_i} to loop-value
+        set {_pid} to "t%{_t}%_%{_parts::%{_i}%}%"
+        set {_wt} to {_w::%{_i}%}
+        fReg({_pid}, "%{_pre}% %{_pk::%{_i}%}%", "a", {_lv}, 4, {_areq}, round({_price} * {_wt} / 8), "기본 장비 · 받는 피해 -%{_def}%%% (부위당)", "")
+        set {-forge::%{_pid}%::def} to {_def}
+        set {-forge::%{_pid}%::tier} to {_t}
+        if {_mn} > 0:
+            fMat({_pid}, {_mat}, max(1, ceil({_mn} * {_wt} / 8)))
+        fVan({_pid}, max(1, ceil({_an} * {_wt} / 8)) of {_av})
+
+function fStatName(i: number) :: text:
+    if {_i} = 0:
+        return "&f주 능력치"
+    set {_n::*} to "&c힘", "&a민첩", "&9지능", "&6체력" and "&e행운"
+    return {_n::%{_i}%}
+
+function fId(it: item) :: text:
+    {_it} is set
+    set {_n} to uncolored name of {_it}
+    {_n} is set
+    return {-forge::byname::%{_n}%}
+
+function fOk(p: player, id: text) :: boolean:
+    if rpgLv({_p}) < {-forge::%{_id}%::lv}:
+        return false
+    set {_st} to {-forge::%{_id}%::st}
+    if {_st} = 0:
+        set {_have} to max(totalStat({_p}, 1), totalStat({_p}, 2), totalStat({_p}, 3))
+    else:
+        set {_have} to totalStat({_p}, {_st})
+    if {_have} < {-forge::%{_id}%::amt}:
+        return false
+    return true
+
+function fCount(p: player, mat: text) :: number:
+    set {_n} to 0
+    loop items in {_p}'s inventory:
+        uncolored name of loop-item is {_mat}
+        add item amount of loop-item to {_n}
+    return {_n}
+
+function fResult(id: text) :: item:
+    set {_it} to unbreakable fBase({_id})
+    set name of {_it} to colored {-forge::%{_id}%::name}
+    set {_set} to {-forge::%{_id}%::set}
+    set {_bl::*} to fBonusLore({_id})
+    set lore of {_it} to colored "&8━━━━━━━━━━━━━━━━", colored "&7요구 레벨: &fLv.%{-forge::%{_id}%::lv}%", colored ("&7요구 능력치: %fStatName({-forge::%{_id}%::st})% %{-forge::%{_id}%::amt}%" if {-forge::%{_id}%::amt} > 0, otherwise "&7요구 능력치: &a없음"), "", colored "&e능력: &7%{-forge::%{_id}%::desc}%", colored "&8━━━━━━━━━━━━━━━━" and colored "&8별빛 대장간 제작품"
+    if size of {_bl::*} > 0:
+        set {_l::*} to lore of {_it}
+        set {_n} to size of {_l::*}
+        set {_last} to {_l::%{_n}%}
+        set {_sep} to {_l::%{_n} - 1%}
+        delete {_l::%{_n}%}
+        delete {_l::%{_n} - 1%}
+        add colored "&f추가 능력치" to {_l::*}
+        add {_bl::*} to {_l::*}
+        add {_sep} to {_l::*}
+        add {_last} to {_l::*}
+        set lore of {_it} to {_l::*}
+    # 전용 모양 (리소스팩)
+    set item model of {_it} to "starserver:forge/%{_id}%"
+    if {-forge::%{_id}%::kind} is "a":
+        set {_set} to {_id}
+        replace all "_helmet", "_chest", "_legs" and "_boots" with "" in {_set}
+        set equipped model id of equippable component of {_it} to "starserver:%{_set}%"
+    return {_it}
+
+function fStatColor(i: number) :: text:
+    set {_c::*} to "&c힘", "&a민첩", "&9지능", "&6체력" and "&e행운"
+    return {_c::%{_i}%}
+
+function fBonusLore(id: text) :: texts:
+    set {_spec} to {-forge::%{_id}%::bonus}
+    {_spec} is set
+    loop ({_spec} split at ","):
+        set {_kv::*} to loop-value split at ":"
+        set {_i} to {_kv::1} parsed as number
+        add colored "&8 ▸ %fStatColor({_i})% &f+%{_kv::2}%" to {_out::*}
+    return {_out::*}
+
+function fIcon(p: player, id: text) :: item:
+    if {-forge::%{_id}%::hidden} is set:
+        set {_h} to 1 of fBase({_id})
+        set name of {_h} to colored "&8&l??? &7(히든)"
+        set lore of {_h} to colored "&8━━━━━━━━━━━━━━━━", colored "&7%{-forge::%{_id}%::hidden}%", "" and colored "&5대장간에서는 만들 수 없어요."
+        return {_h}
+    return fIconReal({_p}, {_id})
+
+function fIconReal(p: player, id: text) :: item:
+    set {_it} to fResult({_id})
+    set {_lore::*} to lore of {_it}
+    add "" to {_lore::*}
+    add colored "&f&l필요 재료" to {_lore::*}
+    set {_can} to true
+    loop indices of {-forge::%{_id}%::cm::*}:
+        set {_need} to {-forge::%{_id}%::cm::%loop-value%}
+        set {_have} to fCount({_p}, loop-value)
+        set {_c} to "&a✔" if {_have} >= {_need}, otherwise "&c✘"
+        if {_have} < {_need}:
+            set {_can} to false
+        add colored "%{_c}% &f%loop-value% &7%{_have}%/%{_need}%" to {_lore::*}
+    loop {-forge::%{_id}%::vm::*}:
+        set {_need} to item amount of loop-value
+        set {_t} to type of loop-value
+        set {_have} to amount of {_t} in {_p}'s inventory
+        set {_c} to "&a✔" if {_have} >= {_need}, otherwise "&c✘"
+        if {_have} < {_need}:
+            set {_can} to false
+        add colored "%{_c}% &f%{_t}% &7%{_have}%/%{_need}%" to {_lore::*}
+    set {_m} to {-forge::%{_id}%::price}
+    set {_c} to "&a✔" if {_p}'s balance >= {_m}, otherwise "&c✘"
+    add colored "%{_c}% &6%{_m}%원" to {_lore::*}
+    add "" to {_lore::*}
+    if fOk({_p}, {_id}) is true:
+        add colored "&a지금 바로 쓸 수 있어요" to {_lore::*}
+    else:
+        add colored "&c요구 조건 부족 — 만들 수는 있지만 아직 못 써요" to {_lore::*}
+    add colored ("&e▶ 클릭해서 제작" if {_can} is true, otherwise "&8재료가 모자라요") to {_lore::*}
+    set lore of {_it} to {_lore::*}
+    return {_it}
+
+function fArmorIds(set: text) :: texts:
+    return "%{_set}%_helmet", "%{_set}%_chest", "%{_set}%_legs" and "%{_set}%_boots"
+
+function forgeMenu(p: player):
+    set {_gui} to chest inventory with 6 rows named "{@title}"
+    loop 54 times:
+        set {_s} to loop-value - 1
+        set slot {_s} of {_gui} to air
+    loop 9 times:
+        set slot (loop-value - 1) of {_gui} to air
+    set slot 4 of {_gui} to anvil named colored "&6&l별빛 대장간" with lore colored "&7몹·보스 재료로 특별한 장비를 만들어요.", colored "&7장비마다 &f요구 레벨&7과 &f요구 능력치&7가 있어요." and colored "&7부족하면 무기는 피해 1, 방어구는 벗겨져요."
+    set slot 9 of {_gui} to red stained glass pane named colored "&c&l⚔ 무기"
+    set {_i} to 0
+    loop {-forge::ids::*}:
+        add 1 to {_i}
+        set slot fWSlot({_i}) of {_gui} to fIcon({_p}, loop-value)
+    set {_sets::*} to "orc", "siren", "hound" and "dragon"
+    set {_lbl::*} to "&2&l⛨ 오크 전사 세트", "&b&l⛨ 사이렌 비늘 세트", "&4&l⛨ 지옥견 세트" and "&c&l⛨ 용린 세트"
+    set {_pane::*} to green stained glass pane, light blue stained glass pane, red stained glass pane and magenta stained glass pane
+    loop 4 times:
+        set {_row} to 18 + (loop-value - 1) * 9
+        set {_set} to {_sets::%loop-value%}
+        set {_first} to "%{_set}%_helmet"
+        set slot {_row} of {_gui} to {_pane::%loop-value%} named colored {_lbl::%loop-value%} with lore colored "&7%{-forge::%{_first}%::desc}%"
+        set {_ids::*} to fArmorIds({_set})
+        set {_k} to 0
+        loop {_ids::*}:
+            set slot ({_row} + 2 + {_k}) of {_gui} to fIcon({_p}, loop-value-2)
+            add 1 to {_k}
+        set slot ({_row} + 7) of {_gui} to {_pane::%loop-value%} named colored {_lbl::%loop-value%} with lore colored "&7%{-forge::%{_first}%::desc}%"
+    set slot 53 of {_gui} to arrow named colored "&7← 대장간"
+    open {_gui} to {_p}
+
+# 특수 무기 칸: 10~16, 그다음 맨 윗줄 0~3·5~8
+function fWSlot(i: number) :: number:
+    set {_s::*} to 10, 11, 12, 13, 14, 15, 16, 17, 0, 1, 2, 3, 5, 6, 7, 8, 19, 24, 26, 28, 33, 35, 37, 42, 44, 46 and 51
+    return {_s::%{_i}%}
+
+function fSlotId(s: number) :: text:
+    set {_i} to 0
+    loop {-forge::ids::*}:
+        add 1 to {_i}
+        if fWSlot({_i}) = {_s}:
+            return loop-value
+    set {_sets::*} to "orc", "siren", "hound" and "dragon"
+    loop 4 times:
+        set {_row} to 18 + (loop-value - 1) * 9
+        if {_s} >= {_row} + 2:
+            if {_s} <= {_row} + 5:
+                set {_parts::*} to "helmet", "chest", "legs" and "boots"
+                return "%{_sets::%loop-value%}%_%{_parts::%{_s} - {_row} - 1%}%"
+    return ""
+
+function fCraft(p: player, id: text):
+    if {-forge::%{_id}%::hidden} is set:
+        send colored "{@p}&5이 장비는 히든 퀘스트로만 얻을 수 있어요." to {_p}
+        stop
+    # 확인
+    loop indices of {-forge::%{_id}%::cm::*}:
+        if fCount({_p}, loop-value) < {-forge::%{_id}%::cm::%loop-value%}:
+            send colored "{@p}&c재료가 모자라요: %loop-value%" to {_p}
+            play sound "block.note_block.bass" to {_p}
+            stop
+    loop {-forge::%{_id}%::vm::*}:
+        if amount of (type of loop-value) in {_p}'s inventory < item amount of loop-value:
+            send colored "{@p}&c재료가 모자라요: %type of loop-value%" to {_p}
+            play sound "block.note_block.bass" to {_p}
+            stop
+    if {_p}'s balance < {-forge::%{_id}%::price}:
+        send colored "{@p}&c돈이 모자라요. (%{-forge::%{_id}%::price}%원)" to {_p}
+        stop
+    # 재료 가져가기
+    loop indices of {-forge::%{_id}%::cm::*}:
+        set {_left} to {-forge::%{_id}%::cm::%loop-value%}
+        loop items in {_p}'s inventory:
+            {_left} > 0
+            uncolored name of loop-item is loop-value-1
+            set {_take} to min({_left}, item amount of loop-item)
+            set {_one} to loop-item
+            set item amount of {_one} to 1
+            remove {_take} of {_one} from {_p}'s inventory
+            remove {_take} from {_left}
+    loop {-forge::%{_id}%::vm::*}:
+        remove loop-value from {_p}'s inventory
+    remove {-forge::%{_id}%::price} from {_p}'s balance
+    give fResult({_id}) to {_p}
+    send colored "{@p}&a제작 완료! &f%{-forge::%{_id}%::name}%" to {_p}
+    play sound "block.anvil.use" to {_p}
+    play sound "entity.player.levelup" with pitch 1.5 to {_p}
+
+function forgeHome(p: player):
+    set {_gui} to chest inventory with 3 rows named "{@home}"
+    loop 27 times:
+        set slot (loop-value - 1) of {_gui} to air
+    set slot 11 of {_gui} to iron chestplate named colored "&f&l기본 장비" with lore colored "&7레벨 10마다 무기 1개 + 방어구 4부위", colored "&7Lv.1 견습 → Lv.50 별빛" and colored "&e▶ 클릭"
+    set slot 13 of {_gui} to anvil named colored "&6&l별빛 대장간" with lore colored "&7요구 레벨·요구 능력치가 부족하면" and colored "&7무기는 피해 1, 방어구는 벗겨져요."
+    set slot 15 of {_gui} to dragon breath named colored "&d&l특수 장비" with lore colored "&7몹·보스 재료로 만드는 능력 무기", colored "&7와 세트 효과 방어구" and colored "&e▶ 클릭"
+    set slot 22 of {_gui} to barrier named colored "&c닫기"
+    open {_gui} to {_p}
+
+function forgeBasic(p: player):
+    set {_gui} to chest inventory with 6 rows named "{@basic}"
+    set {_pane::*} to white stained glass pane, light gray stained glass pane, light blue stained glass pane, cyan stained glass pane, gray stained glass pane and yellow stained glass pane
+    set {_lv::*} to 1, 10, 20, 30, 40 and 50
+    loop 6 times:
+        set {_t} to loop-value
+        set {_r} to ({_t} - 1) * 9
+        set {_k} to {_r}
+        while {_k} < {_r} + 9:
+            set slot {_k} of {_gui} to air
+            add 1 to {_k}
+        set slot ({_r} + 8) of {_gui} to {_pane::%{_t}%} named colored "&e&lLv.%{_lv::%{_t}%}% 장비" with lore colored "&7← 단검·검·활·지팡이·방어구"
+        set slot {_r} of {_gui} to fIcon({_p}, "t%{_t}%_dagger")
+        set slot ({_r} + 1) of {_gui} to fIcon({_p}, "t%{_t}%_sword")
+        set slot ({_r} + 2) of {_gui} to fIcon({_p}, "t%{_t}%_bow")
+        set slot ({_r} + 3) of {_gui} to fIcon({_p}, "t%{_t}%_staff")
+        set slot ({_r} + 4) of {_gui} to fIcon({_p}, "t%{_t}%_helmet")
+        set slot ({_r} + 5) of {_gui} to fIcon({_p}, "t%{_t}%_chest")
+        set slot ({_r} + 6) of {_gui} to fIcon({_p}, "t%{_t}%_legs")
+        set slot ({_r} + 7) of {_gui} to fIcon({_p}, "t%{_t}%_boots")
+    set slot 8 of {_gui} to arrow named colored "&7← 대장간"
+    set slot 53 of {_gui} to barrier named colored "&c닫기"
+    open {_gui} to {_p}
+
+function fBasicSlotId(s: number) :: text:
+    set {_t} to floor({_s} / 9) + 1
+    set {_c} to mod({_s}, 9)
+    set {_parts::0} to "dagger"
+    set {_parts::1} to "sword"
+    set {_parts::2} to "bow"
+    set {_parts::3} to "staff"
+    set {_parts::4} to "helmet"
+    set {_parts::5} to "chest"
+    set {_parts::6} to "legs"
+    set {_parts::7} to "boots"
+    if {_parts::%{_c}%} is set:
+        return "t%{_t}%_%{_parts::%{_c}%}%"
+    return ""
+
+command /대장간:
+    aliases: /대장장이, /제작
+    trigger:
+        forgeHome(player)
+
+on inventory click:
+    name of event-inventory is "{@home}"
+    cancel event
+    event-inventory is not player's inventory
+    set {_s} to index of event-slot
+    if {_s} = 11:
+        forgeBasic(player)
+    else if {_s} = 15:
+        forgeMenu(player)
+    else if {_s} = 22:
+        close player's inventory
+
+on inventory click:
+    name of event-inventory is "{@basic}"
+    cancel event
+    event-inventory is not player's inventory
+    set {_s} to index of event-slot
+    if {_s} = 8:
+        forgeHome(player)
+        stop
+    if {_s} = 53:
+        close player's inventory
+        stop
+    set {_id} to fBasicSlotId({_s})
+    {_id} is not ""
+    fCraft(player, {_id})
+    forgeBasic(player)
+
+on inventory click:
+    name of event-inventory is "{@title}"
+    cancel event
+    event-inventory is not player's inventory
+    set {_s} to index of event-slot
+    if {_s} = 53:
+        forgeHome(player)
+        stop
+    set {_id} to fSlotId({_s})
+    {_id} is not ""
+    fCraft(player, {_id})
+    forgeMenu(player)
+
+# ── 요구 조건·무기 능력 ──
+on damage:
+    attacker is a player
+    victim is not a player
+    set {_p} to attacker
+    set {_id} to fId(tool of {_p})
+    {_id} is set
+    {-forge::%{_id}%::kind} is "w"
+    if fOk({_p}, {_id}) is false:
+        set damage to 1
+        send action bar colored "&c요구 조건 부족! &7(Lv.%{-forge::%{_id}%::lv}% · %fStatName({-forge::%{_id}%::st})% %{-forge::%{_id}%::amt}%)" to {_p}
+        stop
+    if {-forge::%{_id}%::dmg} > 0:
+        set damage to damage * (1 + {-forge::%{_id}%::dmg} / 100)
+    if metadata value "skill_hit" of {_p} is true:
+        stop
+    set {_v} to victim
+    if {-forge::%{_id}%::dagger} is set:
+        set {_dy} to mod(yaw of {_p} - yaw of {_v} + 540, 360) - 180
+        if abs({_dy}) < 60:
+            set damage to damage * (1 + {-forge::%{_id}%::dagger} / 100)
+            send action bar colored "&8&l✦ 뒤치기! &7(+%{-forge::%{_id}%::dagger}%%%)" to {_p}
+            add 1 to {hq::%uuid of {_p}%::backstab}
+            play sound "entity.player.attack.crit" with pitch 0.7 to {_p}
+        if {_id} is "shadow_dagger":
+            chance of 15%:
+                apply blindness 1 to {_v} for 2 seconds
+        else if {_id} is "venom_dagger":
+            chance of 30%:
+                apply poison 1 to {_v} for 3 seconds
+    if {_id} is "fang_sword":
+        chance of 20%:
+            apply wither 1 to {_v} for 3 seconds
+    else if {_id} is "siren_blade":
+        chance of 15%:
+            loop all living entities in radius 4 of {_v}:
+                loop-entity is not a player
+                loop-entity is not a villager
+                push loop-entity upwards at speed 0.6
+                apply slowness 2 to loop-entity for 2 seconds
+                damage loop-entity by 1.5
+            play sound "entity.player.splash.high_speed" to {_p}
+    else if {_id} is "hound_sword":
+        ignite {_v} for 4 seconds
+        if time in world of {_p} is between 13:00 and 23:00:
+            set damage to damage * 1.15
+    else if {_id} is "giant_crusher":
+        chance of 25%:
+            loop all living entities in radius 3 of {_v}:
+                loop-entity is not a player
+                loop-entity is not a villager
+                loop-entity is not {_v}
+                damage loop-entity by 2.5
+            play sound "entity.generic.explode" with volume 0.5 to {_p}
+    else if {_id} is "dragon_greatsword":
+        chance of 15%:
+            loop all living entities in radius 6 of {_p}:
+                loop-entity is not a player
+                loop-entity is not a villager
+                damage loop-entity by 4
+                ignite loop-entity for 3 seconds
+            play sound "entity.ender_dragon.growl" with volume 0.5 to {_p}
+    else if {_id} is "harpy_bow":
+        damage cause is projectile
+        set damage to damage * 1.25
+    else if {_id} is "frost_bow":
+        damage cause is projectile
+        set damage to damage * 1.2
+        apply slowness 2 to {_v} for 3 seconds
+    else if {_id} is "dragon_bow":
+        damage cause is projectile
+        set damage to damage * 1.3
+        ignite {_v} for 4 seconds
+
+# ── 고서 마법 ──
+on right click:
+    set {_id} to fId(player's tool)
+    {_id} is set
+    {-forge::%{_id}%::tome} is set
+    cancel event
+    if fOk(player, {_id}) is false:
+        send action bar colored "&c요구 조건 부족! &7(Lv.%{-forge::%{_id}%::lv}% · 지능 %{-forge::%{_id}%::amt}%)" to player
+        stop
+    set {_cdk} to "%uuid of player%::%{_id}%"
+    if {-tome::cd::%{_cdk}%} is set:
+        set {_ts} to "%{-forge::%{_id}%::tome}% seconds" parsed as timespan
+        if difference between {-tome::cd::%{_cdk}%} and now < {_ts}:
+            send action bar colored "&7아직 다시 쓸 수 없어요." to player
+            stop
+    set {-tome::cd::%{_cdk}%} to now
+    set {_int} to totalStat(player, 3)
+    if {_id} is "tome_fire":
+        make player shoot a snowball at speed 2.2
+        set metadata value "staff" of last shot projectile to "tome_fire"
+        play sound "entity.blaze.shoot" to player
+    else if {_id} is "tome_frost":
+        loop all living entities in radius 5 of player:
+            loop-entity is not player
+            loop-entity is not a player
+            loop-entity is not a villager
+            loop-entity is not an armor stand
+            damage loop-entity by (5 + {_int} * 0.1) / 2
+            apply slowness 3 to loop-entity for 4 seconds
+        play sound "block.glass.break" with pitch 0.6 to player
+        execute console command "execute at %player% run particle minecraft:snowflake ~ ~1 ~ 2.5 0.6 2.5 0.02 120 force"
+    else if {_id} is "tome_life":
+        loop all players in radius 6 of player:
+            heal loop-player by 3 + {_int} * 0.03
+            send action bar colored "&a생명의 빛이 감싸요." to loop-player
+        play sound "block.amethyst_block.chime" with pitch 1.5 to player
+        execute console command "execute at %player% run particle minecraft:happy_villager ~ ~1 ~ 3 0.8 3 0 60 force"
+    else if {_id} is "tome_thunder":
+        set {_t} to target entity of player
+        if {_t} is not set:
+            send action bar colored "&7바라보는 적이 없어요." to player
+            delete {-tome::cd::%{_cdk}%}
+            stop
+        strike lightning effect at {_t}
+        damage {_t} by (10 + {_int} * 0.15) / 2
+    else if {_id} is "tome_void":
+        set {_c} to location 6 meters in front of player
+        loop all living entities in radius 8 of {_c}:
+            loop-entity is not a player
+            loop-entity is not a villager
+            loop-entity is not an armor stand
+            push loop-entity (vector between location of loop-entity and {_c}) at speed 0.8
+            damage loop-entity by (12 + {_int} * 0.2) / 2
+            apply wither 2 to loop-entity for 4 seconds
+        play sound "entity.wither.ambient" with volume 0.6 to player
+        execute console command "execute positioned %x-coordinate of {_c}% %y-coordinate of {_c}% %z-coordinate of {_c}% in minecraft:%world of player% run particle minecraft:portal ~ ~1 ~ 2 1 2 0.5 200 force"
+
+# 공허의 쌍단검: 처치하면 3초 투명
+on death:
+    attacker is a player
+    fId(tool of attacker) is "void_dagger"
+    fOk(attacker, "void_dagger") is true
+    apply invisibility 1 to attacker for 3 seconds
+    send action bar colored "&5공허 속으로 사라졌다..." to attacker
+
+on shoot:
+    shooter is a player
+    projectile is an arrow
+    set {_id} to fId(tool of shooter)
+    {_id} is "harpy_bow"
+    fOk(shooter, {_id}) is true
+    chance of 20%:
+        make shooter shoot an arrow at speed 2.5
+        wait 3 ticks
+        make shooter shoot an arrow at speed 2.5
+
+on right click:
+    set {_id} to fId(player's tool)
+    {_id} is set
+    {-forge::%{_id}%::staff} is set
+    cancel event
+    if fOk(player, {_id}) is false:
+        send action bar colored "&c요구 조건 부족! &7(Lv.%{-forge::%{_id}%::lv}% · %fStatName({-forge::%{_id}%::st})% %{-forge::%{_id}%::amt}%)" to player
+        stop
+    if {-forge::cd::%uuid of player%} is set:
+        difference between {-forge::cd::%uuid of player%} and now < 1.2 seconds
+        stop
+    set {-forge::cd::%uuid of player%} to now
+    make player shoot a snowball at speed 2.5
+    set metadata value "staff" of last shot projectile to {_id}
+    play sound "entity.illusioner.cast_spell" to player
+
+on damage:
+    damage cause is projectile
+    attacker is a player
+    set {_sid} to metadata value "staff" of projectile
+    {_sid} is set
+    set {_sid} to "%{_sid}%"
+    set {_k} to 0.1
+    if {_sid} is "frost_staff":
+        set {_k} to 0.12
+        apply slowness 2 to victim for 3 seconds
+    else if {_sid} is "lich_staff":
+        set {_k} to 0.15
+        apply wither 1 to victim for 3 seconds
+    else if {_sid} is "moon_staff":
+        set {_k} to 0.13
+    else if {_sid} is "tome_fire":
+        set {_k} to 0.1
+        ignite victim for 4 seconds
+    else if {_sid} is "sun_staff":
+        set {_k} to 0.14
+        ignite victim for 4 seconds
+    set {_base} to {-forge::%{_sid}%::staff} ? 5
+    if {_sid} is "tome_fire":
+        set {_base} to 6
+    set {_dmg} to {_base} + totalStat(attacker, 3) * {_k}
+    if {_sid} is "moon_staff":
+        if time in world of attacker is between 13:00 and 23:00:
+            set {_dmg} to {_dmg} * 1.3
+    set damage to {_dmg}
+
+# 방어구 방어 보너스
+on damage:
+    victim is a player
+    set {_red} to 0
+    loop helmet of victim, chestplate of victim, leggings of victim and boots of victim:
+        set {_id} to fId(loop-value)
+        {_id} is set
+        add ({-forge::%{_id}%::def} ? 0) to {_red}
+    {_red} > 0
+    set damage to damage * (1 - {_red} / 100)
+
+# 방어구 요구 조건 + 세트 효과 (2초마다)
+every 2 seconds:
+    loop all players:
+        set {_p} to loop-player
+        delete {_cnt::*}
+        loop 4 times:
+            set {_n} to loop-value-2
+            if {_n} = 1:
+                set {_a} to helmet of {_p}
+            else if {_n} = 2:
+                set {_a} to chestplate of {_p}
+            else if {_n} = 3:
+                set {_a} to leggings of {_p}
+            else:
+                set {_a} to boots of {_p}
+            set {_id} to fId({_a})
+            {_id} is set
+            if fOk({_p}, {_id}) is false:
+                if {_n} = 1:
+                    set helmet of {_p} to air
+                else if {_n} = 2:
+                    set chestplate of {_p} to air
+                else if {_n} = 3:
+                    set leggings of {_p} to air
+                else:
+                    set boots of {_p} to air
+                give {_a} to {_p}
+                send colored "{@p}&c%{-forge::%{_id}%::name}%&c을(를) 입기엔 아직 부족해요. &7(Lv.%{-forge::%{_id}%::lv}% · %fStatName({-forge::%{_id}%::st})% %{-forge::%{_id}%::amt}%)" to {_p}
+            else:
+                add 1 to {_cnt::%{-forge::%{_id}%::set}%}
+        if {_cnt::orc} = 4:
+            apply health boost 1 to {_p} for 4 seconds
+        if {_cnt::siren} = 4:
+            apply speed 1 to {_p} for 4 seconds
+            apply water breathing 1 to {_p} for 4 seconds
+        if {_cnt::hound} = 4:
+            apply fire resistance 1 to {_p} for 4 seconds
+            apply strength 1 to {_p} for 4 seconds
+        if {_cnt::dragon} = 4:
+            apply resistance 1 to {_p} for 4 seconds
+            apply fire resistance 1 to {_p} for 4 seconds
+
+# 관리자: /대장간관리 목록 · /대장간관리 지급 <플레이어> <id>
+command /대장간관리 [<text>]:
+    permission: op
+    trigger:
+        set {_a::*} to (argument 1 ? "") split at " "
+        if {_a::1} is "지급":
+            set {_t} to {_a::2} parsed as player
+            give fResult({_a::3}) to {_t}
+            send "{@p}%{_a::3}% 지급 → %{_t}%"
+            stop
+        send "{@p}레시피 %size of {-forge::byname::*}%개"
+        loop indices of {-forge::byname::*}:
+            set {_id} to {-forge::byname::%loop-value%}
+            set {_m} to ""
+            loop indices of {-forge::%{_id}%::cm::*}:
+                set {_m} to "%{_m}% %loop-value-2% x%{-forge::%{_id}%::cm::%loop-value-2%}%"
+            loop {-forge::%{_id}%::vm::*}:
+                set {_m} to "%{_m}% %loop-value-2%"
+            send "&7%{_id}% Lv.%{-forge::%{_id}%::lv}% 능력치%{-forge::%{_id}%::st}%>=%{-forge::%{_id}%::amt}% %{-forge::%{_id}%::price}%원 :%{_m}%"
+
+# ─────────────────────────────────────────────
+#  장비 도감 — /장비도감 (/도감 의 장비 탭)
+#  대장간 특수 무기·방어구를 입체 모델 그대로 보여 준다. 히든 장비는 ??? 로 가린다.
+# ─────────────────────────────────────────────
+function forgeDex(p: player):
+    set {_gui} to chest inventory with 6 rows named "&f&b&l✦ 도감 &8- &f장비"
+    set {_i} to 0
+    loop {-forge::ids::*}:
+        {_i} < 27
+        if {-forge::%loop-value%::hidden} is set:
+            set {_it} to fIcon({_p}, loop-value)
+            set {_l::*} to lore of {_it}
+            add colored "&5얻는 법: 히든 퀘스트 보상" to {_l::*}
+            set lore of {_it} to {_l::*}
+        else:
+            set {_it} to fResult(loop-value)
+            set {_l::*} to lore of {_it}
+            add "" to {_l::*}
+            add colored "&6얻는 법: &f/대장간 &7에서 제작 &8(%{-forge::%loop-value%::price}%원)" to {_l::*}
+            set lore of {_it} to {_l::*}
+        set slot {_i} of {_gui} to {_it}
+        add 1 to {_i}
+    set {_sets::*} to "orc", "siren", "hound" and "dragon"
+    set {_start::*} to 27, 32, 36 and 41
+    loop 4 times:
+        set {_ids::*} to fArmorIds({_sets::%loop-value%})
+        set {_k} to 0
+        loop {_ids::*}:
+            set {_it} to fResult(loop-value-2)
+            set {_l::*} to lore of {_it}
+            add "" to {_l::*}
+            add colored "&6얻는 법: &f/대장간 &7에서 제작" to {_l::*}
+            set lore of {_it} to {_l::*}
+            set slot ({_start::%loop-value-1%} + {_k}) of {_gui} to {_it}
+            add 1 to {_k}
+    set slot 31 of {_gui} to iron chestplate named colored "&f&l⛨ 방어구 세트" with lore colored "&7왼쪽 위: 오크 전사 · 오른쪽 위: 사이렌 비늘" and colored "&7왼쪽 아래: 지옥견 · 오른쪽 아래: 용린"
+    set slot 40 of {_gui} to iron chestplate named colored "&f&l⛨ 방어구 세트" with lore colored "&7왼쪽 위: 오크 전사 · 오른쪽 위: 사이렌 비늘" and colored "&7왼쪽 아래: 지옥견 · 오른쪽 아래: 용린"
+    set slot 45 of {_gui} to arrow named colored "&7← 도감"
+    set slot 49 of {_gui} to barrier named colored "&c닫기"
+    set slot 53 of {_gui} to anvil named colored "&6&l대장간 열기" with lore colored "&7재료를 모아 직접 만들어 보세요."
+    open {_gui} to {_p}
+
+command /장비도감:
+    aliases: /무기도감, /방어구도감
+    trigger:
+        forgeDex(player)
+
+on inventory click:
+    name of event-inventory is "&f&b&l✦ 도감 &8- &f장비"
+    cancel event
+    event-inventory is not player's inventory
+    set {_s} to index of event-slot
+    if {_s} = 45:
+        close player's inventory
+        make player execute command "/도감"
+    else if {_s} = 49:
+        close player's inventory
+    else if {_s} = 53:
+        close player's inventory
+        make player execute command "/대장간"

@@ -1,0 +1,175 @@
+# ===== 커스텀 무기/방어구 =====
+# 지급: /mm items give <닉네임> <아이템ID>
+# 보스 몬스터 처치 시에도 확률로 드롭됨 (mobs/커스텀몹.yml 참고)
+
+별빛의검:
+  Id: DIAMOND_SWORD
+  Display: '&b&l✦ 별빛의 검'
+  Lore:
+  - '&7밤하늘의 별빛을 담아 벼려낸 검.'
+  - ''
+  - '&9등급: &b희귀'
+  Enchantments:
+  - DAMAGE_ALL:5
+  - SWEEPING_EDGE:3
+  - UNBREAKING:3
+  Attributes:
+    MainHand:
+      Damage: 4
+      MovementSpeed: 0.02
+
+용암도끼:
+  Id: NETHERITE_AXE
+  Display: '&6&l🔥 용암 도끼'
+  Lore:
+  - '&7지옥의 대장장이가 만든 불타는 도끼.'
+  - ''
+  - '&9등급: &5영웅'
+  Enchantments:
+  - DAMAGE_ALL:5
+  - FIRE_ASPECT:2
+  - UNBREAKING:3
+  Attributes:
+    MainHand:
+      Damage: 6
+      Health: 4
+
+바람의활:
+  Id: BOW
+  Display: '&a&l➶ 바람의 활'
+  Lore:
+  - '&7바람의 정령이 깃든 활. 손이 가볍다.'
+  - ''
+  - '&9등급: &b희귀'
+  Enchantments:
+  - ARROW_DAMAGE:5
+  - ARROW_KNOCKBACK:2
+  - ARROW_INFINITE:1
+  Attributes:
+    MainHand:
+      MovementSpeed: 0.04
+
+수호자의투구:
+  Id: NETHERITE_HELMET
+  Display: '&e&l⛨ 수호자의 투구'
+  Lore:
+  - '&7옛 왕국의 기사단장이 쓰던 투구.'
+  - ''
+  - '&9등급: &5영웅'
+  Enchantments:
+  - PROTECTION_ENVIRONMENTAL:4
+  - UNBREAKING:3
+  Attributes:
+    Head:
+      Health: 6
+      KnockbackResistance: 0.2
+
+행운의부적:
+  Id: TOTEM_OF_UNDYING
+  Display: '&d&l♣ 행운의 부적'
+  Lore:
+  - '&7왼손에 들면 운이 좋아지는 것 같다.'
+  - ''
+  - '&9등급: &e전설'
+  Attributes:
+    OffHand:
+      Luck: 3
+      Health: 4
+
+# ===== 보스 드롭 재료 =====
+별의조각:
+  Id: AMETHYST_SHARD
+  Display: '&b별의 조각'
+  Lore:
+  - '&7보스에게서 얻는 빛나는 조각.'
+  - '&7모아서 거래에 쓸 수 있다.'
+  Enchantments:
+  - UNBREAKING:1
+  Hide:
+  - ENCHANTS
+
+# ===== 오크/드래곤 드롭 =====
+오크의송곳니:
+  Id: BONE
+  Display: '&2오크의 송곳니'
+  Lore:
+  - '&7오크에게서 뽑아낸 거친 송곳니.'
+  - '&7상점에 팔 수 있다.'
+
+용의비늘:
+  Id: PRISMARINE_SHARD
+  Display: '&c&l용의 비늘'
+  Lore:
+  - '&7적룡 이그니스의 비늘. 뜨겁다.'
+  Enchantments:
+  - UNBREAKING:1
+  Hide:
+  - ENCHANTS
+
+대족장의도끼:
+  Id: NETHERITE_AXE
+  Display: '&4&l⚔ 대족장의 도끼'
+  Lore:
+  - '&7오크 대족장 크루가가 휘두르던 거대한 도끼.'
+  - ''
+  - '&9등급: &e전설'
+  Enchantments:
+  - DAMAGE_ALL:6
+  - UNBREAKING:3
+  Attributes:
+    MainHand:
+      Damage: 9
+      Health: 6
+      MovementSpeed: -0.01
+
+# ===== 신화 몹 드롭 =====
+사이렌의비늘:
+  Id: PRISMARINE_SHARD
+  Display: '&b사이렌의 비늘'
+  Lore:
+  - '&7노래하는 바다 요괴의 비늘.'
+하피의깃털:
+  Id: FEATHER
+  Display: '&e하피의 깃털'
+  Lore:
+  - '&7바람을 품은 깃털.'
+지옥견의이빨:
+  Id: BLAZE_ROD
+  Display: '&4지옥견의 이빨'
+  Lore:
+  - '&7저승 문지기의 이빨. 아직 뜨겁다.'
+거인의눈:
+  Id: ENDER_EYE
+  Display: '&6거인의 눈'
+  Lore:
+  - '&7키클롭스의 하나뿐인 눈.'
+미노타우로스의뿔:
+  Id: GOAT_HORN
+  Display: '&c&l미노타우로스의 뿔'
+  Lore:
+  - '&7미궁의 괴물이 남긴 거대한 뿔.'
+메두사의머리:
+  Id: PLAYER_HEAD
+  Display: '&2&l메두사의 머리'
+  Lore:
+  - '&7두 눈을 감은 채로 들고 다녀야 한다.'
+  - ''
+  - '&9등급: &e전설'
+  Attributes:
+    Head:
+      Health: 8
+      Armor: 4
+
+망자의뼈:
+  Id: BONE
+  Display: '&7망자의 뼈'
+  Lore:
+  - '&8언데드에게서 얻은 차가운 뼈.'
+  - '&8대장간 재료'
+
+원혼의정수:
+  Id: GHAST_TEAR
+  Display: '&b원혼의 정수'
+  Lore:
+  - '&8원혼이 남긴 푸른 눈물.'
+  - '&8대장간 재료'

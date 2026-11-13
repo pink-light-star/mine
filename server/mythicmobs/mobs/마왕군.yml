@@ -1,0 +1,75 @@
+# BetterModel 기본 예제 모델(demon_knight, blue_wizard)을 쓰는 보스 (소환 전용: /몹소환 <ID>)
+보스_데몬나이트:
+  Type: WITHER_SKELETON
+  Display: '&4&l⚔ 데몬 나이트 ⚔'
+  Health: 900
+  Damage: 14
+  Armor: 10
+  Faction: 마왕군
+  BossBar:
+    Enabled: true
+    Title: '&4데몬 나이트'
+    Range: 50
+    Color: RED
+    Style: SEGMENTED_12
+  Equipment:
+  - NETHERITE_AXE HAND
+  - SHIELD OFFHAND
+  Skills:
+  - model{mid=demon_knight} @self ~onSpawn
+  - message{m="&4[데몬 나이트] &f마왕님의 이름으로... 너희를 심판하겠다."} @PlayersInRadius{r=40} ~onSpawn
+  - randomskill{skills=데몬_망치1,데몬_망치2} @self ~onAttack
+  # 망치 내려찍기 (범위 피해 + 띄우기)
+  - skill{s=데몬_대지분쇄} @self ~onTimer:220
+  # 방패 돌진 (밀쳐내기)
+  - skill{s=데몬_방패돌진} @target ~onTimer:160
+  # 체력 절반 이하: 방어 태세
+  - skill{s=데몬_방어태세} @self ~onDamaged 0.15
+  - message{m="&4[데몬 나이트] &f이 몸이... 무너지다니..."} @PlayersInRadius{r=40} ~onDeath
+  Drops:
+  - 별의조각 6to10 1
+  - 용암도끼 1 0.25
+  - exp 1000
+  Options:
+    MovementSpeed: 0.24
+    PreventOtherDrops: true
+    PreventSunburn: true
+    KnockbackResistance: 0.9
+    AlwaysShowName: true
+    Despawn: false
+    FollowRange: 40
+
+보스_대마법사:
+  Type: EVOKER
+  Display: '&9&l✦ 푸른 대마법사 ✦'
+  Health: 700
+  Damage: 8
+  Faction: 마왕군
+  BossBar:
+    Enabled: true
+    Title: '&9푸른 대마법사'
+    Range: 50
+    Color: BLUE
+    Style: SEGMENTED_10
+  Skills:
+  - model{mid=blue_wizard} @self ~onSpawn
+  - message{m="&9[대마법사] &f별의 마력이여... 내게 오라."} @PlayersInRadius{r=40} ~onSpawn
+  # 빙결 폭발 (주변 둔화 + 피해)
+  - skill{s=마법사_빙결} @self ~onTimer:180
+  # 낙뢰 (대상에게 번개)
+  - skill{s=마법사_낙뢰} @target ~onTimer:120
+  # 순간이동 (맞으면 가끔 대상 뒤로)
+  - skill{s=마법사_순간이동} @self ~onDamaged 0.2
+  - message{m="&9[대마법사] &f별빛이... 꺼져간다..."} @PlayersInRadius{r=40} ~onDeath
+  Drops:
+  - 별의조각 5to9 1
+  - 행운의부적 1 0.3
+  - exp 900
+  Options:
+    MovementSpeed: 0.28
+    PreventOtherDrops: true
+    PreventSunburn: true
+    KnockbackResistance: 0.6
+    AlwaysShowName: true
+    Despawn: false
+    FollowRange: 40

@@ -1,0 +1,154 @@
+# ===== 오크 부족 =====
+# 밤이 되면 평원/숲/사바나에 오크가 출몰 (randomspawns/오크출몰.yml)
+# 대족장 소환: /mm mobs spawn 보스_오크대족장
+
+오크_전사:
+  Type: ZOMBIE
+  Display: '&2오크 전사'
+  Health: 40
+  Damage: 7
+  Faction: 오크
+  Equipment:
+  - IRON_AXE HAND
+  - LEATHER_CHESTPLATE{color=0x3B6B2A} CHEST
+  - LEATHER_LEGGINGS{color=0x2E4F22} LEGS
+  - LEATHER_BOOTS{color=0x4A3420} FEET
+  Skills:
+  - model{mid=orc_warrior} @self ~onSpawn
+  - state{mid=orc_warrior;s=attack} @self ~onAttack
+  - leap{velocity=110} @target ~onTimer:100 0.6
+  - message{m="&2[오크 전사] &f크아아!"} @PlayersInRadius{r=12} ~onTimer:100 0.2
+  - potion{type=STRENGTH;duration=100;level=0} @self ~onDamaged 0.15
+  - effect:particles{p=angry_villager;amount=8;hS=0.4;vS=0.4} @self ~onDamaged 0.15
+  - message{m="&2[오크 전사] &f크르르... 인간이다!"} @PlayersInRadius{r=15} ~onCombat 0.1
+  Drops:
+  - 오크의송곳니 1to2 0.6
+  - IRON_INGOT 1to2 0.3
+  - exp 25
+  Options:
+    MovementSpeed: 0.27
+    PreventOtherDrops: true
+    PreventSunburn: true
+    AlwaysShowName: false
+
+오크_궁수:
+  Type: SKELETON
+  Display: '&2오크 궁수'
+  Health: 30
+  Damage: 6
+  Faction: 오크
+  Equipment:
+  - BOW HAND
+  - LEATHER_HELMET{color=0x3B6B2A} HEAD
+  - LEATHER_CHESTPLATE{color=0x3B6B2A} CHEST
+  Skills:
+  - model{mid=orc_archer} @self ~onSpawn
+  - state{mid=orc_archer;s=attack} @self ~onAttack
+  - arrowvolley{amount=6;spread=18;velocity=14} @target ~onTimer:90
+  - sound{s=entity.arrow.shoot;v=1;p=0.8} @self ~onTimer:90
+  Drops:
+  - 오크의송곳니 1 0.5
+  - ARROW 3to8 0.8
+  - exp 20
+  Options:
+    MovementSpeed: 0.25
+    PreventOtherDrops: true
+    PreventSunburn: true
+
+오크_주술사:
+  Type: WITCH
+  Display: '&a오크 주술사'
+  Health: 35
+  Faction: 오크
+  Skills:
+  - model{mid=orc_shaman} @self ~onSpawn
+  - state{mid=orc_shaman;s=attack} @self ~onAttack
+  - potion{type=SPEED;duration=120;level=1} @MobsInRadius{r=10;types=오크_전사,오크_궁수} ~onTimer:180
+  - message{m="&a[오크 주술사] &f전사들이여, 달려라!"} @PlayersInRadius{r=15} ~onTimer:180 0.4
+  - potion{type=SLOWNESS;duration=60;level=1} @PlayersInRadius{r=6} ~onTimer:140
+  - effect:particles{p=witch;amount=30;hS=2;vS=0.5} @self ~onTimer:140
+  - heal{amount=10} @MobsInRadius{r=10;types=오크_전사,오크_궁수,보스_오크대족장} ~onTimer:100
+  - effect:particles{p=happy_villager;amount=20;hS=1;vS=1} @MobsInRadius{r=10;types=오크_전사,오크_궁수} ~onTimer:100
+  - message{m="&a[오크 주술사] &f조상의 힘이여!"} @PlayersInRadius{r=15} ~onTimer:200 0.3
+  Drops:
+  - 오크의송곳니 1to3 0.7
+  - 별의조각 1 0.15
+  - exp 35
+  Options:
+    PreventOtherDrops: true
+
+보스_오크대족장:
+  Type: VINDICATOR
+  Display: '&4&l⚔ 오크 대족장 크루가 ⚔'
+  Health: 900
+  Damage: 16
+  Faction: 오크
+  BossBar:
+    Enabled: true
+    Title: '&4오크 대족장 크루가'
+    Range: 60
+    Color: RED
+    Style: SEGMENTED_12
+  Equipment:
+  - NETHERITE_AXE HAND
+  Skills:
+  - model{mid=orc_chief} @self ~onSpawn
+  - state{mid=orc_chief;s=attack} @self ~onAttack
+  - message{m="&4[크루가] &f감히 내 부족의 땅에 발을 들이다니!"} @PlayersInRadius{r=40} ~onSpawn
+  # 지면 강타: 주변 플레이어를 띄우고 피해
+  - skill{s=오크_지면강타} @self ~onTimer:140
+  # 부하 소환
+  - summon{type=오크_전사;amount=3;radius=4} @self ~onTimer:300
+  - message{m="&4[크루가] &f전사들이여, 나와라!"} @PlayersInRadius{r=40} ~onTimer:300
+  # 체력 50% 이하 광폭화
+  - skill{s=오크_광폭화} @self ~onDamaged ?healthpercent{h=<50%} 1
+  - message{m="&4[크루가] &f크아아... 부족은... 영원하다..."} @PlayersInRadius{r=40} ~onDeath
+  Drops:
+  - 오크의송곳니 10to15 1
+  - 별의조각 5to8 1
+  - 대족장의도끼 1 0.35
+  - 수호자의투구 1 0.2
+  - exp 800
+  Options:
+    MovementSpeed: 0.3
+    PreventOtherDrops: true
+    KnockbackResistance: 0.9
+    AlwaysShowName: true
+    Despawn: false
+
+# ===== 드래곤 =====
+보스_적룡:
+  Type: PHANTOM
+  Display: '&c&l🐉 적룡 이그니스 🐉'
+  Health: 1500
+  Damage: 18
+  BossBar:
+    Enabled: true
+    Title: '&c적룡 이그니스'
+    Range: 80
+    Color: RED
+    Style: SEGMENTED_20
+  Skills:
+  - model{mid=dragon} @self ~onSpawn
+  - state{mid=dragon;s=attack} @self ~onAttack
+  - message{m="&c[이그니스] &f하찮은 것들... 모두 재가 되어라!"} @PlayersInRadius{r=60} ~onSpawn
+  - sound{s=entity.ender_dragon.growl;v=3} @self ~onSpawn
+  - shootfireball{y=2;v=3} @target ~onTimer:50
+  - skill{s=적룡_화염브레스} @target ~onTimer:160
+  - sound{s=entity.ender_dragon.growl;v=2} @self ~onTimer:200
+  - message{m="&c[이그니스] &f크르아아... 이 몸이... 인간에게..."} @PlayersInRadius{r=60} ~onDeath
+  - sound{s=entity.ender_dragon.death;v=2} @self ~onDeath
+  Drops:
+  - 용의비늘 3to5 1
+  - 별의조각 10to15 1
+  - 용암도끼 1 0.4
+  - 행운의부적 1 0.25
+  - exp 2000
+  Options:
+    MovementSpeed: 0.4
+    PreventOtherDrops: true
+    PreventSunburn: true
+    KnockbackResistance: 1
+    AlwaysShowName: true
+    Despawn: false
+    Size: 18

@@ -1,0 +1,152 @@
+# ─────────────────────────────────────────────
+#  모험가 잡화점 (Skript 상점) — /잡화점
+#  물약·주문서 등 RPG 소모품
+# ─────────────────────────────────────────────
+
+options:
+    p: &d[잡화점] &f
+    title: &f&d&l✦ 모험가 잡화점
+
+function shopItem(id: text) :: item:
+    if {_id} is "hp":
+        return potion named "&c&l체력 회복 물약" with lore "&7마시면 체력 &c+10" and "&8모험가 잡화점"
+    if {_id} is "hpbig":
+        return potion named "&4&l대형 체력 물약" with lore "&7마시면 체력 &c모두 회복" and "&8모험가 잡화점"
+    if {_id} is "speed":
+        return potion named "&b&l신속의 물약" with lore "&760초 동안 이동 속도 증가 II" and "&8모험가 잡화점"
+    if {_id} is "power":
+        return potion named "&6&l힘의 물약" with lore "&760초 동안 공격력 증가 I" and "&8모험가 잡화점"
+    if {_id} is "return":
+        return paper named "&e&l귀환 주문서" with lore "&7우클릭: 3초 뒤 마을(스폰)로 귀환", "&7(움직이면 취소)" and "&8모험가 잡화점"
+    if {_id} is "reset":
+        return knowledge book named "&d&l능력치 초기화 주문서" with lore "&7우클릭: 투자한 능력치 포인트를 모두 돌려받아요" and "&8모험가 잡화점"
+    if {_id} is "dgreset":
+        return clock named "&4&l던전 시계" with lore "&7우클릭: 던전 대기 시간 초기화" and "&8모험가 잡화점"
+    return air
+
+function shopPrice(id: text) :: number:
+    set {_pr::hp} to 3000
+    set {_pr::hpbig} to 12000
+    set {_pr::speed} to 5000
+    set {_pr::power} to 8000
+    set {_pr::return} to 2000
+    set {_pr::reset} to 100000
+    set {_pr::dgreset} to 50000
+    return {_pr::%{_id}%} ? 0
+
+function shopSlot(s: number) :: text:
+    set {_m::20} to "hp"
+    set {_m::21} to "hpbig"
+    set {_m::22} to "speed"
+    set {_m::23} to "power"
+    set {_m::24} to "return"
+    set {_m::30} to "reset"
+    set {_m::32} to "dgreset"
+    return {_m::%{_s}%} ? ""
+
+function openShop(p: player):
+    set {_gui} to chest inventory with 5 rows named "{@title}"
+    loop 45 times:
+        set {_s} to loop-value - 1
+        set {_r} to floor({_s} / 9)
+        set {_c} to mod({_s}, 9)
+        set {_b} to false
+        if {_r} is 0 or 4:
+            set {_b} to true
+        if {_c} is 0 or 8:
+            set {_b} to true
+        if {_b} is true:
+            set slot {_s} of {_gui} to air
+        else:
+            set slot {_s} of {_gui} to air
+    set slot 4 of {_gui} to emerald named "&a&l내 돈: &f%{_p}'s balance%원" with lore "&7좌클릭 1개 · Shift+좌클릭 5개"
+    loop 20, 21, 22, 23, 24, 30 and 32:
+        set {_id} to shopSlot(loop-value)
+        set {_it} to shopItem({_id})
+        set {_lore::*} to lore of {_it}
+        add "" and "&e가격: &6%shopPrice({_id})%원" and "&a▶ 클릭해서 구매" to {_lore::*}
+        set lore of {_it} to {_lore::*}
+        delete {_lore::*}
+        set slot loop-value of {_gui} to {_it}
+    set slot 40 of {_gui} to barrier named "&c닫기"
+    open {_gui} to {_p}
+
+command /잡화점:
+    aliases: /물약상점, /rpgshop
+    trigger:
+        openShop(player)
+
+on inventory click:
+    name of event-inventory is "{@title}"
+    cancel event
+    event-inventory is not player's inventory
+    set {_s} to index of event-slot
+    if {_s} = 40:
+        close player's inventory
+        stop
+    set {_id} to shopSlot({_s})
+    {_id} is not ""
+    set {_n} to 1
+    if click type is left mouse button with shift:
+        set {_n} to 5
+    set {_cost} to shopPrice({_id}) * {_n}
+    if player's balance < {_cost}:
+        send "{@p}&c돈이 모자라요. (%{_cost}%원 필요)"
+        play sound "block.note_block.bass" to player
+        stop
+    remove {_cost} from player's balance
+    give {_n} of shopItem({_id}) to player
+    send "{@p}&a구매 완료! &f%name of shopItem({_id})% x%{_n}% &7(-%{_cost}%원)"
+    play sound "entity.experience_orb.pickup" to player
+    openShop(player)
+
+on consume:
+    set {_name} to name of event-item
+    {_name} is set
+    if {_name} is "&c&l체력 회복 물약":
+        wait 1 tick
+        heal player by 5
+        play sound "entity.generic.drink" to player
+    else if {_name} is "&4&l대형 체력 물약":
+        wait 1 tick
+        heal player
+    else if {_name} is "&b&l신속의 물약":
+        wait 1 tick
+        apply speed 2 to player for 60 seconds
+    else if {_name} is "&6&l힘의 물약":
+        wait 1 tick
+        apply strength 1 to player for 60 seconds
+
+on right click:
+    set {_name} to name of player's tool
+    {_name} is set
+    if {_name} is "&e&l귀환 주문서":
+        cancel event
+        if {return::%uuid of player%} is true:
+            stop
+        set {return::%uuid of player%} to true
+        set {_l} to location of player
+        send title "&e귀환 중..." with subtitle "&73초 동안 움직이지 마세요" to player for 3 seconds
+        loop 3 times:
+            wait 1 second
+            if distance between player and {_l} > 1:
+                send "{@p}&c움직여서 귀환이 취소됐어요."
+                delete {return::%uuid of player%}
+                stop
+        remove 1 of player's tool from player's tool
+        teleport player to spawn of world "world"
+        play sound "entity.enderman.teleport" to player
+        delete {return::%uuid of player%}
+    else if {_name} is "&d&l능력치 초기화 주문서":
+        cancel event
+        remove 1 of player's tool from player's tool
+        loop "str", "dex", "int", "vit" and "luk":
+            delete {stat::%uuid of player%::%loop-value%}
+        send "{@p}&d능력치 포인트를 모두 돌려받았어요! &7(/능력치)"
+        play sound "block.enchantment_table.use" to player
+    else if {_name} is "&4&l던전 시계":
+        cancel event
+        remove 1 of player's tool from player's tool
+        delete {dg::cd::%uuid of player%}
+        send "{@p}&4던전 대기 시간이 초기화됐어요!"
+        play sound "block.bell.use" to player

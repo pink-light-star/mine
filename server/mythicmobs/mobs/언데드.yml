@@ -1,0 +1,205 @@
+# ===== 언데드 군단 (졸몹) =====
+# 밤에 곳곳에서 출몰 (randomspawns/언데드출몰.yml)
+# 드롭 재료(망자의 뼈·원혼의 정수)는 대장간 '망령의 낫' 재료
+
+해골_병사:
+  Type: SKELETON
+  Display: '&7해골 병사'
+  Health: 30
+  Damage: 6
+  Faction: 언데드
+  Equipment:
+  - IRON_SWORD HAND
+  - SHIELD OFFHAND
+  - CHAINMAIL_CHESTPLATE CHEST
+  - CHAINMAIL_HELMET HEAD
+  Skills:
+  - potion{type=RESISTANCE;duration=60;level=0} @self ~onDamaged 0.2
+  - sound{s=entity.skeleton.ambient;v=1;p=0.6} @self ~onTimer:120 0.5
+  Drops:
+  - 망자의뼈 1to2 0.5
+  - BONE 1to3 0.8
+  - exp 20
+  Options:
+    MovementSpeed: 0.26
+    PreventOtherDrops: true
+    PreventSunburn: true
+
+해골_궁수장:
+  Type: SKELETON
+  Display: '&f해골 궁수장'
+  Health: 28
+  Damage: 6
+  Faction: 언데드
+  Equipment:
+  - BOW HAND
+  - IRON_HELMET HEAD
+  Skills:
+  - arrowvolley{amount=5;spread=14;velocity=14} @target ~onTimer:100
+  - sound{s=entity.arrow.shoot;v=1;p=0.7} @self ~onTimer:100
+  Drops:
+  - 망자의뼈 1 0.4
+  - ARROW 4to10 0.9
+  - exp 22
+  Options:
+    MovementSpeed: 0.25
+    PreventOtherDrops: true
+    PreventSunburn: true
+
+썩은_망자:
+  Type: ZOMBIE
+  Display: '&2썩은 망자'
+  Health: 50
+  Damage: 6
+  Faction: 언데드
+  Equipment:
+  - LEATHER_CHESTPLATE{color=0x3D4A2F} CHEST
+  - LEATHER_LEGGINGS{color=0x2C2C24} LEGS
+  Skills:
+  - potion{type=HUNGER;duration=100;level=1} @target ~onAttack
+  - potion{type=POISON;duration=40;level=0} @target ~onAttack 0.25
+  - effect:particles{p=mycelium;amount=15;hS=0.4;vS=0.6} @self ~onTimer:40
+  Drops:
+  - 망자의뼈 1to2 0.4
+  - ROTTEN_FLESH 1to3 0.9
+  - exp 22
+  Options:
+    MovementSpeed: 0.21
+    KnockbackResistance: 0.5
+    PreventOtherDrops: true
+    PreventSunburn: true
+
+굶주린_구울:
+  Type: HUSK
+  Display: '&6굶주린 구울'
+  Health: 34
+  Damage: 7
+  Faction: 언데드
+  Skills:
+  - leap{velocity=120} @target ~onTimer:80 0.7
+  - heal{amount=3} @self ~onAttack
+  - sound{s=entity.husk.ambient;v=1;p=0.5} @self ~onTimer:80 0.5
+  Drops:
+  - 망자의뼈 1to2 0.5
+  - 별의조각 1 0.05
+  - exp 25
+  Options:
+    MovementSpeed: 0.32
+    PreventOtherDrops: true
+
+얼음_원혼:
+  Type: STRAY
+  Display: '&b얼어붙은 원혼'
+  Health: 26
+  Damage: 5
+  Faction: 언데드
+  Equipment:
+  - BOW HAND
+  Skills:
+  - potion{type=SLOWNESS;duration=60;level=1} @target ~onAttack
+  - effect:particles{p=snowflake;amount=20;hS=0.5;vS=0.8} @self ~onTimer:30
+  - projectile{onTick=원혼_서리틱;onHit=원혼_서리명중;v=10;i=1;hR=1;vR=1;md=20} @target ~onTimer:140 0.6
+  Drops:
+  - 원혼의정수 1 0.35
+  - exp 24
+  Options:
+    MovementSpeed: 0.24
+    PreventOtherDrops: true
+    PreventSunburn: true
+
+떠도는_원혼:
+  Type: VEX
+  Display: '&8떠도는 원혼'
+  Health: 16
+  Damage: 4
+  Faction: 언데드
+  Skills:
+  - potion{type=BLINDNESS;duration=40;level=0} @target ~onAttack 0.3
+  - effect:particles{p=soul;amount=6;hS=0.3;vS=0.3} @self ~onTimer:20
+  Drops:
+  - 원혼의정수 1 0.3
+  - exp 15
+  Options:
+    PreventOtherDrops: true
+
+해골_마법사:
+  Type: SKELETON
+  Display: '&5해골 마법사'
+  Health: 32
+  Damage: 4
+  Faction: 언데드
+  Equipment:
+  - BLAZE_ROD HAND
+  - LEATHER_HELMET{color=0x3A1F5C} HEAD
+  - LEATHER_CHESTPLATE{color=0x3A1F5C} CHEST
+  Skills:
+  - shootfireball{y=1;v=1.2;incendiary=false} @target ~onTimer:80
+  - lightning @target ~onTimer:200 0.25
+  - teleport{spreadh=6;spreadv=0} @self ~onDamaged 0.15
+  - effect:particles{p=witch;amount=15;hS=0.4;vS=0.8} @self ~onTimer:40
+  Drops:
+  - 원혼의정수 1to2 0.4
+  - 별의조각 1 0.08
+  - exp 35
+  Options:
+    MovementSpeed: 0.22
+    PreventOtherDrops: true
+    PreventSunburn: true
+
+고블린_도적:
+  Type: ZOMBIE
+  Display: '&a고블린 도적'
+  Health: 18
+  Damage: 3
+  Faction: 고블린
+  Options:
+    Baby: true
+    MovementSpeed: 0.36
+    PreventOtherDrops: true
+    PreventSunburn: true
+  Equipment:
+  - GOLDEN_SWORD HAND
+  - LEATHER_HELMET{color=0x4C7A2B} HEAD
+  Skills:
+  - command{c="eco take <target.name> 100";asop=false} @target ~onAttack 0.3
+  - message{m="&a[고블린] &f낄낄! 돈 좀 빌려간다~"} @target ~onAttack 0.3
+  - command{c="eco give <trigger.name> 300"} @trigger ~onDeath
+  - message{m="&a[고블린] &f내 돈... &e(+300원)"} @trigger ~onDeath
+  Drops:
+  - GOLD_NUGGET 2to6 0.9
+  - exp 18
+
+리치:
+  Type: WITHER_SKELETON
+  Display: '&5&l☠ 언데드 군주 리치'
+  Health: 220
+  Damage: 10
+  Faction: 언데드
+  BossBar:
+    Enabled: true
+    Title: '&5☠ 언데드 군주 리치'
+    Range: 30
+    Color: PURPLE
+    Style: SOLID
+  Equipment:
+  - NETHERITE_HOE HAND
+  - WITHER_SKELETON_SKULL HEAD
+  - LEATHER_CHESTPLATE{color=0x1E0F2E} CHEST
+  Skills:
+  - summon{type=해골_병사;amount=2;radius=4} @self ~onTimer:240
+  - message{m="&5[리치] &f일어나라, 나의 병사들이여!"} @PlayersInRadius{r=25} ~onTimer:240
+  - shootfireball{y=1;v=1.4;incendiary=false} @target ~onTimer:60
+  - potion{type=WITHER;duration=80;level=1} @PlayersInRadius{r=6} ~onTimer:160
+  - effect:particles{p=soul_fire_flame;amount=60;hS=3;vS=0.5} @self ~onTimer:160
+  - heal{amount=20} @self ~onTimer:200
+  - message{m="&5[리치] &f살아있는 자여... 너도 곧 내 것이 되리라."} @PlayersInRadius{r=25} ~onSpawn
+  Drops:
+  - 원혼의정수 3to5 1
+  - 망자의뼈 4to8 1
+  - 별의조각 2to4 0.8
+  - exp 300
+  Options:
+    MovementSpeed: 0.24
+    KnockbackResistance: 0.7
+    PreventOtherDrops: true
+    PreventSunburn: true

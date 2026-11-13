@@ -1,0 +1,138 @@
+# ===== 던전 전용 몹 (던전.sk 에서 소환) =====
+
+협곡_망자:
+  Type: HUSK
+  Display: '&6협곡의 망자'
+  Health: 34
+  Damage: 7
+  Skills:
+  - potion{type=HUNGER;duration=80;level=1} @target ~onAttack
+  Options:
+    MovementSpeed: 0.27
+    PreventOtherDrops: true
+  Drops:
+  - 망자의뼈 1 0.3
+  - exp 20
+
+협곡_궁수:
+  Type: SKELETON
+  Display: '&7해골 궁수'
+  Health: 28
+  Damage: 6
+  Equipment:
+  - BOW HAND
+  Options:
+    PreventOtherDrops: true
+    PreventSunburn: true
+  Drops:
+  - ARROW 2to6 0.8
+  - exp 18
+
+독거미:
+  Type: SPIDER
+  Display: '&2독거미'
+  Health: 30
+  Damage: 6
+  Skills:
+  - potion{type=POISON;duration=60;level=0} @target ~onAttack 0.5
+  Options:
+    PreventOtherDrops: true
+  Drops:
+  - STRING 1to3 0.9
+  - exp 18
+
+버섯_마녀:
+  Type: WITCH
+  Display: '&d버섯 마녀'
+  Health: 40
+  Skills:
+  - potion{type=SLOWNESS;duration=60;level=1} @PlayersInRadius{r=6} ~onTimer:120
+  - effect:particles{p=spore_blossom_air;amount=40;hS=3;vS=1} @self ~onTimer:120
+  Options:
+    PreventOtherDrops: true
+  Drops:
+  - 별의조각 1 0.1
+  - exp 25
+
+화염_해골기사:
+  Type: WITHER_SKELETON
+  Display: '&c불타는 해골 기사'
+  Health: 55
+  Damage: 10
+  Equipment:
+  - STONE_SWORD HAND
+  Skills:
+  - ignite{ticks=60} @target ~onAttack
+  Options:
+    PreventOtherDrops: true
+  Drops:
+  - 망자의뼈 1to2 0.5
+  - exp 35
+
+화염_정령:
+  Type: BLAZE
+  Display: '&6화염 정령'
+  Health: 40
+  Damage: 6
+  Options:
+    PreventOtherDrops: true
+  Drops:
+  - BLAZE_ROD 1 0.5
+  - exp 30
+
+용암_덩어리:
+  Type: MAGMA_CUBE
+  Display: '&c용암 덩어리'
+  Health: 30
+  Damage: 6
+  Options:
+    PreventOtherDrops: true
+    PreventSlimeSplit: true
+  Drops:
+  - MAGMA_CREAM 1 0.5
+  - exp 20
+
+고블린_창병:
+  Type: ZOMBIE
+  Display: '&a고블린 창병'
+  Health: 20
+  Damage: 4
+  Equipment:
+  - IRON_SHOVEL HAND
+  - LEATHER_HELMET{color=0x4C7A2B} HEAD
+  Skills:
+  Options:
+    Baby: true
+    MovementSpeed: 0.33
+    PreventOtherDrops: true
+    PreventSunburn: true
+  Drops:
+  - GOLD_NUGGET 1to4 0.9
+  - exp 12
+
+보스_고블린대장:
+  Type: VINDICATOR
+  Display: '&a&l고블린 대장 그롬'
+  Health: 260
+  Damage: 8
+  BossBar:
+    Enabled: true
+    Title: '&a고블린 대장 그롬'
+    Range: 30
+    Color: GREEN
+    Style: SOLID
+  Equipment:
+  - GOLDEN_AXE HAND
+  - GOLDEN_HELMET HEAD
+  Skills:
+  - summon{type=고블린_도적;amount=2;radius=3} @self ~onTimer:200
+  - message{m="&a[그롬] &f얘들아! 저놈 돈 다 털어!"} @PlayersInRadius{r=25} ~onTimer:200
+  - leap{velocity=120} @target ~onTimer:120 0.6
+  - throw{velocity=8;velocityY=4} @target ~onAttack 0.3
+  Drops:
+  - GOLD_INGOT 4to10 1
+  - 별의조각 1to3 0.8
+  - exp 200
+  Options:
+    MovementSpeed: 0.3
+    PreventOtherDrops: true

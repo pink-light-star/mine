@@ -1,0 +1,365 @@
+<meta charset="utf-8">
+<title>별빛 도감</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* 레이아웃: 위쪽 탭 → 왼쪽 카드 목록 + 오른쪽 고정 3D 뷰어 (좁은 화면에서는 뷰어가 위로) */
+:root {
+  --bg: #eceef6; --panel: #ffffff; --stage: #dfe2f0; --line: #d3d6e6;
+  --ink: #1a1d33; --muted: #5d6280; --gold: #9a6b12; --gold-soft: #f3e6c4;
+  --g-common: #6b7080; --g-rare: #2e8b3e; --g-unique: #12869a; --g-ancient: #b0357f;
+  --g-hero: #c0392b; --g-legend: #b57a00; --g-myth: #7b3fc4;
+  --display: "Gowun Batang", "Apple SD Gothic Neo", serif;
+  --body: "Noto Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e1122; --panel: #161a31; --stage: #1d2240; --line: #2a3054;
+  --ink: #e8e9f4; --muted: #9ba0c0; --gold: #e8bd62; --gold-soft: #3a3020;
+  --g-common: #b8bccb; --g-rare: #6fd37f; --g-unique: #5fd6e8; --g-ancient: #f07cc4;
+  --g-hero: #ff7a6b; --g-legend: #ffc94d; --g-myth: #b98bff; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0e1122; --panel: #161a31; --stage: #1d2240; --line: #2a3054;
+  --ink: #e8e9f4; --muted: #9ba0c0; --gold: #e8bd62; --gold-soft: #3a3020;
+  --g-common: #b8bccb; --g-rare: #6fd37f; --g-unique: #5fd6e8; --g-ancient: #f07cc4;
+  --g-hero: #ff7a6b; --g-legend: #ffc94d; --g-myth: #b98bff; color-scheme: dark; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--body); }
+.wrap { max-width: 1240px; margin: 0 auto; padding-block: 28px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; margin-bottom: 18px; }
+h1 { font: 700 34px/1.1 var(--display); margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+h1 span { color: var(--gold); }
+.sub { margin: 6px 0 0; color: var(--muted); font-size: 14px; max-width: 62ch; }
+.count { font: 500 12px var(--mono); color: var(--muted); }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
+.tab { appearance: none; border: 0; background: none; color: var(--muted); font: 500 15px var(--body); padding: 10px 14px 12px;
+  border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer; display: flex; gap: 8px; align-items: baseline; }
+.tab b { font: 500 11px var(--mono); color: var(--muted); }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--gold); }
+.tab:focus-visible, .card:focus-visible, .chip:focus-visible, .anim button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, 440px); gap: 22px; align-items: start; }
+@media (max-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr); } .viewer { order: -1; position: static !important; } }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.chip { appearance: none; border: 1px solid var(--line); background: var(--panel); color: var(--muted); font: 500 13px var(--body);
+  padding: 5px 12px; border-radius: 999px; cursor: pointer; }
+.chip[aria-pressed="true"] { border-color: var(--gold); color: var(--ink); background: var(--gold-soft); }
+.group-title { font: 700 16px var(--display); margin: 18px 0 10px; color: var(--ink); display: flex; gap: 10px; align-items: baseline; }
+.group-title small { font: 400 13px var(--body); color: var(--muted); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.card { appearance: none; text-align: left; border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 10px;
+  padding: 10px; cursor: pointer; display: grid; grid-template-rows: 110px auto; gap: 8px; font: inherit; min-width: 0; }
+.card:hover { border-color: var(--muted); }
+.card[aria-current="true"] { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold) inset; }
+.thumb { background: var(--stage); border-radius: 6px; display: grid; place-items: center; overflow: hidden; }
+.thumb img { max-width: 100%; max-height: 110px; object-fit: contain; }
+.thumb img.px { width: 56px; height: 56px; image-rendering: pixelated; }
+.thumb .ph { font: 700 30px var(--display); color: var(--muted); opacity: .6; }
+.card .nm { font-weight: 700; font-size: 14px; line-height: 1.3; overflow-wrap: anywhere; }
+.card .meta { font-size: 12px; color: var(--muted); display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.grade { font: 700 11px var(--body); letter-spacing: .04em; }
+.g-일반 { color: var(--g-common); } .g-레어 { color: var(--g-rare); } .g-유니크 { color: var(--g-unique); } .g-고대 { color: var(--g-ancient); }
+.g-영웅 { color: var(--g-hero); } .g-전설 { color: var(--g-legend); } .g-신화 { color: var(--g-myth); }
+.hiddenc .thumb { background: repeating-linear-gradient(45deg, var(--stage) 0 8px, var(--panel) 8px 16px); }
+.viewer { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.stage { position: relative; aspect-ratio: 4 / 3.4; max-width: 100%; background: radial-gradient(ellipse at 50% 35%, var(--panel), var(--stage) 75%); }
+.stage canvas { width: 100%; height: 100%; display: block; touch-action: none; }
+.stage .empty { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; color: var(--muted); padding: 24px; font-size: 14px; }
+.stage .hint { position: absolute; left: 12px; bottom: 10px; font: 500 11px var(--mono); color: var(--muted); }
+.info { padding: 16px 18px 18px; display: grid; gap: 12px; }
+.info h2 { font: 700 22px/1.25 var(--display); margin: 0; }
+.info .kind { font-size: 13px; color: var(--muted); }
+.stats { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0; font-size: 14px; }
+.stats dt { color: var(--muted); }
+.stats dd { margin: 0; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; min-width: 0; }
+.num { font-family: var(--mono); font-size: 13px; }
+.bonus { display: flex; flex-wrap: wrap; gap: 6px; }
+.bonus span { border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; font-size: 12px; }
+.desc { font-size: 14px; color: var(--ink); margin: 0; padding: 10px 12px; background: var(--stage); border-radius: 8px; }
+.anim { display: flex; flex-wrap: wrap; gap: 6px; }
+.anim button { appearance: none; border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 6px; padding: 4px 10px; font: 500 12px var(--body); cursor: pointer; }
+.anim button[aria-pressed="true"] { border-color: var(--gold); background: var(--gold-soft); }
+footer { margin-top: 32px; color: var(--muted); font-size: 12px; }
+.layout.solo { grid-template-columns: minmax(0, 1fr); }
+.layout.solo .viewer { display: none; }
+.cmds { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.cmdbox { border: 1px solid var(--line); background: var(--panel); border-radius: 10px; padding: 14px 16px; min-width: 0; }
+.cmdbox h3 { font: 700 16px var(--display); margin: 0 0 8px; }
+.cmdbox.admin h3 { color: var(--g-hero); }
+.cmdbox dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 0; font-size: 13px; }
+.cmdbox dt { font: 500 13px var(--mono); color: var(--gold); max-width: 11em; overflow-wrap: anywhere; }
+.cmdbox dd { margin: 0; color: var(--ink); min-width: 0; }
+.cmdnote { color: var(--muted); font-size: 13px; margin: 0 0 14px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>별빛 <span>도감</span></h1>
+      <p class="sub">별빛 서버의 보스·몬스터, 탈것, 펫, 대장간 장비. 카드를 누르면 3D 모델을 돌려 볼 수 있어요.</p>
+    </div>
+    <div class="count" id="count">불러오는 중…</div>
+  </header>
+  <nav class="tabs" role="tablist" id="tabs"></nav>
+  <div class="layout">
+    <main id="list" aria-live="polite"></main>
+    <aside class="viewer" aria-label="3D 미리보기">
+      <div class="stage"><canvas id="view"></canvas><div class="empty" id="empty">왼쪽에서 하나를 골라 주세요.</div><div class="hint" id="hint"></div></div>
+      <div class="info" id="info"></div>
+    </aside>
+  </div>
+  <footer>게임 안에서는 <b>/도감</b> 으로 같은 내용을 보고, 항목을 누르면 내 앞에 모델이 나타나요. 히든 장비는 퀘스트를 깨야 정체가 드러나요.</footer>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const won = n => n.toLocaleString("ko-KR") + "원";
+const ANIM_KO = { idle: "대기", walk: "걷기", fly: "비행", attack: "공격" };
+
+let DATA;
+try { DATA = await (await fetch("dex-data.json")).json(); }
+catch (e) { $("#count").textContent = "도감 데이터를 불러오지 못했어요. 새로고침해 주세요."; throw e; }
+
+// ------------------------------------------------------------ 3D 뷰어
+const canvas = $("#view");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 4000);
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true; controls.autoRotate = !matchMedia("(prefers-reduced-motion: reduce)").matches; controls.autoRotateSpeed = 1.6;
+canvas.addEventListener("pointerdown", () => { controls.autoRotate = false; });
+scene.add(new THREE.HemisphereLight(0xffffff, 0x6a6488, 1.7));
+const sun = new THREE.DirectionalLight(0xffffff, 1.3); sun.position.set(-40, 90, -60); scene.add(sun);
+const D2R = Math.PI / 180;
+const msin = d => Math.sin(d * D2R), mcos = d => Math.cos(d * D2R);
+let current = null, bones = {}, rest = {}, anim = null, t0 = 0;
+const texCache = {};
+
+function compile(expr) {
+  const js = String(expr).replace(/math\.sin\(/g, "msin(").replace(/math\.cos\(/g, "mcos(").replace(/math\.abs\(/g, "Math.abs(").replace(/q\.anim_time/g, "t");
+  try { return new Function("t", "msin", "mcos", "return (" + js + ");"); } catch { return () => 0; }
+}
+
+function build(key) {
+  if (current) { scene.remove(current); current = null; }
+  anim = null;
+  const m = key ? DATA.models[key] : null;
+  $("#empty").hidden = !!m;
+  const wrap = $("#anims");
+  if (!m) { $("#hint").textContent = ""; if (wrap) wrap.hidden = true; return; }
+  let tex = texCache[key];
+  if (!tex) {
+    tex = new THREE.TextureLoader().load(m.tex);
+    tex.magFilter = THREE.NearestFilter; tex.minFilter = THREE.NearestFilter; tex.colorSpace = THREE.SRGBColorSpace;
+    texCache[key] = tex;
+  }
+  const mat = new THREE.MeshLambertMaterial({ map: tex, alphaTest: 0.1, side: THREE.DoubleSide });
+  const R = m.res; bones = {}; rest = {};
+  const root = new THREE.Group();
+  function addEl(parent, po, e) {
+    const size = [0, 1, 2].map(i => Math.max(0.01, e[3 + i] - e[i]));
+    const geo = new THREE.BoxGeometry(...size), uv = geo.attributes.uv;
+    e[12].forEach((ui, fi) => {
+      const r = m.uv[ui], u1 = r[0] / R, u2 = r[2] / R, v1 = 1 - r[1] / R, v2 = 1 - r[3] / R, b = fi * 4;
+      uv.setXY(b, u1, v1); uv.setXY(b + 1, u2, v1); uv.setXY(b + 2, u1, v2); uv.setXY(b + 3, u2, v2);
+    });
+    const mesh = new THREE.Mesh(geo, mat), pivot = new THREE.Group();
+    pivot.position.set(e[6] - po[0], e[7] - po[1], e[8] - po[2]);
+    pivot.rotation.set(e[9] * D2R, e[10] * D2R, e[11] * D2R, "ZYX");
+    mesh.position.set((e[0] + e[3]) / 2 - e[6], (e[1] + e[4]) / 2 - e[7], (e[2] + e[5]) / 2 - e[8]);
+    pivot.add(mesh); parent.add(pivot);
+  }
+  function addNode(parent, po, n) {
+    if (n.n === "hitbox" || n.n.startsWith("b_")) return;
+    const g = new THREE.Group();
+    g.position.set(n.o[0] - po[0], n.o[1] - po[1], n.o[2] - po[2]);
+    g.rotation.set(n.r[0] * D2R, n.r[1] * D2R, n.r[2] * D2R, "ZYX");
+    bones[n.n] = g; rest[n.n] = g.rotation.clone();
+    parent.add(g);
+    for (const c of n.c) Array.isArray(c) ? addEl(g, n.o, c) : addNode(g, n.o, c);
+  }
+  for (const n of m.tree) addNode(root, [0, 0, 0], n);
+  root.rotation.y = m.item ? Math.PI * 0.75 : Math.PI;
+  scene.add(root); current = root;
+  const box = new THREE.Box3().setFromObject(root), sz = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
+  const r = Math.max(sz.x, sz.y, sz.z);
+  controls.target.copy(c);
+  camera.position.set(c.x + r * 0.9, c.y + r * 0.45, c.z + r * 1.45);
+  camera.near = r / 200; camera.far = r * 30; camera.updateProjectionMatrix();
+  camera.lookAt(c); controls.update(); renderer.render(scene, camera);
+  $("#hint").textContent = m.item ? `입체 블록 ${m.cubes}개` : `큐브 ${m.cubes}개 · 키 약 ${(sz.y / 16).toFixed(1)}블록`;
+  const names = Object.keys(m.anims);
+  if (wrap) {
+    wrap.replaceChildren(...names.map(a => {
+      const b = document.createElement("button"); b.type = "button"; b.textContent = ANIM_KO[a] || a; b.dataset.a = a;
+      b.onclick = () => setAnim(m, a); return b;
+    }));
+    wrap.hidden = names.length === 0;
+  }
+  if (names.length) setAnim(m, names.includes("idle") ? "idle" : names[0]);
+}
+function setAnim(m, name) {
+  const a = m.anims[name];
+  anim = { len: a.len, loop: a.loop, tr: Object.entries(a.tr).map(([b, xyz]) => ({ b, f: xyz.map(compile) })) };
+  t0 = performance.now();
+  document.querySelectorAll("#anims button").forEach(b => b.setAttribute("aria-pressed", b.dataset.a === name));
+}
+function tick() {
+  requestAnimationFrame(tick);
+  const w = canvas.clientWidth, h = canvas.clientHeight, pr = renderer.getPixelRatio();
+  if (w && (canvas.width !== Math.floor(w * pr) || canvas.height !== Math.floor(h * pr))) {
+    renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  if (anim) {
+    let t = (performance.now() - t0) / 1000;
+    if (anim.loop === "once") { t %= anim.len + 0.8; if (t > anim.len) t = 0; }
+    for (const k in bones) bones[k].rotation.copy(rest[k]);
+    for (const tr of anim.tr) {
+      const b = bones[tr.b]; if (!b) continue;
+      b.rotation.x += -tr.f[0](t, msin, mcos) * D2R;
+      b.rotation.y += -tr.f[1](t, msin, mcos) * D2R;
+      b.rotation.z += tr.f[2](t, msin, mcos) * D2R;
+    }
+  }
+  controls.update(); renderer.render(scene, camera);
+}
+tick();
+
+// ------------------------------------------------------------ 목록과 정보
+const bonusHtml = b => b?.length ? `<div class="bonus">${b.map(([s, v]) => `<span>${esc(s)} +${v}</span>`).join("")}</div>` : "";
+const reqText = r => r ? `${esc(r[0])} ${r[1]}` : "없음";
+const TIER = ["", "견습 모험가", "철기병", "미스릴", "아다만", "흑요", "별빛"];
+const CMDS = [
+  { g: "기본", list: [["/메뉴", "메인 메뉴 (Shift+F 로도 열림)"], ["/명령어", "명령어 목록"], ["/내정보", "레벨·직업·돈·칭호"], ["/도감", "탈것·펫·보스 도감, 누르면 3D 모델"]] },
+  { g: "이동", list: [["/스폰", "마을로"], ["/집 · /집설정 · /집삭제", "집 이동·저장·삭제"], ["/돌아가기", "직전 위치(죽은 곳)로"], ["/워프", "워프 목록·이동"], ["/텔포 · /텔포부르기", "다른 사람에게 이동 요청·불러오기"], ["/수락 · /거절", "텔포 요청 답하기"]] },
+  { g: "성장", list: [["/전직", "전투 직업 고르기·전직"], ["/스킬", "내 스킬·사용 키·MP·쿨타임"], ["/능력치", "힘·민첩·지능·체력·행운 올리기"], ["/칭호", "칭호 보기·바꾸기"], ["/이름꾸미기", "이름 색·머리 위 장식"]] },
+  { g: "퀘스트", list: [["/퀘스트", "진행 중·완료한 퀘스트"], ["/월드퀘스트", "서버 전체 공동 퀘스트"], ["/일일의뢰", "매일 바뀌는 의뢰 3개"]] },
+  { g: "전투·장비", list: [["/던전", "던전 입장 (파티 가능)"], ["/던전 나가기", "던전에서 나오기"], ["/대장간", "몹·보스 재료로 장비 제작"], ["/장비", "장비 등급 안내"], ["/잡화점", "물약·귀환 주문서·능력치 초기화"]] },
+  { g: "도감", list: [["/도감", "탈것·펫·보스·몬스터"], ["/장비도감", "대장간 무기·방어구 (입체 모델)"], ["/물고기도감", "잡은 물고기"], ["/탈것도감", "탈것 목록 (채팅)"]] },
+  { g: "펫·탈것", list: [["/뽑기", "펫 뽑기 (1회 30,000원)"], ["/뽑기 확률", "등급별 확률"], ["/펫목록", "내 펫"], ["/그물상점", "그물총·그물·빗자루"]] },
+  { g: "돈", list: [["/돈", "내 돈"], ["/송금", "다른 사람에게 보내기"], ["/돈순위", "부자 순위"], ["/상점", "블록·광물·음식·인첸트"], ["/판매 · /판매창", "손에 든 것·넣은 것 팔기"], ["/키트", "기본 키트 받기"]] },
+  { g: "생활", list: [["/생활직업 · /직업가입", "생활 직업 보기·가입 (탈퇴 불가)"], ["/직업스탯", "직업 레벨"], ["/생활스킬 · /스탯", "채굴·농사 등 스킬과 스탯"], ["/마나", "마나 보기"]] },
+  { g: "낚시", list: [["/낚시", "낚시 메뉴"], ["/물고기판매", "물고기 팔기"], ["/낚시순위", "낚시 대회 순위"]] },
+  { g: "대화", list: [["/귓 · /답장", "귓속말"], ["/메일", "편지"], ["/접속자", "접속자 목록"], ["/잠수", "자리 비움"], ["/음성채팅", "음성 채팅 설정"]] },
+  { g: "관리 (OP)", admin: true, list: [["/관리 지급", "그물총·뽑기권·탈것·펫·장비 지급"], ["/레벨관리", "레벨·직업 설정"], ["/능력치관리", "능력치 설정"], ["/대장간관리 지급", "대장간 장비 지급"], ["/던전관리", "던전 설정"], ["/보물상자관리", "랜덤박스 설정"], ["/퀘스트npc", "퀘스트 NPC 배치"], ["/몹소환 · /모델리로드", "커스텀 몹·모델"], ["/팩업로드", "리소스팩 다시 올리기"], ["/크리 · /서바 · /낮 · /밤", "게임 모드·시간"]] },
+];
+const TABS = [
+  { id: "mobs", label: "보스·몬스터", items: () => DATA.mobs },
+  { id: "mounts", label: "탈것", items: () => DATA.mounts },
+  { id: "pets", label: "펫", items: () => DATA.pets },
+  { id: "gear", label: "장비", items: () => DATA.gear },
+  { id: "cmds", label: "명령어", items: () => CMDS.flatMap(g => g.list) },
+];
+let tab = "mobs", gearFilter = "special", selected = null;
+try { const s = localStorage.getItem("dex-tab"); if (TABS.some(t => t.id === s)) tab = s; } catch {}
+if (TABS.some(t => t.id === location.hash.slice(1))) tab = location.hash.slice(1);
+
+function card(it, sub, thumb, cls = "") {
+  const img = thumb ? `<img src="${esc(thumb)}" alt="" loading="lazy" class="${thumb.includes("/i_") ? "px" : ""}">` : `<span class="ph">${esc((it.name || "?")[0])}</span>`;
+  return `<button type="button" class="card ${cls}" data-id="${esc(it.id)}" aria-current="${selected === it}"><div class="thumb">${img}</div><div><div class="nm">${esc(it.name)}</div><div class="meta">${sub}</div></div></button>`;
+}
+function renderTabs() {
+  $("#tabs").innerHTML = TABS.map(t => `<button type="button" class="tab" role="tab" aria-selected="${t.id === tab}" data-t="${t.id}">${t.label}<b>${t.items().length}</b></button>`).join("");
+  document.querySelectorAll(".tab").forEach(b => b.onclick = () => {
+    tab = b.dataset.t;
+    try { localStorage.setItem("dex-tab", tab); } catch {}
+    history.replaceState(null, "", "#" + tab);
+    renderTabs(); renderList(true);
+  });
+}
+function renderList(pickFirst) {
+  const L = $("#list");
+  let html = "", items = [];
+  document.querySelector(".layout").classList.toggle("solo", tab === "cmds");
+  $("#count").textContent = `보스·몬스터 ${DATA.mobs.length} · 탈것 ${DATA.mounts.length} · 펫 ${DATA.pets.length} · 장비 ${DATA.gear.length}`;
+  if (tab === "cmds") {
+    L.innerHTML = `<p class="cmdnote">한국어 명령어 모음이에요. 게임 안에서 <b>/명령어</b> 로도 볼 수 있어요.</p><div class="cmds">${CMDS.map(c =>
+      `<section class="cmdbox${c.admin ? " admin" : ""}"><h3>${esc(c.g)}</h3><dl>${c.list.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl></section>`).join("")}</div>`;
+    return;
+  }
+  if (tab === "mobs") {
+    const groups = [["보스", d => /보스/.test(d.kind)], ["정예", d => d.kind === "정예"], ["몬스터", d => d.kind === "몬스터"]];
+    for (const [g, f] of groups) {
+      const xs = DATA.mobs.filter(f); if (!xs.length) continue; items.push(...xs);
+      html += `<div class="group-title">${g}<small>${xs.length}</small></div><div class="grid">${xs.map(m => card(m, `<span>${esc(m.kind)}</span><span class="num">HP ${m.hp.toLocaleString()}</span>`, m.thumb)).join("")}</div>`;
+    }
+  } else if (tab === "mounts") {
+    const withModel = DATA.mounts.filter(m => m.model), plain = DATA.mounts.filter(m => !m.model);
+    items.push(...withModel, ...plain);
+    html += `<div class="group-title">전용 모델 탈것<small>${withModel.length}</small></div><div class="grid">${withModel.map(m => card(m, `<span class="grade g-${m.grade}">${m.grade}</span>${m.fly ? "<span>비행</span>" : ""}`, m.thumb)).join("")}</div>`;
+    html += `<div class="group-title">그물로 잡는 동물<small>바닐라 모습 · ${plain.length}</small></div><div class="grid">${plain.map(m => card(m, `<span class="grade g-${m.grade}">${m.grade}</span><span class="num">${m.speed}칸/초</span>`, null)).join("")}</div>`;
+  } else if (tab === "pets") {
+    items = DATA.pets;
+    html += `<div class="group-title">아군 펫<small>/뽑기 로 얻어요</small></div><div class="grid">${items.map(p => card(p, `<span>${esc(p.weapon.split(" ")[0])}</span>${p.combat ? "<span>변신</span>" : ""}`, p.thumb)).join("")}</div>`;
+  } else {
+    const F = [["special", "특수 무기"], ["armor", "방어구 세트"], ["tier", "기본 장비"]];
+    html += `<div class="filters">${F.map(([k, l]) => `<button type="button" class="chip" aria-pressed="${gearFilter === k}" data-f="${k}">${l}</button>`).join("")}</div>`;
+    const xs = DATA.gear.filter(g => g.cat === gearFilter);
+    const bucket = gearFilter === "special" ? [...new Set(xs.map(g => g.kind))].map(k => [k, xs.filter(g => g.kind === k)])
+      : gearFilter === "armor" ? [...new Set(xs.map(g => g.set))].map(k => [k + " 세트", xs.filter(g => g.set === k)])
+      : [1, 2, 3, 4, 5, 6].map(t => [`${t}단계 · ${TIER[t]}`, xs.filter(g => g.tier === t)]);
+    for (const [g, ys] of bucket) {
+      if (!ys.length) continue; items.push(...ys);
+      html += `<div class="group-title">${esc(g)}<small>${ys.length}</small></div><div class="grid">${ys.map(it => card(it, it.hidden ? "<span>히든</span>" : `<span class="num">Lv.${it.lv}</span><span>${esc(it.kind)}</span>`, it.thumb, it.hidden ? "hiddenc" : "")).join("")}</div>`;
+    }
+  }
+  L.innerHTML = html;
+  L.querySelectorAll(".chip").forEach(b => b.onclick = () => { gearFilter = b.dataset.f; renderList(true); });
+  const byId = Object.fromEntries(items.map(i => [i.id, i]));
+  L.querySelectorAll(".card").forEach(b => b.onclick = () => select(byId[b.dataset.id]));
+  $("#count").textContent = `보스·몬스터 ${DATA.mobs.length} · 탈것 ${DATA.mounts.length} · 펫 ${DATA.pets.length} · 장비 ${DATA.gear.length}`;
+  if (pickFirst || !items.includes(selected)) select(items[0]);
+}
+function select(it) {
+  selected = it;
+  document.querySelectorAll(".card").forEach(c => c.setAttribute("aria-current", c.dataset.id === it?.id));
+  if (!it) return;
+  let kind = "", rows = [], extra = "";
+  if (tab === "mobs") {
+    kind = esc(it.kind);
+    rows = [["체력", `<span class="num">${it.hp.toLocaleString()}</span>`], ["공격력", it.dmg ? `<span class="num">${it.dmg}</span>` : "없음 (지원형)"], ["특징", esc(it.note)]];
+  } else if (tab === "mounts") {
+    kind = `<span class="grade g-${it.grade}">${it.grade}</span> 탈것${it.fly ? " · 비행" : ""}`;
+    rows = [["속도", `<span class="num">${it.speed}</span> 칸/초`]];
+    if (!it.fly && it.jump) rows.push(["점프", `<span class="num">${it.jump}</span>`]);
+    rows.push(["얻는 법", esc(it.how)]);
+    if (it.note) rows.push(["특징", esc(it.note)]);
+  } else if (tab === "pets") {
+    kind = "아군 펫";
+    rows = [["무기", esc(it.weapon)], ["한 발 피해", `<span class="num">${it.dmg}</span>${it.shots > 1 ? ` × ${it.shots}발` : ""}`]];
+    if (it.range) rows.push(["사거리", `<span class="num">${it.range}</span> 칸`]);
+    if (it.combat) rows.push(["전투 변신", esc(it.combat)]);
+    rows.push(["얻는 법", "/뽑기 (펫 뽑기)"]);
+    if (it.combatModel) extra = `<div class="filters"><button type="button" class="chip" id="pv-n" aria-pressed="true">평소 모습</button><button type="button" class="chip" id="pv-c" aria-pressed="false">전투 모습</button></div>`;
+  } else if (it.hidden) {
+    kind = "히든 장비";
+    rows = [["단서", esc(it.hidden)], ["얻는 법", "히든 퀘스트 보상"]];
+  } else {
+    kind = it.cat === "armor" ? `${esc(it.set)} 세트 · ${esc(it.kind)}` : it.cat === "tier" ? `${it.tier}단계 기본 장비 · ${esc(it.kind)}` : `특수 무기 · ${esc(it.kind)}`;
+    rows = [["요구 레벨", `<span class="num">Lv.${it.lv}</span>`], ["요구 능력치", reqText(it.req)], ["제작 비용", `<span class="num">${won(it.price)}</span>`], ["얻는 법", "/대장간 에서 제작"]];
+  }
+  const desc = tab === "gear" && !it.hidden ? `<p class="desc">${esc(it.desc)}</p>${bonusHtml(it.bonus)}` : "";
+  $("#info").innerHTML = `<div><h2>${esc(it.name)}</h2><div class="kind">${kind}</div></div>${extra}<dl class="stats">${rows.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join("")}</dl>${desc}<div class="anim" id="anims"></div>`;
+  const modelKey = it.hidden ? null : it.model;
+  build(modelKey);
+  if (!modelKey) $("#empty").textContent = tab === "mounts" ? "바닐라 모습 그대로 타는 동물이에요." : it.hidden ? "히든 퀘스트를 깨면 모습이 드러나요." : "입체 모델이 없는 장비예요.";
+  if (it.combatModel) {
+    $("#pv-n").onclick = () => { build(it.model); $("#pv-n").setAttribute("aria-pressed", true); $("#pv-c").setAttribute("aria-pressed", false); };
+    $("#pv-c").onclick = () => { build(it.combatModel); $("#pv-c").setAttribute("aria-pressed", true); $("#pv-n").setAttribute("aria-pressed", false); };
+  }
+}
+renderTabs(); renderList(true);
+</script>

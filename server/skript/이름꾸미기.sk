@@ -1,0 +1,157 @@
+# ─────────────────────────────────────────────
+#  이름 꾸미기 — /이름꾸미기
+#  이름 색 + 이름 앞 장식. 머리 위 이름표·탭 목록·채팅에 모두 적용
+#  (LuckPerms 접두사로 저장 → TAB이 표시)
+# ─────────────────────────────────────────────
+
+options:
+    p: &b[이름 장인] &f
+    title: &f&b&l✎ 이름 꾸미기
+
+function nmColorCode(i: number) :: text:
+    set {_c::*} to "&f", "&7", "&e", "&6", "&c", "&d", "&5", "&9", "&b", "&3", "&a" and "&2"
+    return {_c::%{_i}%}
+
+function nmColorName(i: number) :: text:
+    set {_c::*} to "하양", "회색", "노랑", "주황", "빨강", "분홍", "보라", "파랑", "하늘", "청록", "연두" and "초록"
+    return {_c::%{_i}%}
+
+function nmColorItem(i: number) :: item:
+    set {_m::*} to white wool, light gray wool, yellow wool, orange wool, red wool, pink wool, purple wool, blue wool, light blue wool, cyan wool, lime wool and green wool
+    return {_m::%{_i}%}
+
+# 장식: 기호, 색, 가격(한 번 사면 계속 사용)
+function nmSym(i: number) :: text:
+    set {_s::*} to "없음", "★", "❤", "✿", "♪", "⚔", "☾", "✦", "♛" and "☠"
+    return {_s::%{_i}%}
+
+function nmSymColor(i: number) :: text:
+    set {_s::*} to "", "&e", "&c", "&d", "&b", "&7", "&9", "&6", "&6&l" and "&4&l"
+    return {_s::%{_i}%}
+
+function nmSymPrice(i: number) :: number:
+    set {_s::*} to 0, 0, 0, 0, 0, 20000, 20000, 50000, 200000 and 200000
+    return {_s::%{_i}%}
+
+function nmApply(p: player):
+    set {_u} to uuid of {_p}
+    set {_col} to {name::color::%{_u}%} ? "&f"
+    set {_si} to {name::sym::%{_u}%} ? 1
+    set {_pre} to ""
+    if {_si} > 1:
+        set {_pre} to "%nmSymColor({_si})%%nmSym({_si})% "
+    set {_full} to "%{_pre}%&r%{_col}%"
+    set {name::prefix::%{_u}%} to {_full}
+    execute console command "lp user %{_p}% meta setprefix 100 ""%{_full}%"""
+    set display name of {_p} to colored "%{_full}%%name of {_p}%&r"
+
+function nmMenu(p: player):
+    set {_u} to uuid of {_p}
+    set {_gui} to chest inventory with 6 rows named "{@title}"
+    loop 54 times:
+        set {_s} to loop-value - 1
+        set {_r} to floor({_s} / 9)
+        set {_c} to mod({_s}, 9)
+        set {_b} to false
+        if {_r} is 0 or 5:
+            set {_b} to true
+        if {_c} is 0 or 8:
+            set {_b} to true
+        if {_b} is true:
+            set slot {_s} of {_gui} to air
+        else:
+            set slot {_s} of {_gui} to air
+    set {_pp} to {name::prefix::%{_u}%} ? "&f"
+    set {_prev} to "%{_pp}%%{_p}%"
+    set slot 4 of {_gui} to name tag named "&f미리보기: %{_prev}%" with lore "&7머리 위 이름표·탭 목록·채팅에 보여요."
+    set slot 10 of {_gui} to paper named "&f&l이름 색 &7(무료)"
+    loop 12 times:
+        set {_slot} to 10 + loop-value if loop-value <= 6, otherwise 13 + loop-value
+        set {_it} to nmColorItem(loop-value) named "%nmColorCode(loop-value)%&l%nmColorName(loop-value)% &f%{_p}%"
+        set lore of {_it} to "&a▶ 클릭해서 적용"
+        set slot {_slot} of {_gui} to {_it}
+    set slot 28 of {_gui} to paper named "&f&l이름 앞 장식"
+    loop 10 times:
+        set {_i} to loop-value
+        set {_slot} to 28 + {_i} if {_i} <= 6, otherwise 31 + {_i}
+        set {_own} to true if nmSymPrice({_i}) = 0, otherwise ({name::own::%{_u}%::%{_i}%} ? false)
+        set {_price} to "&6%nmSymPrice({_i})%원"
+        if {_own} is true:
+            set {_price} to "&a보유 중"
+        if nmSymPrice({_i}) = 0:
+            set {_price} to "&a무료"
+        set {_it} to nether star named "%nmSymColor({_i})%%nmSym({_i})% &f장식" if {_i} > 1, otherwise barrier named "&f장식 없음"
+        set lore of {_it} to "&7가격: %{_price}%" and "&a▶ 클릭해서 적용"
+        set slot {_slot} of {_gui} to {_it}
+    set slot 49 of {_gui} to barrier named "&c닫기"
+    open {_gui} to {_p}
+
+command /이름꾸미기:
+    aliases: /이름, /닉네임꾸미기
+    trigger:
+        nmMenu(player)
+
+on inventory click:
+    name of event-inventory is "{@title}"
+    cancel event
+    event-inventory is not player's inventory
+    set {_s} to index of event-slot
+    set {_u} to uuid of player
+    if {_s} = 49:
+        close player's inventory
+        stop
+    # 색: 11~16, 20~25
+    set {_ci} to 0
+    if {_s} >= 11:
+        if {_s} <= 16:
+            set {_ci} to {_s} - 10
+    if {_s} >= 20:
+        if {_s} <= 25:
+            set {_ci} to {_s} - 13
+    if {_ci} > 0:
+        set {name::color::%{_u}%} to nmColorCode({_ci})
+        nmApply(player)
+        play sound "entity.villager.yes" to player
+        nmMenu(player)
+        stop
+    # 장식: 29~34, 38~41
+    set {_si} to 0
+    if {_s} >= 29:
+        if {_s} <= 34:
+            set {_si} to {_s} - 28
+    if {_s} >= 38:
+        if {_s} <= 41:
+            set {_si} to {_s} - 31
+    {_si} > 0
+    set {_price} to nmSymPrice({_si})
+    if {_price} > 0:
+        if {name::own::%{_u}%::%{_si}%} is not true:
+            if player's balance < {_price}:
+                send "{@p}&c돈이 모자라요. (%{_price}%원)"
+                play sound "block.note_block.bass" to player
+                stop
+            remove {_price} from player's balance
+            set {name::own::%{_u}%::%{_si}%} to true
+            send "{@p}&a장식 구매! &f%nmSym({_si})% &7(-%{_price}%원)"
+    set {name::sym::%{_u}%} to {_si}
+    nmApply(player)
+    play sound "entity.villager.yes" to player
+    nmMenu(player)
+
+on join:
+    wait 2 seconds
+    {name::prefix::%uuid of player%} is set
+    set display name of player to colored "%{name::prefix::%uuid of player%}%%name of player%&r"
+
+# 채팅: [Lv.10 전사] 칭호 ★이름: 메시지
+on chat:
+    set {_lv} to metadata value "rpg_level" of player
+    set {_cls} to metadata value "rpg_class_colored" of player
+    set {_t} to metadata value "rpg_title" of player
+    set {_pre} to {name::prefix::%uuid of player%} ? "&f"
+    set {_lv2} to {_lv} ? 1
+    set {_cls2} to {_cls} ? "&f초보자"
+    set {_head} to "&7[Lv.%{_lv2}% %{_cls2}%&7] "
+    if "%{_t}%" is not "" and "<none>":
+        set {_head} to "%{_head}%%{_t}% "
+    set chat format to colored "%{_head}%%{_pre}%%name of player%&7: &f[message]"

@@ -1,0 +1,81 @@
+# ─────────────────────────────────────────────
+#  50층 탑 파쿠르 (월드: parkour)
+#  숨겨진 NPC '수상한 등반가'에게 말을 걸면 이동 (/파쿠르 는 관리자만)
+#  꼭대기 금 압력판(19, 317, -23) 도착 → 기록 + 첫 클리어 시 히든 퀘스트 '하늘에 닿은 자'
+# ─────────────────────────────────────────────
+
+options:
+    p: &b[50층 탑] &f
+
+function pkStart() :: location:
+    return location(12.5, -59, -22.5, world("parkour"), 0, 0)
+
+function pkEnter(p: player):
+    if "%world of {_p}%" is not "parkour":
+        set {pk::back::%uuid of {_p}%} to location of {_p}
+    teleport {_p} to pkStart()
+    set {-pk::start::%uuid of {_p}%} to now
+    send title colored "&b&l50층 탑" with subtitle colored "&f꼭대기의 금 압력판을 밟으세요!" to {_p} for 3 seconds
+    send colored "{@p}떨어져도 다치지 않아요. 나가기: &e/파쿠르 나가기" to {_p}
+
+command /파쿠르 [<text>]:
+    trigger:
+        if arg-1 is "나가기":
+            "%world of player%" is "parkour"
+            teleport player to ({pk::back::%uuid of player%} ? spawn of world "world")
+            send colored "{@p}탑에서 나왔어요."
+            stop
+        if arg-1 is "처음":
+            "%world of player%" is "parkour"
+            pkEnter(player)
+            stop
+        # 숨겨진 NPC가 대신 실행해 줌 (performCommand) — 직접 입력은 이미 탑 안이거나 OP일 때만
+        if "%world of player%" is "parkour":
+            pkEnter(player)
+            stop
+        if {-pk::npc::%uuid of player%} is set:
+            delete {-pk::npc::%uuid of player%}
+            pkEnter(player)
+            stop
+        if player is op:
+            pkEnter(player)
+            stop
+        send colored "{@p}&7...이 탑으로 가는 길은 누군가 숨겨 두었다고 한다."
+
+# NPC 우클릭 직전에 표시 (StarRPG가 cmd:파쿠르 로 명령 실행)
+on right click on villager:
+    uncolored name of event-entity contains "수상한 등반가"
+    set {-pk::npc::%uuid of player%} to true
+    send colored "&8[수상한 등반가] &7...여기까지 찾아오다니. 저 탑 꼭대기에 닿을 수 있겠나?" to player
+
+on step on light weighted pressure plate:
+    "%world of player%" is "parkour"
+    {-pk::done::%uuid of player%} is not set
+    set {-pk::done::%uuid of player%} to true
+    set {_t} to difference between ({-pk::start::%uuid of player%} ? now) and now
+    send title colored "&6&l✦ 50층 탑 정복! ✦" with subtitle colored "&f기록: %{_t}%" to player for 5 seconds
+    play sound "ui.toast.challenge_complete" to player
+    broadcast colored "{@p}&e%player%&f님이 50층 탑을 정복했습니다! &7(%{_t}%)"
+    if {pk::clears::%uuid of player%} is not set:
+        execute console command "questnpc 완료 %player% hq2"
+    else:
+        add 5000 to player's balance
+        send colored "{@p}재도전 보상 &65,000원" to player
+    add 1 to {pk::clears::%uuid of player%}
+    wait 5 seconds
+    teleport player to ({pk::back::%uuid of player%} ? spawn of world "world")
+    delete {-pk::done::%uuid of player%}
+
+on break:
+    "%world of player%" is "parkour"
+    player's gamemode is not creative
+    cancel event
+
+on place:
+    "%world of player%" is "parkour"
+    player's gamemode is not creative
+    cancel event
+
+on join:
+    "%world of player%" is "parkour"
+    set {-pk::start::%uuid of player%} to now

@@ -1,0 +1,51 @@
+# ─────────────────────────────────────────────
+#  금지 아이템: 레드스톤·공장(자동화) 아이템
+#  설치·제작·사용·디스펜서 발사 막기. OP가 크리에이티브일 때만 예외.
+#  (레버·버튼·압력판·문은 그대로 사용 가능)
+# ─────────────────────────────────────────────
+
+options:
+    p: &c[금지] &f
+
+function banned(t: itemtype) :: boolean:
+    set {_b::*} to redstone, redstone torch, redstone block, repeater, comparator, observer, piston, sticky piston, hopper, dropper, dispenser, crafter, daylight detector, target block, redstone lamp, tripwire hook, powered rail, detector rail, activator rail, hopper minecart, chest minecart, furnace minecart, tnt minecart, sculk sensor and calibrated sculk sensor
+    loop {_b::*}:
+        if {_t} is loop-value:
+            return true
+    return false
+
+function bypass(p: player) :: boolean:
+    if {_p} is op:
+        if {_p}'s gamemode is creative:
+            return true
+    return false
+
+on place:
+    banned(type of event-block) is true
+    bypass(player) is false
+    cancel event
+    send action bar colored "&c이 서버에서는 레드스톤·공장 아이템을 쓸 수 없어요." to player
+    play sound "block.note_block.bass" to player
+
+# 레드스톤 가루는 설치하면 '레드스톤 와이어' 블록이 돼서 따로 막음
+on right click:
+    player's tool is redstone or hopper minecart or chest minecart or furnace minecart or tnt minecart
+    bypass(player) is false
+    cancel event
+    send action bar colored "&c이 서버에서는 레드스톤·공장 아이템을 쓸 수 없어요." to player
+
+on place of redstone wire:
+    bypass(player) is false
+    cancel event
+
+on craft:
+    banned(type of event-item) is true
+    bypass(player) is false
+    cancel event
+    send colored "{@p}&c%type of event-item%&f은(는) 금지 아이템이라 만들 수 없어요." to player
+
+# 이미 놓여 있던 디스펜서·드로퍼·호퍼·크래프터는 열 수 없게
+on right click on hopper or dropper or dispenser or crafter:
+    bypass(player) is false
+    cancel event
+    send action bar colored "&c금지된 공장 블록이에요. (부수면 회수돼요)" to player

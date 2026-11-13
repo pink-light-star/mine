@@ -1,0 +1,111 @@
+오크_지면강타:
+  Skills:
+  - message{m="&4[크루가] &f부서져라!!"} @PlayersInRadius{r=40}
+  - effect:particles{p=explosion;amount=10;hS=3;vS=0.5} @self
+  - sound{s=entity.generic.explode;v=2} @self
+  - damage{a=10} @PlayersInRadius{r=6}
+  - throw{velocity=8;velocityY=6} @PlayersInRadius{r=6}
+
+오크_광폭화:
+  Skills:
+  - message{m="&4[크루가] &c&l크아아아! 분노가 끓어오른다!"} @PlayersInRadius{r=40}
+  - potion{type=SPEED;duration=999999;level=1} @self
+  - potion{type=STRENGTH;duration=999999;level=1} @self
+  - effect:particles{p=angry_villager;amount=30;hS=1;vS=1} @self
+
+적룡_화염브레스:
+  Skills:
+  - message{m="&c[이그니스] &6&l화염의 숨결!"} @PlayersInRadius{r=60}
+  - effect:particles{p=flame;amount=200;hS=3;vS=2;speed=0.1} @target
+  - ignite{ticks=100} @target
+  - damage{a=12} @target
+
+메두사_석화:
+  Skills:
+  - message{m="&2&l석화의 시선! &7(몸이 굳는다...)"} @self
+  - potion{type=SLOWNESS;duration=60;level=6} @self
+  - potion{type=MINING_FATIGUE;duration=100;level=2} @self
+  - potion{type=JUMP_BOOST;duration=60;level=128} @self
+  - effect:particles{p=block;m=stone;amount=40;hS=0.5;vS=1} @self
+  - sound{s=block.stone.place;v=2;p=0.5} @self
+
+키클롭스_바위틱:
+  Skills:
+  - effect:particles{p=block;m=cobblestone;amount=5;hS=0.3;vS=0.3} @origin
+
+키클롭스_바위명중:
+  Skills:
+  - damage{a=12} @target
+  - throw{velocity=6;velocityY=3} @target
+  - sound{s=entity.generic.explode;v=1} @origin
+
+# ----- 데몬 나이트 (demon_knight 모델 애니메이션 사용) -----
+데몬_망치1:
+  Skills:
+  - state{mid=demon_knight;s=hammer_attack_1} @self
+
+데몬_망치2:
+  Skills:
+  - state{mid=demon_knight;s=hammer_attack_2} @self
+
+데몬_대지분쇄:
+  Skills:
+  - state{mid=demon_knight;s=hammer_attack_3} @self
+  - message{m="&4[데몬 나이트] &c&l대지여, 갈라져라!"} @PlayersInRadius{r=40}
+  - delay 25
+  - effect:particles{p=explosion;amount=12;hS=3;vS=0.5} @self
+  - sound{s=entity.generic.explode;v=2;p=0.7} @self
+  - damage{a=12} @PlayersInRadius{r=6}
+  - throw{velocity=6;velocityY=7} @PlayersInRadius{r=6}
+
+데몬_방패돌진:
+  Skills:
+  - state{mid=demon_knight;s=shield_attack_2} @self
+  - delay 15
+  - lunge{velocity=1.6;velocityY=0.2} @target
+  - delay 8
+  - damage{a=9} @PlayersInRadius{r=3}
+  - throw{velocity=10;velocityY=3} @PlayersInRadius{r=3}
+  - sound{s=item.shield.block;v=2;p=0.6} @self
+
+데몬_방어태세:
+  Cooldown: 20
+  Conditions:
+  - healthpercent{p=<0.5} true
+  Skills:
+  - state{mid=demon_knight;s=guard} @self
+  - message{m="&4[데몬 나이트] &7(방패를 들어 올린다)"} @PlayersInRadius{r=40}
+  - potion{type=RESISTANCE;duration=80;level=2} @self
+
+# ----- 푸른 대마법사 (blue_wizard 모델) -----
+마법사_빙결:
+  Skills:
+  - message{m="&9[대마법사] &b&l얼어붙어라!"} @PlayersInRadius{r=40}
+  - effect:particles{p=snowflake;amount=200;hS=6;vS=1;speed=0.05} @self
+  - sound{s=block.glass.break;v=2;p=0.6} @self
+  - damage{a=8} @PlayersInRadius{r=7}
+  - potion{type=SLOWNESS;duration=80;level=3} @PlayersInRadius{r=7}
+
+마법사_낙뢰:
+  Skills:
+  - message{m="&9[대마법사] &e천벌을!"} @PlayersInRadius{r=40}
+  - lightning{damage=10} @target
+
+마법사_순간이동:
+  Cooldown: 8
+  Skills:
+  - effect:particles{p=portal;amount=60;hS=0.5;vS=1} @self
+  - teleport{spreadh=6;spreadv=0} @target
+  - effect:particles{p=portal;amount=60;hS=0.5;vS=1} @self
+  - sound{s=entity.enderman.teleport;v=1.5} @self
+
+# ===== 언데드 졸몹 =====
+원혼_서리틱:
+  Skills:
+  - effect:particles{p=snowflake;amount=6;hS=0.1;vS=0.1} @origin
+
+원혼_서리명중:
+  Skills:
+  - damage{a=4} @target
+  - potion{type=SLOWNESS;duration=80;level=2} @target
+  - sound{s=block.glass.break;v=1;p=1.4} @target

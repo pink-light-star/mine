@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>별빛 서버</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+:root { --bg: #eceef6; --panel: #ffffff; --line: #d3d6e6; --ink: #1a1d33; --muted: #5d6280; --gold: #9a6b12; color-scheme: light;
+  --display: "Gowun Batang", serif; --body: "Noto Sans KR", system-ui, sans-serif; }
+@media (prefers-color-scheme: dark) { :root { --bg: #0e1122; --panel: #161a31; --line: #2a3054; --ink: #e8e9f4; --muted: #9ba0c0; --gold: #e8bd62; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 var(--body); }
+.wrap { max-width: 860px; margin: 0 auto; padding-block: 56px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { font: 700 44px/1.1 var(--display); margin: 0; }
+h1 span { color: var(--gold); }
+.sub { color: var(--muted); margin: 10px 0 32px; max-width: 60ch; }
+.links { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+a.box { display: block; text-decoration: none; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; }
+a.box:hover, a.box:focus-visible { border-color: var(--gold); outline: none; }
+a.box b { display: block; font: 700 22px var(--display); margin-bottom: 4px; }
+a.box span { color: var(--muted); font-size: 14px; }
+ul { color: var(--muted); font-size: 14px; padding-left: 18px; margin: 32px 0 0; }
+ul a { color: var(--gold); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>별빛 <span>서버</span></h1>
+  <p class="sub">한국어 마인크래프트 RPG 서버예요. 직업과 스킬, 던전, 보스, 펫과 탈것, 대장간 장비를 직접 만들었어요.</p>
+  <div class="links">
+    <a class="box" href="dex/"><b>도감</b><span>보스·몬스터, 탈것, 펫, 장비 85종을 3D 모델로 돌려 보기</span></a>
+    <a class="box" href="commands/"><b>명령어</b><span>명령어 78개의 기능과 쓰는 법, 예시</span></a>
+  </div>
+  <ul>
+    <li><a href="https://github.com/pink-light-star/mine">소스와 설정</a> · 서버 플러그인(Java), Skript, MythicMobs, 모델 생성기</li>
+    <li><a href="https://github.com/pink-light-star/mine/blob/main/docs/%EB%8C%80%ED%99%94%EA%B8%B0%EB%A1%9D.md">제작 대화 기록</a></li>
+  </ul>
+</div>
+</body>
+</html>

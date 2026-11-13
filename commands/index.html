@@ -1,0 +1,204 @@
+<meta charset="utf-8">
+<title>별빛 명령어</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* 레이아웃: 위쪽 검색 + 분류 바로가기 → 분류별 명령어 표 (왼쪽 명령어, 가운데 하는 일, 오른쪽 예시) */
+:root {
+  --bg: #eceef6; --panel: #ffffff; --soft: #e3e6f2; --line: #d3d6e6;
+  --ink: #1a1d33; --muted: #5d6280; --gold: #9a6b12; --gold-soft: #f3e6c4; --red: #b3322a;
+  --display: "Gowun Batang", "Apple SD Gothic Neo", serif;
+  --body: "Noto Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e1122; --panel: #161a31; --soft: #1d2240; --line: #2a3054;
+  --ink: #e8e9f4; --muted: #9ba0c0; --gold: #e8bd62; --gold-soft: #3a3020; --red: #ff7a6b; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0e1122; --panel: #161a31; --soft: #1d2240; --line: #2a3054;
+  --ink: #e8e9f4; --muted: #9ba0c0; --gold: #e8bd62; --gold-soft: #3a3020; --red: #ff7a6b; color-scheme: dark; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.6 var(--body); }
+.wrap { max-width: 1080px; margin: 0 auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { font: 700 34px/1.15 var(--display); margin: 0; text-wrap: balance; }
+h1 span { color: var(--gold); }
+.sub { color: var(--muted); margin: 6px 0 0; max-width: 64ch; }
+.tools { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 14px 10px; margin-top: 14px;
+  display: grid; gap: 10px; border-bottom: 1px solid var(--line); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.search { display: flex; gap: 8px; align-items: center; }
+.search input { flex: 1; min-width: 0; font: 15px var(--body); color: var(--ink); background: var(--panel); border: 1px solid var(--line);
+  border-radius: 8px; padding: 9px 12px; }
+.search input:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+.search .n { font: 500 12px var(--mono); color: var(--muted); white-space: nowrap; }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; }
+.jump a { font-size: 13px; color: var(--muted); text-decoration: none; border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 3px 11px; }
+.jump a:hover, .jump a:focus-visible { color: var(--ink); border-color: var(--gold); outline: none; }
+.tip { margin: 18px 0 0; padding: 12px 14px; background: var(--gold-soft); border-radius: 8px; font-size: 14px; }
+.tip b { font-family: var(--mono); font-weight: 500; }
+section { margin-top: 30px; scroll-margin-top: 130px; }
+section h2 { font: 700 20px var(--display); margin: 0 0 4px; display: flex; gap: 10px; align-items: baseline; }
+section h2 small { font: 400 13px var(--body); color: var(--muted); }
+section.admin h2 { color: var(--red); }
+section > p { margin: 0 0 10px; color: var(--muted); font-size: 14px; }
+.tbl { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--panel); }
+.row { display: grid; grid-template-columns: minmax(150px, 220px) minmax(0, 1fr) minmax(0, 260px); gap: 6px 18px; padding: 12px 16px; border-top: 1px solid var(--line); }
+.row:first-child { border-top: 0; }
+.cmd { font: 500 14px var(--mono); color: var(--gold); overflow-wrap: anywhere; }
+.cmd .arg { color: var(--muted); }
+.cmd .al { display: block; font: 400 12px var(--body); color: var(--muted); margin-top: 2px; }
+.what { min-width: 0; }
+.what .note { display: block; color: var(--muted); font-size: 13px; margin-top: 2px; }
+.ex { font: 500 12.5px var(--mono); color: var(--ink); background: var(--soft); border-radius: 6px; padding: 4px 8px; align-self: start; overflow-wrap: anywhere; }
+.ex.none { background: none; color: var(--muted); font-family: var(--body); padding: 4px 0; }
+@media (max-width: 760px) {
+  .row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .ex { justify-self: start; }
+}
+.empty { margin-top: 30px; color: var(--muted); }
+footer { margin-top: 36px; font-size: 12px; color: var(--muted); }
+</style>
+
+<div class="wrap">
+  <h1>별빛 <span>명령어</span></h1>
+  <p class="sub">별빛 서버에서 쓰는 한국어 명령어를 분류별로 모았어요. 명령어마다 하는 일과 쓰는 법, 예시를 적었어요.</p>
+  <p class="tip">헷갈리면 <b>Shift+F</b> 로 메뉴를 열거나 게임 안에서 <b>/명령어</b> 를 입력하세요. <span class="arg">&lt;꺾쇠&gt;</span> 는 꼭 넣는 값, <span class="arg">[대괄호]</span> 는 빼도 되는 값이에요.</p>
+  <div class="tools">
+    <div class="search"><input id="q" type="search" placeholder="명령어나 기능으로 찾기 (예: 집, 돈, 펫)" aria-label="명령어 찾기"><span class="n" id="n"></span></div>
+    <nav class="jump" id="jump" aria-label="분류 바로가기"></nav>
+  </div>
+  <div id="list"></div>
+  <p class="empty" id="empty" hidden>찾는 명령어가 없어요. 다른 낱말로 찾아보세요.</p>
+  <footer>관리 명령어는 OP(관리자)만 쓸 수 있어요. 명령어가 바뀌면 이 페이지도 다시 올려요.</footer>
+</div>
+
+<script>
+// [명령어, 다른 이름(없으면 ""), 하는 일, 덧붙임(없으면 ""), 예시(없으면 "")]
+const DATA = [
+  { id: "basic", g: "기본", d: "처음 들어오면 이것부터.", rows: [
+    ["/메뉴", "Shift+F · /메인메뉴", "메인 메뉴를 열어요. 전직, 스킬, 던전, 상점, 이동 같은 기능을 버튼으로 바로 쓸 수 있어요.", "", "Shift+F"],
+    ["/명령어", "/도움말 · /명령어목록", "명령어 목록을 채팅에 분류별로 보여 줘요.", "", ""],
+    ["/내정보 [닉네임]", "/정보 · /레벨", "레벨, 직업, MP, 돈, 칭호를 보여 줘요. 닉네임을 넣으면 다른 사람 정보를 봐요.", "", "/내정보 Steve"],
+    ["/도감 [탭]", "/몬스터도감 · /보스도감", "탈것·펫·보스·몬스터 도감 GUI를 열어요. 항목을 누르면 내 앞에 그 3D 모델이 15초 동안 나타나 빙글 돌아요.", "펫은 쉬프트+클릭하면 전투 모습을 보여 줘요. 장비 탭은 /장비도감 으로 이어져요.", "/도감 pet"],
+  ]},
+  { id: "move", g: "이동", d: "", rows: [
+    ["/스폰", "/마을", "마을(스폰)로 이동해요.", "", ""],
+    ["/집 [이름]", "", "저장해 둔 집으로 이동해요. 집이 여러 개면 이름을 넣어요.", "", "/집 광산"],
+    ["/집설정 [이름]", "/셋홈", "지금 서 있는 곳을 집으로 저장해요.", "이름을 안 넣으면 기본 집(home)으로 저장돼요.", "/집설정 광산"],
+    ["/집삭제 <이름>", "", "저장한 집을 지워요.", "", "/집삭제 광산"],
+    ["/돌아가기", "/백", "직전 위치로 돌아가요. 죽었으면 죽은 자리로 가요.", "", ""],
+    ["/워프 [이름]", "", "이름만 넣으면 그 워프로 이동하고, 이름 없이 쓰면 워프 목록을 보여 줘요.", "", "/워프"],
+    ["/텔포 <닉네임>", "/텔포요청", "그 사람에게 이동하겠다고 요청해요. 상대가 수락하면 이동해요.", "", "/텔포 Alex"],
+    ["/텔포부르기 <닉네임>", "", "그 사람을 내 쪽으로 불러요. 상대가 수락하면 상대가 와요.", "", "/텔포부르기 Alex"],
+    ["/수락", "", "받은 텔포 요청을 받아들여요.", "", ""],
+    ["/거절", "", "받은 텔포 요청을 거절해요.", "", ""],
+  ]},
+  { id: "grow", g: "성장", d: "레벨을 올리면서 직업과 능력치를 키워요.", rows: [
+    ["/전직", "/전직하기", "전투 직업을 고르거나 다음 직업으로 전직하는 창을 열어요.", "용기사로 전직하면 신화 탈것 흑룡을 받아요.", ""],
+    ["/스킬", "/내스킬 · /스킬목록", "내 직업 스킬, 쓰는 키, MP 소모량, 쿨타임을 보여 줘요.", "", ""],
+    ["/능력치", "/스탯 · /스탯창", "힘·민첩·지능·체력·행운에 포인트를 넣는 창을 열어요.", "직업마다 잘 오르는 능력치가 달라요. 장비의 요구 능력치도 여기서 채워요.", ""],
+    ["/칭호", "/칭호변경", "얻은 칭호를 보고 이름 앞에 붙일 칭호를 바꿔요.", "", ""],
+    ["/이름꾸미기", "", "이름 색과 머리 위 장식을 고르는 창을 열어요.", "", ""],
+  ]},
+  { id: "quest", g: "퀘스트", d: "", rows: [
+    ["/퀘스트", "/퀘 · /퀘스트목록", "진행 중인 퀘스트와 완료한 퀘스트를 보여 줘요.", "마을 NPC에게 말을 걸면 퀘스트를 받아요. 숨겨진 히든 퀘스트도 있어요.", ""],
+    ["/월드퀘스트", "/월퀘", "서버 사람들이 다 같이 채우는 공동 퀘스트를 보여 줘요. 목표를 채우면 모두 보상을 받아요.", "", ""],
+    ["/일일의뢰", "/일퀘 · /일일퀘스트", "매일 바뀌는 의뢰 3개를 보여 줘요. 깨면 돈과 경험치를 받아요.", "", ""],
+  ]},
+  { id: "battle", g: "전투·장비", d: "", rows: [
+    ["/던전", "", "던전 입장 창을 열어요. 몹 웨이브를 막고 보스를 잡으면 보상을 받아요.", "파티를 짜서 같이 들어갈 수 있어요.", ""],
+    ["/던전 나가기", "", "던전에서 나와 들어오기 전 자리로 돌아가요.", "", ""],
+    ["/대장간", "", "몹·보스 재료와 돈으로 특수 무기와 방어구를 만드는 창을 열어요.", "장비마다 요구 레벨·요구 능력치가 있어요. 부족하면 무기는 피해가 1이 되고 방어구는 벗겨져요.", ""],
+    ["/장비", "/등급 · /장비등급", "장비 등급(일반~신화)과 등급별 추가 능력치를 알려 줘요.", "", ""],
+    ["/잡화점", "", "물약, 귀환 주문서, 능력치 초기화권을 파는 상점을 열어요.", "", ""],
+  ]},
+  { id: "dex", g: "도감", d: "", rows: [
+    ["/도감", "", "탈것·펫·보스·몬스터 도감. 누르면 3D 모델이 앞에 나타나요.", "", ""],
+    ["/장비도감", "/무기도감 · /방어구도감", "대장간 무기와 방어구를 입체 모델 그대로 보여 주고, 얻는 법과 추가 능력치를 알려 줘요.", "히든 장비는 ??? 와 단서만 보여요.", ""],
+    ["/물고기도감", "", "지금까지 잡은 물고기 기록을 보여 줘요.", "", ""],
+    ["/탈것도감", "/탈것 · /탈것목록", "탈것 종류와 등급별 포획 확률을 채팅으로 보여 줘요.", "", ""],
+  ]},
+  { id: "pet", g: "펫·탈것", d: "", rows: [
+    ["/뽑기", "/가챠 · /펫뽑기", "펫 뽑기 창을 열어요. 1회 30,000원, 10회 270,000원이에요.", "뽑기권이 있으면 돈 대신 써요.", ""],
+    ["/뽑기 확률", "", "펫 등급별 뽑기 확률을 보여 줘요.", "", ""],
+    ["/펫목록", "/펫 · /펫도감", "펫 종류와 무기를 보여 줘요.", "", ""],
+    ["/그물상점", "/그물", "그물총, 그물, 마법 빗자루를 파는 상점을 열어요.", "그물총으로 야생 동물을 맞히면 탈것으로 잡을 수 있어요. 체력이 낮을수록 잘 잡혀요.", ""],
+  ]},
+  { id: "money", g: "돈", d: "", rows: [
+    ["/돈 [닉네임]", "/잔액", "내 돈을 보여 줘요. 닉네임을 넣으면 그 사람 돈을 봐요.", "", "/돈"],
+    ["/송금 <닉네임> <금액>", "", "다른 사람에게 돈을 보내요.", "", "/송금 Alex 5000"],
+    ["/돈순위", "", "서버 부자 순위를 보여 줘요.", "", ""],
+    ["/상점", "", "블록, 광물, 음식, 인챈트 책을 사고파는 상점을 열어요.", "", ""],
+    ["/판매", "/전부팔기", "인벤토리에서 팔 수 있는 물건을 한 번에 전부 팔아요.", "장비까지 팔릴 수 있으니 필요한 건 상자에 넣어 두세요.", ""],
+    ["/판매창", "", "판매 창을 열어요. 팔 물건만 넣고 닫으면 한꺼번에 팔려요.", "", ""],
+    ["/키트 [이름]", "", "받을 수 있는 키트 목록을 보여 주고, 이름을 넣으면 그 키트를 받아요.", "키트마다 다시 받기까지 기다리는 시간이 있어요.", "/키트 tools"],
+  ]},
+  { id: "life", g: "생활", d: "전투 말고 채집·제작으로도 성장해요.", rows: [
+    ["/생활직업", "/직업목록", "광부, 농부, 나무꾼 같은 생활 직업 목록을 열어요.", "", ""],
+    ["/직업가입 <직업>", "", "생활 직업에 가입해요. 그 일을 하면 돈과 직업 경험치를 받아요.", "한 번 가입하면 탈퇴할 수 없어요.", "/직업가입 광부"],
+    ["/직업스탯", "/직업정보", "내 생활 직업 레벨과 경험치를 보여 줘요.", "", ""],
+    ["/생활스킬", "", "채굴, 농사, 전투 같은 생활 스킬 레벨을 보여 줘요. 레벨이 오르면 보너스를 받아요.", "", ""],
+    ["/생활스탯", "", "생활 스킬로 오른 스탯을 보여 줘요.", "/스탯 은 /능력치 창을 여는 다른 이름이에요.", ""],
+    ["/마나", "", "생활 스킬용 마나를 보여 줘요.", "", ""],
+  ]},
+  { id: "fish", g: "낚시", d: "", rows: [
+    ["/낚시", "", "낚시 메뉴를 열어요.", "", ""],
+    ["/물고기판매", "", "잡은 물고기를 파는 상점을 열어요.", "", ""],
+    ["/낚시순위", "", "낚시 대회 순위를 보여 줘요.", "", ""],
+  ]},
+  { id: "chat", g: "대화", d: "", rows: [
+    ["/귓 <닉네임> <말>", "/귓속말", "그 사람에게만 보이는 귓속말을 보내요.", "", "/귓 Alex 같이 던전 갈래?"],
+    ["/답장 <말>", "", "마지막으로 귓속말을 주고받은 사람에게 답장해요.", "", "/답장 좋아"],
+    ["/메일", "", "편지를 읽거나 보내요. 접속하지 않은 사람에게도 남길 수 있어요.", "보내기: /메일 send <닉네임> <내용>", "/메일 read"],
+    ["/접속자", "", "지금 접속한 사람 목록을 보여 줘요.", "", ""],
+    ["/잠수", "", "자리 비움 상태로 바꿔요. 다시 쓰거나 움직이면 풀려요.", "", ""],
+    ["/음성채팅", "", "음성 채팅 설정을 열어요.", "음성 채팅 모드를 깔아야 쓸 수 있어요.", ""],
+  ]},
+  { id: "admin", g: "관리", admin: true, d: "OP(관리자)만 쓸 수 있어요.", rows: [
+    ["/관리 지급 <닉네임> <아이템> [개수]", "/별빛관리 · /아이템지급", "그물총, 그물, 뽑기권, 탈것, 펫, 장비를 줘요.", "아이템: 그물총 · 그물 · 뽑기권 · 탈것 종류(예: DRAGON) · 펫:ID · 장비:등급[:종류]", "/관리 지급 Steve 펫:RED"],
+    ["/레벨관리 <할 일> <닉네임> <값>", "/직업관리", "레벨, 경험치, 전투 직업을 직접 정해요.", "할 일: 레벨설정 · 경험치 · 직업설정", "/레벨관리 레벨설정 Steve 30"],
+    ["/능력치관리 <할 일> <닉네임> [수]", "", "능력치 투자를 초기화하거나 보너스 포인트를 줘요.", "할 일: 초기화 · 보너스", "/능력치관리 보너스 Steve 5"],
+    ["/대장간관리 지급 <닉네임> <장비ID>", "", "대장간 장비를 바로 줘요. 히든 장비도 줄 수 있어요.", "장비 ID는 /대장간관리 목록 으로 봐요.", "/대장간관리 지급 Steve dragon_bow"],
+    ["/던전관리 <할 일>", "", "던전 상태를 관리해요.", "할 일: 목록 · 이동 <id> · 초기화", "/던전관리 초기화"],
+    ["/보물상자관리 지급 <닉네임>", "", "이그니스 랜덤박스(보물상자)를 줘요.", "", "/보물상자관리 지급 Steve"],
+    ["/퀘스트npc <종류|스폰>", "", "퀘스트 NPC를 내 자리에 세우거나, 스폰 둘레에 전부 배치해요.", "배치 <id> <월드> <x> <y> <z> · 완료 <닉네임> <퀘스트id> 도 돼요.", "/퀘스트npc 스폰"],
+    ["/몹소환 <몹ID> [수]", "", "커스텀 몹(보스 포함)을 내 자리에 소환해요.", "/몹전부제거 는 커스텀 몹을 모두 없애요. 이그니스의 ID는 보스_적룡 이에요.", "/몹소환 보스_적룡"],
+    ["/모델리로드", "", "3D 모델을 다시 불러와요. 모델 파일을 바꾼 뒤에 써요.", "", ""],
+    ["/팩업로드", "", "리소스팩을 새로 만들어 다시 올려요.", "", ""],
+    ["/크리 [닉네임]", "", "크리에이티브 모드로 바꿔요.", "/관전 은 관전 모드예요.", ""],
+    ["/서바 [닉네임]", "", "서바이벌 모드로 바꿔요.", "", ""],
+    ["/낮 · /밤", "", "시간을 낮이나 밤으로 바꿔요.", "/맑음 · /비 로 날씨도 바꿀 수 있어요.", ""],
+  ]},
+];
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const cmdHtml = c => esc(c).replace(/(&lt;[^&]+&gt;|\[[^\]]+\])/g, '<span class="arg">$1</span>');
+const total = DATA.reduce((n, s) => n + s.rows.length, 0);
+
+document.getElementById("jump").innerHTML = DATA.map(s => `<a href="#${s.id}">${esc(s.g)}</a>`).join("");
+const list = document.getElementById("list");
+list.innerHTML = DATA.map(s => `<section id="${s.id}" class="${s.admin ? "admin" : ""}">
+  <h2>${esc(s.g)}<small>${s.rows.length}개</small></h2>${s.d ? `<p>${esc(s.d)}</p>` : ""}
+  <div class="tbl">${s.rows.map(([c, al, w, note, ex]) => `<div class="row" data-k="${esc((c + " " + al + " " + w + " " + note + " " + s.g).toLowerCase())}">
+    <div class="cmd">${cmdHtml(c)}${al ? `<span class="al">${esc(al)}</span>` : ""}</div>
+    <div class="what">${esc(w)}${note ? `<span class="note">${esc(note)}</span>` : ""}</div>
+    <div class="ex${ex ? "" : " none"}">${ex ? esc(ex) : "그대로 입력"}</div></div>`).join("")}</div></section>`).join("");
+
+const q = document.getElementById("q"), n = document.getElementById("n");
+function filter() {
+  const v = q.value.trim().toLowerCase();
+  let shown = 0;
+  document.querySelectorAll("section").forEach(sec => {
+    let k = 0;
+    sec.querySelectorAll(".row").forEach(r => { const ok = !v || r.dataset.k.includes(v); r.hidden = !ok; if (ok) k++; });
+    sec.hidden = k === 0; shown += k;
+  });
+  n.textContent = v ? `${shown} / ${total}개` : `${total}개`;
+  document.getElementById("empty").hidden = shown > 0;
+}
+q.addEventListener("input", filter);
+filter();
+</script>

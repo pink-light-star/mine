@@ -1,0 +1,74 @@
+name: StarRPG
+version: 1.0.0
+main: kr.starserver.starrpg.StarRPG
+api-version: '1.21'
+softdepend: [Vault, BetterModel, PlaceholderAPI]
+description: 커스텀 동물 탈것, 그물총 포획, 전설 탈것
+commands:
+  starrpg:
+    description: 관리자 아이템 지급
+    aliases: [관리, 별빛관리, 아이템지급]
+    permission: starrpg.admin
+  netshop:
+    description: 그물 상점
+    aliases: [그물상점, 그물]
+  dex:
+    description: 도감 (탈것·펫·보스·장비)
+    aliases: [도감, 몬스터도감, 보스도감]
+  mountlist:
+    description: 탈것 도감
+    aliases: [탈것도감, 탈것, 탈것목록]
+  petlist:
+    description: 아군 펫 목록
+    aliases: [펫목록, 펫, 펫도감]
+  packupload:
+    description: 리소스팩을 공개 호스팅에 다시 올림
+    aliases: [팩업로드]
+    permission: starrpg.admin
+  gacha:
+    description: 펫 뽑기
+    aliases: [가챠, 뽑기, 펫뽑기]
+  rpgclass:
+    description: 전직 (전투 직업 고르기)
+    aliases: [전직, 전직하기]
+  rpgskill:
+    description: 내 직업 스킬
+    aliases: [스킬, 내스킬, 스킬목록]
+  rpginfo:
+    description: 내 레벨·직업 정보
+    aliases: [내정보, 레벨, 정보]
+  rpg:
+    description: 전투 레벨 관리 (관리자)
+    aliases: [레벨관리, 직업관리]
+    permission: starrpg.admin
+  questlog:
+    description: 내 퀘스트 목록
+    aliases: [퀘스트, 퀘스트목록, 퀘]
+  questnpc:
+    description: 퀘스트 NPC 배치 (관리자)
+    aliases: [퀘스트npc]
+    permission: starrpg.admin
+  worldquest:
+    description: 월드 퀘스트 확인/시작
+    aliases: [월드퀘스트, 월퀘]
+  title:
+    description: 칭호 보기/바꾸기
+    aliases: [칭호, 칭호변경]
+  gear:
+    description: 장비 등급 안내
+    aliases: [장비, 등급, 장비등급]
+  spawn:
+    description: 스폰으로 이동
+    aliases: [스폰, 마을]
+  명령어:
+    description: 한국어 명령어 안내
+    aliases: [도움말, 명령어목록]
+  menu:
+    description: 메뉴 열기 (Shift+F)
+    aliases: [메뉴, 메인메뉴]
+  daily:
+    description: 일일 의뢰 열기
+    aliases: [일일의뢰, 일일퀘스트, 일퀘]
+permissions:
+  starrpg.admin:
+    default: op

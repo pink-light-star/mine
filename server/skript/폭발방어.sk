@@ -1,0 +1,18 @@
+# ─────────────────────────────────────────────
+#  폭발 방어: 크리퍼·TNT·위더·화염구·침대/리스폰 정박기 등
+#  폭발이 블록을 부수지 않음 (모든 월드). 몹·플레이어 피해는 그대로.
+#  액자·그림·갑옷 거치대도 폭발로 부서지지 않음.
+# ─────────────────────────────────────────────
+
+on explode:
+    clear exploded blocks
+
+# 침대·리스폰 정박기 폭발과 액자·그림 보호는 StarRPG 플러그인에서 처리
+
+on damage of armor stand or item frame or glow item frame:
+    damage cause is entity explosion or block explosion
+    cancel event
+
+on damage of dropped item:
+    damage cause is entity explosion or block explosion
+    cancel event

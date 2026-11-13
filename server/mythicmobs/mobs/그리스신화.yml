@@ -1,0 +1,182 @@
+# ===== 그리스·로마 신화 몹 =====
+# 출몰 위치: randomspawns/신화출몰.yml
+# 직접 소환: /mm mobs spawn <몹ID>
+
+사이렌:
+  Type: DROWNED
+  Display: '&b사이렌'
+  Health: 45
+  Damage: 6
+  Faction: 신화
+  Equipment:
+  - TRIDENT HAND
+  Skills:
+  - model{mid=siren} @self ~onSpawn
+  - state{mid=siren;s=attack} @self ~onAttack
+  - potion{type=WEAKNESS;duration=80;level=0} @PlayersInRadius{r=12} ~onTimer:160
+  # 노래로 플레이어를 끌어당긴다
+  - message{m="&b♪ 사이렌의 노래가 들려온다... &7(끌려간다!)"} @PlayersInRadius{r=12} ~onTimer:160
+  - sound{s=entity.allay.ambient_with_item;v=2;p=0.6} @self ~onTimer:160
+  - pull{velocity=4} @PlayersInRadius{r=12} ~onTimer:160
+  - potion{type=NAUSEA;duration=100;level=0} @PlayersInRadius{r=12} ~onTimer:160
+  Drops:
+  - 사이렌의비늘 1to2 0.6
+  - PRISMARINE_CRYSTALS 1to3 0.5
+  - exp 40
+  Options:
+    MovementSpeed: 0.28
+    PreventOtherDrops: true
+    PreventSunburn: true
+
+하피:
+  Type: VEX
+  Display: '&e하피'
+  Health: 25
+  Damage: 5
+  Faction: 신화
+  Skills:
+  - model{mid=harpy} @self ~onSpawn
+  - state{mid=harpy;s=attack} @self ~onAttack
+  - leap{velocity=130} @target ~onTimer:80 0.7
+  - potion{type=LEVITATION;duration=20;level=1} @target ~onAttack 0.15
+  - sound{s=entity.parrot.imitation.phantom;v=1.5} @self ~onTimer:100 0.5
+  - throw{velocity=3;velocityY=4} @target ~onAttack 0.3
+  Drops:
+  - FEATHER 2to5 1
+  - 하피의깃털 1 0.4
+  - exp 30
+  Options:
+    PreventOtherDrops: true
+    Despawn: true
+
+케르베로스:
+  Type: WOLF
+  Display: '&4&l케르베로스'
+  Health: 120
+  Damage: 11
+  Faction: 신화
+  AITargetSelectors:
+  - clear
+  - players
+  AIGoalSelectors:
+  - clear
+  - meleeattack
+  - randomstroll
+  Skills:
+  - model{mid=cerberus} @self ~onSpawn
+  - state{mid=cerberus;s=attack} @self ~onAttack
+  - ignite{ticks=60} @PlayersInRadius{r=4} ~onTimer:100
+  - effect:particles{p=flame;amount=60;hS=2;vS=0.4;speed=0.05} @self ~onTimer:100
+  - sound{s=entity.wolf.growl;v=2;p=0.4} @self ~onTimer:100
+  - leap{velocity=120} @target ~onTimer:140 0.6
+  - sound{s=entity.wolf.growl;v=2;p=0.5} @self ~onTimer:80
+  - ignite{ticks=60} @target ~onAttack
+  - effect:particles{p=flame;amount=15;hS=0.5;vS=0.5} @self ~onTimer:20
+  Drops:
+  - 지옥견의이빨 1to2 0.7
+  - exp 120
+  Options:
+    MovementSpeed: 0.38
+    PreventOtherDrops: true
+    Angry: true
+
+키클롭스:
+  Type: ZOMBIE
+  Display: '&6&l키클롭스'
+  Health: 220
+  Damage: 15
+  Faction: 신화
+  Equipment:
+  - CARVED_PUMPKIN HEAD
+  - LEATHER_CHESTPLATE{color=0x8B6B3D} CHEST
+  - STICK HAND
+  Skills:
+  - model{mid=cyclops} @self ~onSpawn
+  - state{mid=cyclops;s=attack} @self ~onAttack
+  - throw{velocity=10;velocityY=6} @PlayersInRadius{r=3} ~onTimer:160
+  - effect:particles{p=explosion;amount=4;hS=1.5;vS=0.2} @self ~onTimer:160
+  - sound{s=entity.iron_golem.attack;v=2;p=0.5} @self ~onTimer:160
+  - message{m="&6[키클롭스] &f우오오오! 작은 것들!"} @PlayersInRadius{r=20} ~onCombat 0.1
+  # 바위 던지기
+  - projectile{onTick=키클롭스_바위틱;onHit=키클롭스_바위명중;v=12;i=1;hR=1;vR=1;g=0.2;hnp=true} @target ~onTimer:100
+  Drops:
+  - 거인의눈 1 0.5
+  - IRON_INGOT 3to6 1
+  - exp 200
+  Options:
+    MovementSpeed: 0.22
+    PreventOtherDrops: true
+    PreventSunburn: true
+    KnockbackResistance: 0.9
+
+보스_미노타우로스:
+  Type: RAVAGER
+  Display: '&c&l🐂 미노타우로스 🐂'
+  Health: 800
+  Damage: 15
+  Faction: 신화
+  BossBar:
+    Enabled: true
+    Title: '&c미노타우로스'
+    Range: 50
+    Color: RED
+    Style: SEGMENTED_10
+  Skills:
+  - model{mid=minotaur} @self ~onSpawn
+  - state{mid=minotaur;s=attack} @self ~onAttack
+  - message{m="&c[미노타우로스] &f미궁에 들어온 자, 살아나가지 못한다!"} @PlayersInRadius{r=40} ~onSpawn
+  # 돌진
+  - message{m="&c[미노타우로스] &f부우우욱!! &7(돌진!)"} @PlayersInRadius{r=40} ~onTimer:120
+  - lunge{velocity=2.5;velocityY=0.3} @target ~onTimer:120
+  - throw{velocity=10;velocityY=5} @PlayersInRadius{r=3} ~onTimer:125
+  - sound{s=entity.ravager.roar;v=3} @self ~onTimer:120
+  Drops:
+  - 미노타우로스의뿔 1 1
+  - 별의조각 6to9 1
+  - 대족장의도끼 1 0.15
+  - exp 900
+  Options:
+    MovementSpeed: 0.32
+    PreventOtherDrops: true
+    KnockbackResistance: 1
+    AlwaysShowName: true
+    Despawn: false
+
+보스_메두사:
+  Type: STRAY
+  Display: '&2&l🐍 메두사 🐍'
+  Health: 650
+  Damage: 10
+  Faction: 신화
+  BossBar:
+    Enabled: true
+    Title: '&2메두사'
+    Range: 50
+    Color: GREEN
+    Style: SEGMENTED_10
+  Equipment:
+  - BOW HAND
+  - LEATHER_HELMET{color=0x2F7D32} HEAD
+  - LEATHER_CHESTPLATE{color=0x6B8E23} CHEST
+  Skills:
+  - model{mid=medusa} @self ~onSpawn
+  - state{mid=medusa;s=attack} @self ~onAttack
+  - message{m="&2[메두사] &f나의 눈을 보아라... 영원히 돌이 되리라."} @PlayersInRadius{r=40} ~onSpawn
+  # 석화의 시선
+  - skill{s=메두사_석화} @PlayersInRadius{r=15} ~onTimer:200
+  # 뱀 소환
+  - summon{type=CAVE_SPIDER;amount=4;radius=3} @self ~onTimer:240
+  - message{m="&2[메두사] &f내 아이들아, 물어라!"} @PlayersInRadius{r=40} ~onTimer:240
+  - message{m="&2[메두사] &f이럴 수가... 나의 시선이..."} @PlayersInRadius{r=40} ~onDeath
+  Drops:
+  - 메두사의머리 1 1
+  - 별의조각 5to8 1
+  - 바람의활 1 0.3
+  - exp 800
+  Options:
+    MovementSpeed: 0.26
+    PreventOtherDrops: true
+    PreventSunburn: true
+    KnockbackResistance: 0.7
+    AlwaysShowName: true
+    Despawn: false

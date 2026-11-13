@@ -1,0 +1,118 @@
+# ===== 탈것 =====
+# 소환: /mm mobs spawn <몹ID>   (보고 있는 위치에 소환, 안장 장착/길들여진 상태)
+# 우클릭으로 바로 탈 수 있음
+
+탈것_천마:
+  Type: HORSE
+  Display: '&f&l천마'
+  Health: 60
+  Options:
+    MovementSpeed: 0.38
+    HorseTamed: true
+    HorseSaddled: true
+    HorseColor: WHITE
+    HorseStyle: WHITE
+    Despawn: false
+    PreventOtherDrops: true
+
+탈것_흑마:
+  Type: HORSE
+  Display: '&8&l흑마'
+  Health: 50
+  Options:
+    MovementSpeed: 0.34
+    HorseTamed: true
+    HorseSaddled: true
+    HorseColor: BLACK
+    HorseStyle: NONE
+    HorseArmor: IRON
+    Despawn: false
+    PreventOtherDrops: true
+
+탈것_해골마:
+  Type: SKELETON_HORSE
+  Display: '&7&l해골마'
+  Health: 40
+  Options:
+    MovementSpeed: 0.36
+    HorseTamed: true
+    HorseSaddled: true
+    Despawn: false
+    PreventOtherDrops: true
+
+탈것_낙타:
+  Type: CAMEL
+  Display: '&6&l사막 낙타 &7(2인승)'
+  Health: 50
+  Options:
+    MovementSpeed: 0.2
+    HorseTamed: true
+    HorseSaddled: true
+    Despawn: false
+    PreventOtherDrops: true
+
+# ===== 보스 =====
+# 소환: /mm mobs spawn <몹ID>
+
+보스_별의기사:
+  Type: WITHER_SKELETON
+  Display: '&b&l✦ 별의 기사 ✦'
+  Health: 400
+  Damage: 10
+  BossBar:
+    Enabled: true
+    Title: '&b별의 기사'
+    Range: 50
+    Color: BLUE
+    Style: SEGMENTED_10
+  Equipment:
+  - 별빛의검 HAND
+  - DIAMOND_CHESTPLATE CHEST
+  - DIAMOND_HELMET HEAD
+  Skills:
+  - message{m="&b[별의 기사] &f별빛 아래 쓰러져라!"} @PlayersInRadius{r=30} ~onSpawn
+  - lightning @target ~onTimer:100
+  - leap{velocity=150} @target ~onTimer:80
+  - message{m="&b[별의 기사] &f...별이... 지는구나..."} @PlayersInRadius{r=30} ~onDeath
+  Drops:
+  - 별의조각 3to6 1
+  - 별빛의검 1 0.25
+  - 바람의활 1 0.25
+  - exp 300
+  Options:
+    MovementSpeed: 0.28
+    PreventOtherDrops: true
+    KnockbackResistance: 0.6
+
+보스_화염군주:
+  Type: ZOMBIFIED_PIGLIN
+  Display: '&6&l🔥 화염 군주 🔥'
+  Health: 700
+  Damage: 14
+  BossBar:
+    Enabled: true
+    Title: '&6화염 군주'
+    Range: 50
+    Color: RED
+    Style: SEGMENTED_10
+  Equipment:
+  - 용암도끼 HAND
+  - NETHERITE_CHESTPLATE CHEST
+  - 수호자의투구 HEAD
+  Skills:
+  - message{m="&6[화염 군주] &f불타 없어져라!"} @PlayersInRadius{r=30} ~onSpawn
+  - ignite{ticks=80} @PlayersInRadius{r=6} ~onTimer:120
+  - shootfireball{y=1;v=4} @target ~onTimer:60
+  - message{m="&6[화염 군주] &f크윽... 불꽃은 꺼지지 않는다..."} @PlayersInRadius{r=30} ~onDeath
+  Drops:
+  - 별의조각 6to10 1
+  - 용암도끼 1 0.3
+  - 수호자의투구 1 0.3
+  - 행운의부적 1 0.1
+  - exp 600
+  Options:
+    MovementSpeed: 0.3
+    PreventOtherDrops: true
+    KnockbackResistance: 0.8
+    AlwaysShowName: true
+    Angry: true

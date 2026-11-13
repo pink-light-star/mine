@@ -1,0 +1,158 @@
+# This is the Bukkit commands configuration file for Paper.
+#
+# If you need help with the configuration or have any questions related to Paper,
+# join us in our Discord or check the docs page.
+#
+# File Reference: https://docs.papermc.io/paper/reference/bukkit-commands-configuration/
+# Docs: https://docs.papermc.io/
+# Discord: https://discord.gg/papermc
+# Website: https://papermc.io/
+
+# 별빛서버 한국어 명령어 별칭 (서버 재시작 시 적용)
+# 형식: 한국어명령어: [실제 명령어 $1-]   ($1- = 뒤에 붙인 글자를 그대로 넘김)
+command-block-overrides: []
+ignore-vanilla-permissions: false
+aliases:
+  icanhasbukkit:
+  - version $1-
+  sell:
+  - economyshopgui:sellall $1-
+  # ── 이동 (Essentials) ──
+  집:
+  - home $1-
+  집설정:
+  - sethome $1-
+  셋홈:
+  - sethome $1-
+  집삭제:
+  - delhome $1-
+  돌아가기:
+  - back
+  백:
+  - back
+  워프:
+  - warp $1-
+  텔포:
+  - tpa $1-
+  텔포요청:
+  - tpa $1-
+  텔포부르기:
+  - tpahere $1-
+  수락:
+  - tpaccept $1-
+  거절:
+  - tpdeny $1-
+  # ── 채팅·친구 ──
+  귓속말:
+  - msg $1-
+  귓:
+  - msg $1-
+  답장:
+  - r $1-
+  메일:
+  - mail $1-
+  접속자:
+  - list
+  잠수:
+  - afk
+  음성채팅:
+  - voicechat $1-
+  # ── 돈·상점 ──
+  돈:
+  - balance $1-
+  잔액:
+  - balance $1-
+  송금:
+  - pay $1-
+  돈순위:
+  - baltop $1-
+  상점:
+  - shop $1-
+  판매:
+  - economyshopgui:sellall $1-
+  전부팔기:
+  - economyshopgui:sellall $1-
+  판매창:
+  - sellgui $1-
+  키트:
+  - kit $1-
+  쓰레기통:
+  - disposal
+  # ── 생활 직업 (Jobs) ──
+  생활직업:
+  - jobs browse
+  직업목록:
+  - jobs browse
+  직업가입:
+  - jobs join $1-
+  직업정보:
+  - jobs info $1-
+  직업스탯:
+  - jobs stats $1-
+  직업순위:
+  - jobs top $1-
+  # ── 생활 스킬·스탯 (AuraSkills) ──
+  생활스킬:
+  - skills $1-
+  생활스탯:
+  - stats $1-
+  스탯:
+  - skript:능력치 $1-
+  마나:
+  - mana $1-
+  스킬순위:
+  - skilltop $1-
+  # ── 낚시 (EvenMoreFish) ──
+  낚시:
+  - emf $1-
+  물고기판매:
+  - emf shop
+  물고기도감:
+  - emf journal
+  낚시순위:
+  - emf top
+  낚시도움말:
+  - emf help
+  # ── 관리자 ──
+  친구초대:
+  - whitelist add $1-
+  초대취소:
+  - whitelist remove $1-
+  화이트리스트:
+  - whitelist $1-
+  몹소환:
+  - mm mobs spawn $1-
+  몹전부제거:
+  - mm mobs killall
+  몹아이템:
+  - mm items give $1-
+  몹리로드:
+  - mm reload
+  모델리로드:
+  - bm reload
+  탭리로드:
+  - tab reload
+  낮:
+  - time set day
+  밤:
+  - time set night
+  맑음:
+  - weather clear
+  비:
+  - weather rain
+  게임모드:
+  - gamemode $1-
+  크리:
+  - gamemode creative $1-
+  서바:
+  - gamemode survival $1-
+  관전:
+  - gamemode spectator $1-
+  날기:
+  - fly $1-
+  회복:
+  - heal $1-
+  저장:
+  - save-all
+  서버종료:
+  - stop

@@ -1,0 +1,91 @@
+# ─────────────────────────────────────────────
+#  별빛서버 몬스터 스폰 조건
+#  1) 마을(월드 스폰) 반경 80칸 안에는 적대 몹이 자연 스폰되지 않음
+#  2) 스폰에서 멀어질수록 몹 레벨이 올라감 (체력 증가, 이름에 Lv 표시)
+#  3) 밤에는 가끔 '정예' 몹 등장 (빛남, 체력 3배, 처치 시 돈)
+#  4) 비/천둥 칠 때는 대전된 크리퍼가 나올 수 있음
+#  5) 던전 월드에는 자연 스폰 없음 (던전.sk에서 직접 소환)
+# ─────────────────────────────────────────────
+
+options:
+    safe: 80
+
+on spawn of monster:
+    spawn reason is natural
+    world of event-entity is "world"
+    # 1) 안전 구역
+    distance between event-entity and spawn of world "world" < {@safe}
+    cancel event
+
+on spawn of monster:
+    spawn reason is natural
+    world of event-entity is "world"
+    event-entity is not a phantom
+    set {_e} to event-entity
+    set {_d} to distance between {_e} and spawn of world "world"
+    # 2) 거리별 레벨: 150칸마다 +1 (최대 50)
+    set {_lv} to floor({_d} / 150) + 1
+    if {_lv} > 50:
+        set {_lv} to 50
+    set {_mult} to 1 + ({_lv} - 1) * 0.08
+    set {_elite} to false
+    # 3) 밤 정예 (5%)
+    if time in world "world" is between 13:00 and 23:00:
+        chance of 5%:
+            set {_elite} to true
+            set {_mult} to {_mult} * 3
+    wait 1 tick
+    {_e} is alive
+    set metadata value "mlv" of {_e} to {_lv}
+    set {_hp} to max health of {_e} * {_mult}
+    set max health of {_e} to {_hp}
+    heal {_e}
+    # 커스텀 이름이 이미 있으면(MythicMobs 등) 이름은 그대로
+    display name of {_e} is not set
+    set {_n} to "%type of {_e}%"
+    if {_elite} is true:
+        set display name of {_e} to "&6&l[정예] &eLv.%{_lv}% &f%{_n}%"
+        apply glowing to {_e} for 1 day
+        apply speed 1 to {_e} for 1 day
+        set metadata value "elite" of {_e} to true
+    else if {_lv} > 1:
+        set display name of {_e} to "&7Lv.%{_lv}% &f%{_n}%"
+
+# 몹 공격력: 기본 1.2배 + 레벨당 +6%%, 정예는 추가 1.5배 (던전은 던전.sk에서 따로)
+on damage:
+    victim is a player
+    attacker is not a player
+    world of attacker is world "world"
+    set {_lv} to metadata value "mlv" of attacker
+    if {_lv} is not set:
+        set {_lv} to floor(distance between attacker and spawn of world "world" / 150) + 1
+    set {_lv} to "%{_lv}%" parsed as number
+    if {_lv} > 50:
+        set {_lv} to 50
+    set {_m} to 1.2 * (1 + ({_lv} - 1) * 0.06)
+    if metadata value "elite" of attacker is true:
+        set {_m} to {_m} * 1.5
+    set damage to damage * {_m}
+
+on death of monster:
+    attacker is a player
+    metadata value "elite" of victim is true
+    set {_m} to random integer between 300 and 900
+    add {_m} to attacker's balance
+    send "&6[정예] &f처치 보상 &e%{_m}%원" to attacker
+    play sound "entity.player.levelup" with pitch 1.6 to attacker
+
+# 4) 천둥 칠 때 크리퍼는 20% 확률로 대전
+on spawn of creeper:
+    spawn reason is natural
+    world of event-entity is "world"
+    weather in world "world" is thunder
+    chance of 20%:
+        wait 1 tick
+        make event-entity powered
+
+# 5) 던전 월드 자연 스폰 막기 (게임룰과 이중 안전장치)
+on spawn of living entity:
+    world of event-entity is "dungeon"
+    spawn reason is natural
+    cancel event

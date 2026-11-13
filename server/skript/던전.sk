@@ -1,0 +1,606 @@
+# ─────────────────────────────────────────────
+#  별빛서버 던전 — 일반 11개 + 레이드 2개
+#  Shift+F 메뉴 → 던전 입장 / /던전 / 던전 안내인 카론
+#  각 던전 = 별도 월드(Domae 맵 복사본). 입구 → 웨이브 3번 → 보스(레이드는 보스 여러 단계)
+# ─────────────────────────────────────────────
+
+options:
+    p: &4[던전] &f
+
+# ── 던전 정의 ──
+function dDef(id: text, w: text, name: text, lv: number, icon: itemtype, time: text, weather: text, raid: boolean, desc: text):
+    add {_id} to {-dgd::ids::*}
+    set {-dgd::%{_id}%::world} to {_w}
+    set {-dgd::%{_id}%::name} to {_name}
+    set {-dgd::%{_id}%::lv} to {_lv}
+    set {-dgd::%{_id}%::icon} to {_icon}
+    set {-dgd::%{_id}%::time} to {_time}
+    set {-dgd::%{_id}%::weather} to {_weather}
+    set {-dgd::%{_id}%::raid} to {_raid}
+    set {-dgd::%{_id}%::desc} to {_desc}
+    set {-dgd::%{_id}%::waves} to 0
+    set {-dgd::%{_id}%::bosses} to 0
+
+# 구역: 가운데(cx, cz)와 지점 0~4 (0 입구, 1~3 웨이브, 4 보스)
+function dArea(id: text, cx: number, cz: number, pts: text):
+    set {-dgd::%{_id}%::cx} to {_cx}
+    set {-dgd::%{_id}%::cz} to {_cz}
+    set {_list::*} to {_pts} split at ";"
+    set {_i} to 0
+    loop {_list::*}:
+        set {_c::*} to loop-value split at ","
+        set {_x} to {_c::1} parsed as number
+        set {_y} to {_c::2} parsed as number
+        set {_z} to {_c::3} parsed as number
+        set {-dgd::%{_id}%::pt::%{_i}%} to location({_x} + 0.5, {_y}, {_z} + 0.5, world("dungeon"))
+        add 1 to {_i}
+
+function dWave(id: text, spec: text):
+    add 1 to {-dgd::%{_id}%::waves}
+    set {-dgd::%{_id}%::wave::%{-dgd::%{_id}%::waves}%} to {_spec}
+
+function dBoss(id: text, spec: text, title: text):
+    add 1 to {-dgd::%{_id}%::bosses}
+    set {-dgd::%{_id}%::boss::%{-dgd::%{_id}%::bosses}%} to {_spec}
+    set {-dgd::%{_id}%::bosstitle::%{-dgd::%{_id}%::bosses}%} to {_title}
+
+on load:
+    delete {-dgd::*}
+    dDef("goblin", "dungeon", "&a고블린 소굴", 1, golden axe, "day", "clear", false, "낄낄대는 고블린들의 소굴")
+    dWave("goblin", "고블린_창병:6")
+    dWave("goblin", "고블린_창병:5,고블린_도적:3")
+    dWave("goblin", "고블린_도적:4,고블린_창병:4")
+    dBoss("goblin", "보스_고블린대장:1", "고블린 대장 그롬")
+
+    dDef("undead", "dungeon", "&7망자의 묘지", 5, skeleton skull, "night", "clear", false, "밤마다 망자가 깨어나는 묘지")
+    dWave("undead", "해골_병사:5,썩은_망자:3")
+    dWave("undead", "해골_궁수장:4,썩은_망자:4")
+    dWave("undead", "해골_병사:4,해골_마법사:2,떠도는_원혼:3")
+    dBoss("undead", "리치:1", "언데드 군주 리치")
+
+    dDef("orc", "dungeon", "&2오크 전초기지", 10, iron axe, "dusk", "clear", false, "오크 부족의 최전방 기지")
+    dWave("orc", "오크_전사:5")
+    dWave("orc", "오크_전사:4,오크_궁수:4")
+    dWave("orc", "오크_전사:4,오크_궁수:2,오크_주술사:2")
+    dBoss("orc", "보스_오크대족장:1", "오크 대족장 크루가")
+
+    dDef("mushroom", "dungeon", "&d독버섯 숲", 15, red mushroom, "night", "rain", false, "독 포자가 떠다니는 축축한 숲")
+    dWave("mushroom", "독거미:6")
+    dWave("mushroom", "독거미:4,버섯_마녀:2")
+    dWave("mushroom", "독거미:5,버섯_마녀:3,썩은_망자:2")
+    dBoss("mushroom", "보스_대마법사:1", "푸른 대마법사")
+
+    dDef("frost", "dungeon", "&b얼어붙은 골짜기", 20, blue ice, "night", "clear", false, "원혼이 얼어붙은 차가운 골짜기")
+    dWave("frost", "얼음_원혼:6")
+    dWave("frost", "얼음_원혼:4,떠도는_원혼:4")
+    dWave("frost", "얼음_원혼:5,해골_마법사:3")
+    dBoss("frost", "리치:1,얼음_원혼:4", "얼음의 리치")
+
+    dDef("olympus", "dungeon", "&e올림포스의 시련 &7(그리스 신화)", 25, goat horn, "day", "clear", false, "신화 속 괴물들이 지키는 시련의 땅")
+    dWave("olympus", "사이렌:4,하피:4")
+    dWave("olympus", "케르베로스:3,하피:3")
+    dWave("olympus", "키클롭스:2,케르베로스:2")
+    dBoss("olympus", "보스_메두사:1", "메두사")
+    dBoss("olympus", "보스_미노타우로스:1", "미노타우로스")
+
+    dDef("lava", "dungeon", "&6용암 협곡", 30, magma block, "night", "clear", false, "강과 버섯 숲을 지나 중앙 고원으로")
+    dWave("lava", "협곡_망자:6,협곡_궁수:3")
+    dWave("lava", "화염_해골기사:4,화염_정령:3")
+    dWave("lava", "화염_해골기사:3,화염_정령:3,용암_덩어리:3")
+    dBoss("lava", "보스_데몬나이트:1", "데몬 나이트")
+
+    dDef("tower", "dungeon", "&5해골 마법사의 탑", 35, blaze rod, "night", "thunder", false, "번개가 치는 밤, 해골 마법사들의 의식")
+    dWave("tower", "해골_마법사:4,해골_병사:4")
+    dWave("tower", "해골_궁수장:5,떠도는_원혼:4")
+    dWave("tower", "해골_마법사:5,해골_병사:3")
+    dBoss("tower", "보스_대마법사:1,리치:1", "대마법사와 리치")
+
+    dDef("star", "dungeon", "&b별의 기사 시련", 40, nether star, "dusk", "clear", false, "별의 기사가 자격을 시험한다")
+    dWave("star", "해골_병사:6,해골_궁수장:4")
+    dWave("star", "화염_해골기사:5")
+    dWave("star", "해골_마법사:4,화염_해골기사:3")
+    dBoss("star", "보스_별의기사:1", "별의 기사")
+
+    dDef("volcano", "dungeon", "&c화염 군주의 화산", 45, fire charge, "night", "clear", false, "불길이 솟는 화산의 심장부")
+    dWave("volcano", "화염_정령:5,용암_덩어리:4")
+    dWave("volcano", "화염_해골기사:5,화염_정령:3")
+    dWave("volcano", "케르베로스:3,화염_정령:4")
+    dBoss("volcano", "보스_화염군주:1", "화염 군주")
+
+    dDef("demon", "dungeon", "&4마왕성 입구", 50, wither skeleton skull, "night", "thunder", false, "마왕군 정예가 지키는 마지막 관문")
+    dWave("demon", "화염_해골기사:5,해골_마법사:4")
+    dWave("demon", "오크_전사:5,키클롭스:2")
+    dWave("demon", "리치:1,해골_병사:5")
+    dBoss("demon", "보스_데몬나이트:1,보스_대마법사:1", "데몬 나이트와 대마법사")
+
+    # ── 레이드 ──
+    dDef("raid_dragon", "dungeon", "&c&l[레이드] 적룡의 둥지", 40, dragon head, "dusk", "thunder", true, "오크 대군을 뚫고 적룡 이그니스를 쓰러뜨려라")
+    dWave("raid_dragon", "오크_전사:8,오크_궁수:5")
+    dWave("raid_dragon", "화염_정령:6,화염_해골기사:5")
+    dWave("raid_dragon", "오크_주술사:3,오크_전사:6,키클롭스:2")
+    dBoss("raid_dragon", "보스_오크대족장:1,오크_전사:4", "오크 대족장 크루가")
+    dBoss("raid_dragon", "보스_적룡:1", "적룡 이그니스")
+
+    dDef("raid_demon", "dungeon", "&4&l[레이드] 마왕 강림", 50, end crystal, "night", "thunder", true, "마왕군의 모든 지휘관이 한자리에")
+    dWave("raid_demon", "화염_해골기사:6,해골_마법사:5")
+    dWave("raid_demon", "리치:2,해골_병사:6")
+    dWave("raid_demon", "케르베로스:4,키클롭스:3")
+    dBoss("raid_demon", "보스_데몬나이트:1,보스_대마법사:1", "데몬 나이트와 대마법사")
+    dBoss("raid_demon", "보스_화염군주:1,보스_별의기사:1", "화염 군주와 별의 기사")
+    dBoss("raid_demon", "보스_메두사:1,보스_미노타우로스:1,리치:1", "타락한 신화의 괴물들")
+    dArea("goblin", 89, 49, "73,65,33;104,74,39;77,66,63;104,66,64;89,66,49")
+    dArea("undead", 89, 98, "72,67,81;103,66,86;77,65,112;104,66,113;89,65,98")
+    dArea("orc", 39, 49, "22,65,32;55,66,40;25,65,61;54,66,64;36,65,46")
+    dArea("mushroom", 39, 98, "22,65,81;56,66,89;27,79,111;53,77,112;38,73,98")
+    dArea("frost", -11, 98, "-28,66,81;3,66,86;-23,80,115;3,77,112;-9,78,96")
+    dArea("olympus", -61, 98, "-78,66,81;-47,65,86;-73,65,112;-46,79,113;-59,66,97")
+    dArea("lava", -11, -1, "-28,66,-18;3,66,-13;-23,65,13;4,81,14;-13,70,1")
+    dArea("tower", -61, 49, "-79,76,28;-47,79,37;-74,66,63;-44,66,66;-61,80,49")
+    dArea("star", -11, 49, "-28,67,32;3,65,37;-23,66,63;6,65,62;-11,65,49")
+    dArea("volcano", -61, -1, "-78,66,-18;-46,66,-14;-73,80,13;-45,71,13;-61,79,-1")
+    dArea("demon", -61, -51, "-78,67,-68;-47,65,-63;-73,65,-36;-49,66,-39;-61,66,-51")
+    dArea("raid_dragon", 89, -51, "72,76,-70;103,66,-63;77,65,-37;103,72,-35;89,65,-51")
+    dArea("raid_demon", 39, -51, "22,79,-68;50,66,-60;28,65,-35;54,66,-36;38,66,-52")
+    dApplyThemes()
+
+function dApplyThemes():
+    set time in world("dungeon") to 18:30
+    set weather in world("dungeon") to clear
+
+every 5 minutes:
+    dApplyThemes()
+
+# ── 공용 ──
+function dW(id: text) :: world:
+    return world({-dgd::%{_id}%::world})
+
+function dLoc(id: text, i: number) :: location:
+    return {-dgd::%{_id}%::pt::%{_i}%}
+
+function dCenter(id: text) :: location:
+    return location({-dgd::%{_id}%::cx}, 70, {-dgd::%{_id}%::cz}, world("dungeon"))
+
+function dTotal(id: text) :: number:
+    return {-dgd::%{_id}%::waves} + {-dgd::%{_id}%::bosses}
+
+# 단계 → 지점 번호
+function dStageLoc(id: text, s: number) :: number:
+    if {_s} <= {-dgd::%{_id}%::waves}:
+        return min({_s}, 3)
+    return 4
+
+function dStageName(id: text, s: number) :: text:
+    if {_s} <= 0:
+        return "입구"
+    if {_s} <= {-dgd::%{_id}%::waves}:
+        return "%{_s}%번째 웨이브"
+    set {_b} to {_s} - {-dgd::%{_id}%::waves}
+    return "보스: %{-dgd::%{_id}%::bosstitle::%{_b}%}%"
+
+function dDiffName(d: number) :: text:
+    set {_n::*} to "&a보통", "&6어려움" and "&4&l지옥"
+    return {_n::%{_d}%}
+
+function dNeed(id: text, d: number) :: number:
+    return {-dgd::%{_id}%::lv} + ({_d} - 1) * 5
+
+function dLv(p: player) :: number:
+    set {_v} to metadata value "rpg_level" of {_p}
+    if {_v} is not set:
+        return 1
+    return "%{_v}%" parsed as number
+
+function dMsg(id: text, t: text):
+    loop {dg::%{_id}%::party::*}:
+        send colored "{@p}%{_t}%" to loop-value
+
+function dTitle(id: text, a: text, b: text):
+    loop {dg::%{_id}%::party::*}:
+        send title colored {_a} with subtitle colored {_b} to loop-value for 3 seconds
+
+function dIdOfWorld(w: world) :: text:
+    loop {-dgd::ids::*}:
+        if "%dW(loop-value)%" is "%{_w}%":
+            return loop-value
+    return ""
+
+function dCount(id: text) :: number:
+    set {_n} to 0
+    loop all living entities in radius 34 of dCenter({_id}):
+        loop-entity is not a player
+        loop-entity is not an armor stand
+        loop-entity is not a villager
+        add 1 to {_n}
+    return {_n}
+
+function dClearMobs(id: text):
+    loop all living entities in radius 34 of dCenter({_id}):
+        loop-entity is not a player
+        loop-entity is not a villager
+        kill loop-entity
+
+# 소환된 몹 강화 (던전 레벨·난이도·레이드 인원)
+function dScale(id: text):
+    loop all living entities in radius 34 of dCenter({_id}):
+        loop-entity is not a player
+        loop-entity is not an armor stand
+        loop-entity is not a villager
+        metadata value "dgs" of loop-entity is not set
+        set {_hp} to max health of loop-entity * {dg::%{_id}%::hpmul}
+        set max health of loop-entity to {_hp}
+        heal loop-entity
+        set metadata value "dgs" of loop-entity to true
+
+function dSpawnSpec(id: text, spec: text, at: location, lvl: number):
+    set {_parts::*} to {_spec} split at ","
+    set {_pos} to "%{-dgd::%{_id}%::world}%,%x-coordinate of {_at}%,%y-coordinate of {_at}%,%z-coordinate of {_at}%"
+    loop {_parts::*}:
+        set {_kv::*} to loop-value split at ":"
+        execute console command "mm mobs spawn %{_kv::1}%:%{_lvl}% %{_kv::2}% %{_pos}%"
+
+function dSpawnStage(id: text):
+    set {dg::%{_id}%::spawned} to true
+    set {_s} to {dg::%{_id}%::stage}
+    set {_at} to dLoc({_id}, dStageLoc({_id}, {_s}))
+    set {_w} to {-dgd::%{_id}%::waves}
+    if {_s} <= {_w}:
+        dTitle({_id}, "&c&l⚔ %{_s}%번째 웨이브", "&f몬스터를 모두 쓰러뜨리세요!")
+        dSpawnSpec({_id}, {-dgd::%{_id}%::wave::%{_s}%}, {_at}, {dg::%{_id}%::diff})
+    else:
+        set {_b} to {_s} - {_w}
+        dTitle({_id}, "&4&l☠ %{-dgd::%{_id}%::bosstitle::%{_b}%}% ☠", "&f보스를 쓰러뜨리세요!")
+        dSpawnSpec({_id}, {-dgd::%{_id}%::boss::%{_b}%}, {_at}, {dg::%{_id}%::diff})
+    loop {dg::%{_id}%::party::*}:
+        play sound "entity.wither.spawn" with volume 0.4 to loop-value
+    wait 10 ticks
+    dScale({_id})
+
+function dEnd(id: text, win: boolean):
+    set {_d} to {dg::%{_id}%::diff}
+    set {_lv} to {-dgd::%{_id}%::lv}
+    set {_raid} to {-dgd::%{_id}%::raid}
+    if {_win} is true:
+        set {_dm::*} to 1, 2 and 4
+        set {_mul} to {_dm::%{_d}%}
+        if {_raid} is true:
+            set {_mul} to {_mul} * 3
+        set {_money} to round((3000 + {_lv} * 1500) * {_mul})
+        set {_xp} to round((300 + {_lv} * 150) * {_mul})
+        set {_frag} to round((2 + {_lv} / 8) * {_mul})
+        loop {dg::%{_id}%::party::*}:
+            add {_money} to loop-value's balance
+            execute console command "rpg addxp %loop-value% %{_xp}%"
+            execute console command "mm items give %loop-value% 별의조각 %{_frag}%"
+            if {_raid} is true:
+                execute console command "starrpg give %loop-value% 뽑기권 2"
+            send title colored "&6&l✦ 던전 클리어! ✦" with subtitle colored "&f%{_money}%원 · %{_xp}% EXP · 별의 조각 %{_frag}%개" to loop-value for 5 seconds
+            play sound "ui.toast.challenge_complete" to loop-value
+            add 1 to {dg::clears::%uuid of loop-value%::%{_id}%}
+        broadcast colored "{@p}&e%{dg::%{_id}%::names}%&f님이 %{-dgd::%{_id}%::name}% %dDiffName({_d})%&f을(를) 클리어했습니다!"
+    else:
+        dTitle({_id}, "&c&l던전 실패", "&7다음엔 꼭 이겨요!")
+    set {dg::%{_id}%::active} to false
+    set {dg::%{_id}%::ending} to true
+    wait 8 seconds
+    loop {dg::%{_id}%::party::*}:
+        set {_p} to loop-value
+        {_p} is online
+        if world of {_p} is dW({_id}):
+            teleport {_p} to ({dg::back::%uuid of {_p}%} ? spawn of world "world")
+        delete {dg::of::%uuid of {_p}%}
+    dClearMobs({_id})
+    delete {dg::%{_id}%::party::*}
+    set {dg::%{_id}%::stage} to 0
+    set {dg::%{_id}%::ending} to false
+
+function dStart(leader: player, id: text, d: number):
+    if {dg::%{_id}%::active} is true:
+        send colored "{@p}&c지금 다른 파티가 이 던전에 있어요. 다른 던전을 고르거나 잠시 후에 와 주세요." to {_leader}
+        stop
+    if {dg::%{_id}%::ending} is true:
+        send colored "{@p}&c던전을 정리하는 중이에요. 몇 초만 기다려 주세요." to {_leader}
+        stop
+    set {_raid} to {-dgd::%{_id}%::raid}
+    set {_r} to 10 if {_raid} is true, otherwise 6
+    set {_max} to 10 if {_raid} is true, otherwise 5
+    set {_cdm} to 60 if {_raid} is true, otherwise 10
+    delete {dg::%{_id}%::party::*}
+    loop all players in radius {_r} of {_leader}:
+        set {_p} to loop-player
+        {dg::of::%uuid of {_p}%} is not set
+        size of {dg::%{_id}%::party::*} < {_max}
+        if dLv({_p}) < dNeed({_id}, {_d}):
+            send colored "{@p}&c%{_p}%: 레벨이 부족해요. (필요 Lv.%dNeed({_id}, {_d})%)" to {_leader}
+            continue
+        if {dg::cd::%uuid of {_p}%::%{_id}%} is set:
+            set {_ts} to "%{_cdm}% minutes" parsed as timespan
+            if difference between {dg::cd::%uuid of {_p}%::%{_id}%} and now < {_ts}:
+                send colored "{@p}&c%{_p}%: 아직 이 던전 대기 시간이에요." to {_leader}
+                continue
+        add {_p} to {dg::%{_id}%::party::*}
+    if size of {dg::%{_id}%::party::*} = 0:
+        send colored "{@p}&c입장할 수 있는 사람이 없어요." to {_leader}
+        stop
+    set {_n} to size of {dg::%{_id}%::party::*}
+    set {_lv} to {-dgd::%{_id}%::lv}
+    set {_hd::*} to 1, 1.8 and 3
+    set {_dd::*} to 1, 1.4 and 2
+    set {dg::%{_id}%::hpmul} to (1 + {_lv} * 0.04) * {_hd::%{_d}%}
+    set {dg::%{_id}%::dmgmul} to (1.2 + {_lv} * 0.05) * {_dd::%{_d}%}
+    if {_raid} is true:
+        set {dg::%{_id}%::hpmul} to {dg::%{_id}%::hpmul} * (1 + 0.6 * ({_n} - 1))
+    set {dg::%{_id}%::active} to true
+    set {dg::%{_id}%::diff} to {_d}
+    set {dg::%{_id}%::stage} to 1
+    set {dg::%{_id}%::spawned} to false
+    set {dg::%{_id}%::deaths} to 0
+    set {dg::%{_id}%::lives} to 10 if {_raid} is true, otherwise 5
+    set {dg::%{_id}%::started} to now
+    dClearMobs({_id})
+    set {_names} to ""
+    loop {dg::%{_id}%::party::*}:
+        set {dg::back::%uuid of loop-value%} to location of loop-value
+        set {dg::cd::%uuid of loop-value%::%{_id}%} to now
+        set {dg::of::%uuid of loop-value%} to {_id}
+        teleport loop-value to dLoc({_id}, 0)
+        if {_names} is "":
+            set {_names} to "%loop-value%"
+        else:
+            set {_names} to "%{_names}%, %loop-value%"
+    set {dg::%{_id}%::names} to {_names}
+    wait 1 tick
+    dTitle({_id}, "%{-dgd::%{_id}%::name}%", "%dDiffName({_d})% &7· 파티 %{_n}%명")
+    dMsg({_id}, "&f입장! 나침반과 &c불꽃 기둥&f을 따라가세요. 목숨은 파티 합쳐 &c%{dg::%{_id}%::lives}%번&f이에요.")
+    dMsg({_id}, "&7나가기: /던전 나가기")
+
+# 매초 진행
+every second:
+    loop {-dgd::ids::*}:
+        set {_id} to loop-value
+        {dg::%{_id}%::active} is true
+        dTick({_id})
+
+function dTick(id: text):
+    loop {dg::%{_id}%::party::*}:
+        if loop-value is not online:
+            remove loop-value from {dg::%{_id}%::party::*}
+        else if world of loop-value is not dW({_id}):
+            delete {dg::of::%uuid of loop-value%}
+            remove loop-value from {dg::%{_id}%::party::*}
+    if size of {dg::%{_id}%::party::*} = 0:
+        set {dg::%{_id}%::active} to false
+        dClearMobs({_id})
+        set {dg::%{_id}%::stage} to 0
+        stop
+    set {_lim} to 40 if {-dgd::%{_id}%::raid} is true, otherwise 25
+    set {_ts} to "%{_lim}% minutes" parsed as timespan
+    if difference between {dg::%{_id}%::started} and now > {_ts}:
+        dMsg({_id}, "&c시간 초과!")
+        dEnd({_id}, false)
+        stop
+    set {_s} to {dg::%{_id}%::stage}
+    set {_l} to dLoc({_id}, dStageLoc({_id}, {_s}))
+    loop {dg::%{_id}%::party::*}:
+        set compass target of loop-value to {_l}
+    execute console command "execute in minecraft:%{-dgd::%{_id}%::world}% run particle minecraft:flame %x-coordinate of {_l}% %y-coordinate of {_l} + 3% %z-coordinate of {_l}% 0.2 3 0.2 0.01 40 force"
+    if {dg::%{_id}%::spawned} is false:
+        loop {dg::%{_id}%::party::*}:
+            if distance between loop-value and {_l} < 12:
+                dSpawnStage({_id})
+                stop
+        stop
+    if dCount({_id}) > 0:
+        stop
+    if {_s} >= dTotal({_id}):
+        dEnd({_id}, true)
+        stop
+    dTitle({_id}, "&a&l✔ %dStageName({_id}, {_s})% 클리어", "&f다음: %dStageName({_id}, {_s} + 1)%")
+    loop {dg::%{_id}%::party::*}:
+        play sound "entity.player.levelup" to loop-value
+        heal loop-value by 6
+    add 1 to {dg::%{_id}%::stage}
+    set {dg::%{_id}%::spawned} to false
+
+# 던전 몹이 더 아프게 (던전 레벨·난이도 비례)
+on damage:
+    victim is a player
+    attacker is not a player
+    set {_id} to {dg::of::%uuid of victim%}
+    {_id} is set
+    set damage to damage * ({dg::%{_id}%::dmgmul} ? 1)
+
+on death of player:
+    set {_id} to {dg::of::%uuid of victim%}
+    {_id} is set
+    {dg::%{_id}%::active} is true
+    add 1 to {dg::%{_id}%::deaths}
+    set {_left} to {dg::%{_id}%::lives} - {dg::%{_id}%::deaths}
+    if {_left} <= 0:
+        dMsg({_id}, "&c목숨을 모두 잃었어요...")
+        dEnd({_id}, false)
+    else:
+        dMsg({_id}, "&c%victim%님이 쓰러졌어요! &7(남은 목숨 %{_left}%)")
+
+on respawn:
+    set {_id} to {dg::of::%uuid of player%}
+    {_id} is set
+    {dg::%{_id}%::active} is true
+    set {_s} to {dg::%{_id}%::stage} - 1
+    if {_s} < 0:
+        set {_s} to 0
+    set respawn location to dLoc({_id}, dStageLoc({_id}, {_s}))
+
+on quit:
+    set {_id} to {dg::of::%uuid of player%}
+    {_id} is set
+    remove player from {dg::%{_id}%::party::*}
+    delete {dg::of::%uuid of player%}
+
+on join:
+    "%world of player%" starts with "dungeon"
+    wait 1 second
+    set {_id} to {dg::of::%uuid of player%}
+    if {_id} is set:
+        {dg::%{_id}%::active} is true
+        stop
+    teleport player to ({dg::back::%uuid of player%} ? spawn of world "world")
+
+# 던전 맵 보호
+on break:
+    "%world of player%" starts with "dungeon"
+    player's gamemode is not creative
+    cancel event
+
+on place:
+    "%world of player%" starts with "dungeon"
+    player's gamemode is not creative
+    cancel event
+
+# ── GUI ──
+function dIcon(p: player, id: text) :: item:
+    set {_it} to 1 of {-dgd::%{_id}%::icon}
+    set name of {_it} to colored "%{-dgd::%{_id}%::name}%"
+    set {_lore::*} to colored "&7%{-dgd::%{_id}%::desc}%", "" and colored "&7권장 레벨: &fLv.%{-dgd::%{_id}%::lv}%"
+    add colored "&7웨이브 &f%{-dgd::%{_id}%::waves}% &7· 보스 &f%{-dgd::%{_id}%::bosses}%단계" to {_lore::*}
+    loop {-dgd::%{_id}%::bosses} times:
+        add colored " &4☠ &f%{-dgd::%{_id}%::bosstitle::%loop-value%}%" to {_lore::*}
+    if {-dgd::%{_id}%::raid} is true:
+        add colored "&d레이드: 반경 10칸 최대 10명 · 인원만큼 보스 체력 증가" to {_lore::*}
+        add colored "&d보상 3배 + 뽑기권 2장 · 대기 60분" to {_lore::*}
+    add "" to {_lore::*}
+    if {dg::%{_id}%::active} is true:
+        add colored "&c진행 중 (%size of {dg::%{_id}%::party::*}%명, %dStageName({_id}, {dg::%{_id}%::stage})%)" to {_lore::*}
+    else:
+        add colored "&a비어 있음" to {_lore::*}
+    set {_c} to {dg::clears::%uuid of {_p}%::%{_id}%} ? 0
+    add colored "&7내 클리어: &e%{_c}%회" to {_lore::*}
+    add colored "&e▶ 클릭: 난이도 고르기" to {_lore::*}
+    set lore of {_it} to {_lore::*}
+    return {_it}
+
+function dSlot(i: number) :: number:
+    # 일반 11개: 10~16, 20~23 / 레이드: 30, 32
+    set {_s::*} to 10, 11, 12, 13, 14, 15, 16, 20, 21, 22, 23, 30 and 32
+    return {_s::%{_i}%}
+
+function dMenu(p: player):
+    set {_gui} to chest inventory with 6 rows named colored "&f&c&l☠ 던전 목록"
+    loop 54 times:
+        set {_s} to loop-value - 1
+        set {_b} to false
+        if floor({_s} / 9) is 0 or 5:
+            set {_b} to true
+        if mod({_s}, 9) is 0 or 8:
+            set {_b} to true
+        if {_b} is true:
+            set slot {_s} of {_gui} to air
+        else:
+            set slot {_s} of {_gui} to air
+    set slot 4 of {_gui} to wither skeleton skull named colored "&4&l던전" with lore colored "&7근처(6칸) 사람과 함께 파티로 입장해요.", colored "&7입구 → 웨이브 3번 → 보스 · 제한 25분 · 목숨 5" and colored "&7같은 던전 대기 시간 10분 (레이드 60분)"
+    set {_i} to 0
+    loop {-dgd::ids::*}:
+        add 1 to {_i}
+        set slot dSlot({_i}) of {_gui} to dIcon({_p}, loop-value)
+    set slot 28 of {_gui} to purple stained glass pane named colored "&d&l레이드 던전 →"
+    set slot 34 of {_gui} to purple stained glass pane named colored "&d&l← 레이드 던전"
+    if {dg::of::%uuid of {_p}%} is set:
+        set slot 49 of {_gui} to oak door named colored "&c&l던전 나가기"
+    else:
+        set slot 49 of {_gui} to barrier named colored "&c닫기"
+    open {_gui} to {_p}
+
+function dDiffMenu(p: player, id: text):
+    set {dg::sel::%uuid of {_p}%} to {_id}
+    set {_gui} to chest inventory with 3 rows named colored "&f&c&l☠ 난이도 선택"
+    loop 27 times:
+        set slot (loop-value - 1) of {_gui} to air
+    set slot 4 of {_gui} to dIcon({_p}, {_id})
+    set {_mat::*} to iron sword, diamond sword and netherite sword
+    set {_hp::*} to "x1", "x1.8" and "x3"
+    set {_dm::*} to "x1", "x1.4" and "x2"
+    set {_rw::*} to "x1", "x2" and "x4"
+    loop 3 times:
+        set {_d} to loop-value
+        set {_it} to 1 of {_mat::%{_d}%}
+        set name of {_it} to colored dDiffName({_d})
+        set lore of {_it} to colored "&7필요 레벨: &fLv.%dNeed({_id}, {_d})%", colored "&7몬스터 체력 %{_hp::%{_d}%}% · 피해 %{_dm::%{_d}%}%", colored "&7보상 %{_rw::%{_d}%}%", "" and colored "&a▶ 클릭해서 입장"
+        set slot (9 + {_d} * 2) of {_gui} to {_it}
+    set slot 22 of {_gui} to arrow named colored "&7← 던전 목록"
+    open {_gui} to {_p}
+
+command /던전 [<text>]:
+    aliases: /dungeon
+    trigger:
+        if arg-1 is "나가기":
+            set {_id} to {dg::of::%uuid of player%}
+            if {_id} is set:
+                remove player from {dg::%{_id}%::party::*}
+                delete {dg::of::%uuid of player%}
+            if "%world of player%" starts with "dungeon":
+                teleport player to ({dg::back::%uuid of player%} ? spawn of world "world")
+                send colored "{@p}던전에서 나왔어요."
+            stop
+        dMenu(player)
+
+on inventory click:
+    name of event-inventory is colored "&f&c&l☠ 던전 목록"
+    cancel event
+    event-inventory is not player's inventory
+    set {_s} to index of event-slot
+    if {_s} = 49:
+        close player's inventory
+        if {dg::of::%uuid of player%} is set:
+            make player execute command "/던전 나가기"
+        stop
+    set {_i} to 0
+    loop {-dgd::ids::*}:
+        add 1 to {_i}
+        if dSlot({_i}) = {_s}:
+            dDiffMenu(player, loop-value)
+            stop
+
+on inventory click:
+    name of event-inventory is colored "&f&c&l☠ 난이도 선택"
+    cancel event
+    event-inventory is not player's inventory
+    set {_s} to index of event-slot
+    set {_id} to {dg::sel::%uuid of player%}
+    {_id} is set
+    if {_s} = 22:
+        dMenu(player)
+        stop
+    set {_d} to 0
+    if {_s} = 11:
+        set {_d} to 1
+    else if {_s} = 13:
+        set {_d} to 2
+    else if {_s} = 15:
+        set {_d} to 3
+    {_d} > 0
+    close player's inventory
+    if dLv(player) < dNeed({_id}, {_d}):
+        send colored "{@p}&c레벨이 부족해요. (필요 Lv.%dNeed({_id}, {_d})%)"
+        stop
+    dStart(player, {_id}, {_d})
+
+command /던전관리 [<text>]:
+    permission: op
+    trigger:
+        set {_a::*} to (argument 1 ? "") split at " "
+        if {_a::1} is "초기화":
+            loop {-dgd::ids::*}:
+                set {dg::%loop-value%::active} to false
+                set {dg::%loop-value%::ending} to false
+                delete {dg::%loop-value%::party::*}
+                dClearMobs(loop-value)
+            delete {dg::cd::*}
+            delete {dg::of::*}
+            send colored "{@p}모든 던전 상태와 대기 시간을 초기화했어요."
+        else if {_a::1} is "이동":
+            set {_id} to {_a::2} ? "lava"
+            teleport player to dLoc({_id}, 0)
+        else if {_a::1} is "목록":
+            loop {-dgd::ids::*}:
+                send colored "&7%loop-value% &f%{-dgd::%loop-value%::name}% &7Lv.%{-dgd::%loop-value%::lv}% %{-dgd::%loop-value%::world}% 웨이브 %{-dgd::%loop-value%::waves}% 보스 %{-dgd::%loop-value%::bosses}%"
+        else:
+            send colored "{@p}/던전관리 초기화 · /던전관리 이동 <id> · /던전관리 목록"

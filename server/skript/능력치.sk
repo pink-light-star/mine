@@ -1,0 +1,273 @@
+# ─────────────────────────────────────────────
+#  별빛서버 능력치(스탯) 시스템
+#  - 직업마다 레벨업 때 자동으로 오르는 능력치가 다름
+#  - 레벨업마다 자유 포인트 3개 → /능력치 에서 직접 투자
+#  힘: 근접 피해 / 민첩: 원거리 피해·치명타 / 지능: 스킬 피해·MP
+#  체력: 최대 체력·피해 감소 / 행운: 치명타·몬스터 처치 시 돈
+# ─────────────────────────────────────────────
+
+options:
+    p: &d[별빛] &f
+    perlevel: 3
+
+# 직업(1차 계열)별 레벨당 자동 성장: 힘, 민첩, 지능, 체력, 행운
+function growth(root: text) :: numbers:
+    if {_root} is "WARRIOR":
+        return 3, 1, 0, 3 and 0
+    if {_root} is "SWORDSMAN" or "MONK":
+        return 3, 2, 0, 2 and 0
+    if {_root} is "LANCER":
+        return 3, 1, 0, 2 and 1
+    if {_root} is "ARCHER":
+        return 1, 3, 0, 1 and 2
+    if {_root} is "GUNSLINGER":
+        return 1, 3, 1, 1 and 1
+    if {_root} is "ROGUE" or "NINJA":
+        return 2, 3, 0, 1 and 1
+    if {_root} is "MAGE":
+        return 0, 1, 4, 1 and 1
+    if {_root} is "MOON_PRIEST":
+        return 0, 1, 3, 1 and 2
+    if {_root} is "CLERIC":
+        return 0, 1, 3, 2 and 1
+    if {_root} is "BARD":
+        return 0, 2, 2, 1 and 2
+    return 1, 1, 1, 1 and 1
+
+function statName(i: number) :: text:
+    set {_n::*} to "힘", "민첩", "지능", "체력" and "행운"
+    return {_n::%{_i}%}
+
+function statKey(i: number) :: text:
+    set {_n::*} to "str", "dex", "int", "vit" and "luk"
+    return {_n::%{_i}%}
+
+function rpgLv(p: player) :: number:
+    set {_v} to metadata value "rpg_level" of {_p}
+    if {_v} is not set:
+        return 1
+    return "%{_v}%" parsed as number
+
+function rpgRoot(p: player) :: text:
+    set {_v} to metadata value "rpg_root" of {_p}
+    if {_v} is not set:
+        return "NOVICE"
+    return "%{_v}%"
+
+# 직업 성장분 (레벨 1부터 지금까지)
+function classStat(p: player, i: number) :: number:
+    set {_g::*} to growth(rpgRoot({_p}))
+    return {_g::%{_i}%} * (rpgLv({_p}) - 1)
+
+function invested(p: player, i: number) :: number:
+    set {_k} to statKey({_i})
+    return {stat::%uuid of {_p}%::%{_k}%} ? 0
+
+function totalStat(p: player, i: number) :: number:
+    return classStat({_p}, {_i}) + invested({_p}, {_i}) + ({-gb::%uuid of {_p}%::%{_i}%} ? 0)
+
+# 장비 추가 능력치: 설명에 "▸ 힘 +10" 형식 줄이 있으면 합산 (손에 든 무기 + 입은 방어구)
+function gearBonusOf(it: item, out: text):
+    {_it} is set
+    loop lore of {_it}:
+        set {_u} to uncolored loop-value
+        {_u} contains "▸ "
+        set {_parts::*} to {_u} split at " "
+        set {_name} to ""
+        set {_num} to 0
+        loop {_parts::*}:
+            if loop-value-2 is "힘" or "민첩" or "지능" or "체력" or "행운":
+                set {_name} to loop-value-2
+            else if loop-value-2 starts with "+":
+                set {_t} to loop-value-2
+                replace all "+" with "" in {_t}
+                set {_num} to ({_t} parsed as number) ? 0
+        {_name} is not ""
+        set {_map::힘} to 1
+        set {_map::민첩} to 2
+        set {_map::지능} to 3
+        set {_map::체력} to 4
+        set {_map::행운} to 5
+        set {_idx} to {_map::%{_name}%}
+        add {_num} to {-gb::%{_out}%::%{_idx}%}
+
+function refreshGear(p: player):
+    set {_u} to "%uuid of {_p}%"
+    delete {-gb::%{_u}%::*}
+    gearBonusOf(tool of {_p}, {_u})
+    gearBonusOf(helmet of {_p}, {_u})
+    gearBonusOf(chestplate of {_p}, {_u})
+    gearBonusOf(leggings of {_p}, {_u})
+    gearBonusOf(boots of {_p}, {_u})
+
+every 1 second:
+    loop all players:
+        refreshGear(loop-player)
+
+function freePoints(p: player) :: number:
+    set {_spent} to 0
+    loop 5 times:
+        add invested({_p}, loop-value) to {_spent}
+    return ({@perlevel} * (rpgLv({_p}) - 1)) + ({stat::%uuid of {_p}%::bonus} ? 0) - {_spent}
+
+# 2초마다: 체력 적용, 지능을 StarRPG로 넘기기, 레벨업 알림
+every 2 seconds:
+    loop all players:
+        set {_p} to loop-player
+        set {_u} to uuid of {_p}
+        set {_vit} to totalStat({_p}, 4)
+        set {_hp} to 20 + floor({_vit} * 0.5)
+        if {_hp} > 200:
+            set {_hp} to 200
+        if {stat::%{_u}%::lasthp} is not {_hp}:
+            set max health attribute of {_p} to {_hp}
+            set {stat::%{_u}%::lasthp} to {_hp}
+        set metadata value "stat_int" of {_p} to totalStat({_p}, 3)
+        set metadata value "stat_free" of {_p} to freePoints({_p})
+        set {_lv} to rpgLv({_p})
+        if {stat::%{_u}%::lastlv} is not set:
+            set {stat::%{_u}%::lastlv} to {_lv}
+        if {_lv} > {stat::%{_u}%::lastlv}:
+            set {_gain} to ({_lv} - {stat::%{_u}%::lastlv}) * {@perlevel}
+            set {stat::%{_u}%::lastlv} to {_lv}
+            send "{@p}&a레벨업! &f능력치 포인트 &e+%{_gain}% &7(/능력치 · Shift+F 메뉴)" to {_p}
+            play sound "entity.player.levelup" with volume 0.6 to {_p}
+        else if {_lv} < {stat::%{_u}%::lastlv}:
+            set {stat::%{_u}%::lastlv} to {_lv}
+
+# ── 전투 효과 ──
+on damage:
+    attacker is a player
+    victim is not a player
+    set {_p} to attacker
+    set {_m} to 1
+    if metadata value "skill_hit" of {_p} is true:
+        # 스킬 피해: 지능 보너스는 StarRPG에서 이미 반영 → 힘·민첩 보너스 없음
+        set {_m} to 1
+    else if damage cause is projectile:
+        add totalStat({_p}, 2) * 0.012 to {_m}
+    else:
+        add totalStat({_p}, 1) * 0.01 to {_m}
+    set {_crit} to totalStat({_p}, 2) * 0.3 + totalStat({_p}, 5) * 0.5
+    if {_crit} > 60:
+        set {_crit} to 60
+    chance of {_crit}%:
+        set {_m} to {_m} * 1.5
+        send action bar "&6&l✦ 치명타! &f(x1.5)" to {_p}
+        play sound "entity.player.attack.crit" to {_p}
+    set damage to damage * {_m}
+
+on damage:
+    victim is a player
+    attacker is not a player
+    set {_red} to totalStat(victim, 4) * 0.3
+    if {_red} > 40:
+        set {_red} to 40
+    set damage to damage * (1 - {_red} / 100)
+
+on death:
+    victim is not a player
+    attacker is a player
+    victim is a monster
+    set {_luk} to totalStat(attacker, 5)
+    chance of ({_luk} * 0.4)%:
+        set {_m} to random integer between 30 and 120
+        add {_m} to attacker's balance
+        send action bar "&e⛃ 행운! &f+%{_m}%원" to attacker
+
+# ── GUI ──
+function statIcon(p: player, i: number) :: item:
+    set {_mat::1} to iron sword
+    set {_mat::2} to bow
+    set {_mat::3} to blaze rod
+    set {_mat::4} to golden apple
+    set {_mat::5} to rabbit foot
+    set {_col::1} to "&c"
+    set {_col::2} to "&a"
+    set {_col::3} to "&9"
+    set {_col::4} to "&6"
+    set {_col::5} to "&e"
+    set {_eff::1} to "근접 피해 +1%%"
+    set {_eff::2} to "원거리 피해 +1.2%%, 치명타 +0.3%%"
+    set {_eff::3} to "스킬 피해 +2%%, 최대 MP +3"
+    set {_eff::4} to "최대 체력 +0.5, 받는 피해 -0.3%%"
+    set {_eff::5} to "치명타 +0.5%%, 처치 시 돈 0.4%%"
+    set {_g::*} to growth(rpgRoot({_p}))
+    set {_gear} to {-gb::%uuid of {_p}%::%{_i}%} ? 0
+    set {_it} to {_mat::%{_i}%} named "%{_col::%{_i}%}%&l%statName({_i})% &f%totalStat({_p}, {_i})%"
+    set lore of {_it} to "&8━━━━━━━━━━━━━━", "&7직업 성장: &f%classStat({_p}, {_i})% &8(레벨당 +%{_g::%{_i}%}%)", "&7직접 투자: &f%invested({_p}, {_i})%", "&7장비 추가: &f%{_gear}%", "", "&71당 효과: &f%{_eff::%{_i}%}%", "&8━━━━━━━━━━━━━━" and "&a좌클릭 &f+1   &aShift+좌클릭 &f+5"
+    return {_it}
+
+function openStats(p: player):
+    set {_gui} to chest inventory with 5 rows named "&f&a&l✦ 능력치"
+    loop 45 times:
+        set {_s} to loop-value - 1
+        set {_r} to floor({_s} / 9)
+        set {_c} to mod({_s}, 9)
+        set {_b} to false
+        if {_r} is 0 or 4:
+            set {_b} to true
+        if {_c} is 0 or 8:
+            set {_b} to true
+        if {_b} is true:
+            set slot {_s} of {_gui} to air
+        else:
+            set slot {_s} of {_gui} to air
+    set {_head} to skull of {_p}
+    set {_cls} to metadata value "rpg_class_colored" of {_p}
+    set {_g::*} to growth(rpgRoot({_p}))
+    set name of {_head} to "&e&l%{_p}%"
+    set lore of {_head} to "&7레벨: &fLv.%rpgLv({_p})%", "&7직업: %{_cls}%", "", "&7레벨당 자동 성장:", " &c힘 %{_g::1}% &a민첩 %{_g::2}% &9지능 %{_g::3}% &6체력 %{_g::4}% &e행운 %{_g::5}%", "" and "&7남은 포인트: &e&l%freePoints({_p})%"
+    set slot 4 of {_gui} to {_head}
+    set slot 20 of {_gui} to statIcon({_p}, 1)
+    set slot 21 of {_gui} to statIcon({_p}, 2)
+    set slot 22 of {_gui} to statIcon({_p}, 3)
+    set slot 23 of {_gui} to statIcon({_p}, 4)
+    set slot 24 of {_gui} to statIcon({_p}, 5)
+    set slot 31 of {_gui} to experience bottle named "&e&l남은 포인트: %freePoints({_p})%" with lore "&7레벨업마다 3개씩 받아요." and "&7초기화: 모험가 잡화점의 &d능력치 초기화 주문서"
+    set slot 40 of {_gui} to barrier named "&c닫기"
+    open {_gui} to {_p}
+
+command /능력치 [<text>]:
+    aliases: /스탯창, /stat
+    trigger:
+        openStats(player)
+
+on inventory click:
+    name of event-inventory is "&f&a&l✦ 능력치"
+    cancel event
+    event-inventory is not player's inventory
+    if index of event-slot is 40:
+        close player's inventory
+        stop
+    set {_i} to index of event-slot - 19
+    {_i} >= 1
+    {_i} <= 5
+    set {_n} to 1
+    if click type is left mouse button with shift:
+        set {_n} to 5
+    set {_free} to freePoints(player)
+    if {_free} < 1:
+        send "{@p}&c남은 포인트가 없어요." to player
+        play sound "block.note_block.bass" to player
+        stop
+    if {_n} > {_free}:
+        set {_n} to {_free}
+    set {_k} to statKey({_i})
+    add {_n} to {stat::%uuid of player%::%{_k}%}
+    play sound "entity.experience_orb.pickup" with pitch 1.4 to player
+    if {_k} is "int":
+        set metadata value "stat_int" of player to totalStat(player, 3)
+    openStats(player)
+
+# 관리자: /능력치관리 초기화 <플레이어> · 보너스 <플레이어> <양>
+command /능력치관리 <text> <player> [<number>]:
+    permission: op
+    trigger:
+        if arg-1 is "초기화":
+            loop "str", "dex", "int", "vit" and "luk":
+                delete {stat::%uuid of arg-2%::%loop-value%}
+            send "{@p}%arg-2%의 투자 능력치를 초기화했어요."
+        else if arg-1 is "보너스":
+            add (arg-3 ? 0) to {stat::%uuid of arg-2%::bonus}
+            send "{@p}%arg-2%에게 보너스 포인트 %arg-3%개."

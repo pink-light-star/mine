@@ -1,0 +1,7 @@
+resource-pack:
+  public-url: https://drive.usercontent.google.com/download?id=1Z36nqeCrpC0U-T0EW_v_5mzzlql_4iIi&export=download&confirm=t&name=pack.zip
+  enabled: true
+  port: 8163
+  file: plugins/BetterModel/build.zip
+  public-host: ''
+  required: false
