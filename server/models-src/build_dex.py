@@ -212,8 +212,11 @@ def main():
         if os.path.exists(icon):
             shutil.copy(icon, os.path.join(OUT, "thumbs", "i_" + g["id"] + ".png")); g["thumb"] = f"thumbs/i_{g['id']}.png"
         mj = os.path.join(PACK, "models", "item", "forge", g["id"] + ".json")
-        tx = os.path.join(PACK, "textures", "item", "forge", "vox", g["id"] + ".png")
-        if os.path.exists(mj) and os.path.exists(tx):
+        tx = None
+        if os.path.exists(mj):
+            t0 = json.load(open(mj)).get("textures", {}).get("0")
+            if t0: tx = os.path.join(PACK, "textures", t0.split(":", 1)[1] + ".png")
+        if tx and os.path.exists(tx):
             pm = pack_item(mj, tx)
             if pm:
                 models["item_" + g["id"]] = pm; g["model"] = "item_" + g["id"]
