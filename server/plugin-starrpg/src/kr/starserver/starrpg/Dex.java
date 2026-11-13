@@ -58,6 +58,7 @@ final class Dex implements Listener {
             new Mob("§4§l⚔ 오크 대족장 크루가", "orc_chief", 900, 16, "§c보스", Material.NETHERITE_AXE, "별빛 고래 10%"),
             new Mob("§4§l⚔ 데몬 나이트", "demon_knight", 900, 14, "§c보스", Material.NETHERITE_SWORD, "마왕군의 선봉"),
             new Mob("§c§l🐂 미노타우로스", "minotaur", 800, 15, "§c보스", Material.IRON_AXE, "별빛 고래 10%"),
+            new Mob("§3§l♞ 흑기사", "dark_rider", 1000, 16, "§c보스", Material.TRIDENT, "말 탄 마왕군 기사 · 마왕성 입구 던전"),
             new Mob("§9§l✦ 푸른 대마법사", "blue_wizard", 700, 8, "§c보스", Material.BLAZE_ROD, "마왕군의 대마법사"),
             new Mob("§2§l🐍 메두사", "medusa", 650, 10, "§c보스", Material.BOW, "별빛 고래 10%"),
             new Mob("§6§l키클롭스", "cyclops", 220, 15, "§6정예", Material.STONE, "외눈 거인"),

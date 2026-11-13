@@ -73,3 +73,35 @@
     AlwaysShowName: true
     Despawn: false
     FollowRange: 40
+
+# 흑기사: 갑옷 입은 군마를 탄 마왕군 기사 (모델 dark_rider, 마왕성 입구 던전 보스)
+보스_흑기사:
+  Type: RAVAGER
+  Display: '&3&l♞ 흑기사 ♞'
+  Health: 1000
+  Damage: 16
+  Armor: 12
+  Faction: 마왕군
+  BossBar:
+    Enabled: true
+    Title: '&3흑기사'
+    Range: 50
+    Color: BLUE
+    Style: SEGMENTED_12
+  Skills:
+  - model{mid=dark_rider} @self ~onSpawn
+  - message{m="&3[흑기사] &f말발굽 소리가 들리는가... 그것이 너희의 마지막 소리다."} @PlayersInRadius{r=40} ~onSpawn
+  - skill{s=흑기사_찌르기} @target ~onAttack
+  - skill{s=흑기사_돌격} @target ~onTimer:180
+  - skill{s=흑기사_창격} @self ~onTimer:260
+  - message{m="&3[흑기사] &f주군이시여... 용서를..."} @PlayersInRadius{r=40} ~onDeath
+  Drops:
+  - 별의조각 8to12 1
+  - exp 1200
+  Options:
+    MovementSpeed: 0.3
+    PreventOtherDrops: true
+    KnockbackResistance: 1
+    AlwaysShowName: true
+    Despawn: false
+    FollowRange: 40

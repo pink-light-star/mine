@@ -109,3 +109,30 @@
   - damage{a=4} @target
   - potion{type=SLOWNESS;duration=80;level=2} @target
   - sound{s=block.glass.break;v=1;p=1.4} @target
+
+# ── 흑기사 ──
+흑기사_찌르기:
+  Skills:
+  - state{mid=dark_rider;s=attack} @self
+  - particles{p=soul_fire_flame;a=12;hs=0.3;vs=0.3;s=0.02} @target
+  - sound{s=entity.player.attack.sweep;v=1.5;p=0.7} @self
+
+흑기사_돌격:
+  Skills:
+  - message{m="&3[흑기사] &f돌격!"} @PlayersInRadius{r=30}
+  - sound{s=entity.horse.angry;v=2;p=0.6} @self
+  - delay 10
+  - lunge{velocity=2.2;velocityY=0.15} @target
+  - delay 8
+  - damage{a=10} @PlayersInRadius{r=3}
+  - throw{velocity=12;velocityY=4} @PlayersInRadius{r=3}
+  - particles{p=soul_fire_flame;a=40;hs=1.5;vs=0.5;s=0.05} @self
+
+흑기사_창격:
+  Skills:
+  - state{mid=dark_rider;s=attack} @self
+  - sound{s=entity.lightning_bolt.thunder;v=1;p=1.6} @self
+  - delay 12
+  - damage{a=8} @PlayersInRadius{r=6}
+  - potion{type=SLOWNESS;duration=60;level=1} @PlayersInRadius{r=6}
+  - particles{p=soul_fire_flame;a=80;hs=3;vs=0.3;s=0.06} @self
