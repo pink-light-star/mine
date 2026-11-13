@@ -12,7 +12,7 @@ NAMES = {
     "cerberus": "케르베로스", "dragon": "적룡 이그니스", 
     "sky_whale": "별빛 고래 (탈것)", "broom": "마법 빗자루 (탈것)",
     "mount_horse": "왕실 기사마 (탈것)", "mount_wolf": "늑대왕 (탈것)", "mount_fox": "신령 여우 (탈것)", "mount_dragon": "비룡 (신화 탈것)",
-    "rico_normal": "세컨드 (평소)", "rico_combat": "리코 (전투)", "rapi_normal": "수영복 (평소)",
+    "rico_normal": "린 (평소)", "rico_combat": "리코 (전투)", "rapi_normal": "라피 (평소)",
     "rapi_combat": "라피 (전투)", "pet_red": "레드후드", "pet_blue": "스노우화이트", "pet_silver": "신데렐라", "pet_pink": "엘리스",
 }
 

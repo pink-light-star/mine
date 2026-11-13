@@ -40,8 +40,8 @@ final class Gacha implements Listener {
     //   펫 6마리 = 각 100 (0.67%) → 합계 600 (4%)
     //   꽝: 철 5개 10800 (72%), 다이아 1개 3600 (24%)
     private final List<Reward> POOL = List.of(
-            new Reward("RICO", "§a§l세컨드 §7(전투: 리코)", 100, true, Material.NAME_TAG),
-            new Reward("RAPI", "§c§l수영복 §7(전투: 라피)", 100, true, Material.NAME_TAG),
+            new Reward("RICO", "§a§l린 §7(전투: 리코)", 100, true, Material.NAME_TAG),
+            new Reward("RAPI", "§c§l라피 §7(전투 시 무장 변신)", 100, true, Material.NAME_TAG),
             new Reward("RED", "§4§l레드후드", 100, true, Material.NAME_TAG),
             new Reward("BLUE", "§9§l스노우화이트", 100, true, Material.NAME_TAG),
             new Reward("SILVER", "§7§l신데렐라", 100, true, Material.NAME_TAG),

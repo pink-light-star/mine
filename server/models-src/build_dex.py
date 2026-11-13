@@ -124,7 +124,7 @@ def pets():
     out = []
     for key, nn, cn, nm, cm, gun, col, wp in re.findall(r'(\w+)\("([^"]+)",\s*"([^"]+)",\s*"(\w+)",\s*"(\w+)",\s*(true|false),\s*"([^"]+)",\s*Weapon\.(\w+)\)', src):
         ko, dmg, shots, rng = weapons[wp]
-        out.append({"id": key.lower(), "name": nn, "combat": cn if nm != cm else None, "model": nm, "combatModel": cm if nm != cm else None,
+        out.append({"id": key.lower(), "name": nn, "combat": (cn if cn != nn else "무장한 모습") if nm != cm else None, "model": nm, "combatModel": cm if nm != cm else None,
                     "weapon": ko, "dmg": dmg, "shots": shots, "range": rng})
     return out
 

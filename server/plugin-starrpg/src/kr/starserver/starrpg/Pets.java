@@ -65,10 +65,10 @@ final class Pets implements Listener {
         ItemStack it = new ItemStack(Material.NAME_TAG);
         ItemMeta m = it.getItemMeta();
         m.setDisplayName("§e§l✦ 펫 카드 §7- " + t.color + "§l" + t.normalName
-                + (t.transforms() ? " §7(전투: " + t.color + t.combatName + "§7)" : ""));
+                + (t.transforms() ? " §7(전투: " + t.color + t.combatLabel() + "§7)" : ""));
         m.setLore(List.of(
                 "§7무기: §f" + t.weapon.korean,
-                t.transforms() ? "§7전투에 들어가면 §f" + t.combatName + "§7(으)로 변신!" : "§7든든한 아군 펫",
+                t.transforms() ? "§7전투에 들어가면 §f" + t.combatLabel() + "§7(으)로 변신!" : "§7든든한 아군 펫",
                 "",
                 "§e블록에 우클릭: §f소환",
                 "§eShift+우클릭(펫): §f카드로 되돌리기"));
@@ -348,7 +348,7 @@ final class Pets implements Listener {
     void listTo(org.bukkit.command.CommandSender s) {
         s.sendMessage("§d§m        §r §e§l아군 펫 §d§m        ");
         for (PetType t : PetType.values()) {
-            s.sendMessage(" " + t.color + "§l" + t.normalName + (t.transforms() ? " §7→ 전투 시 " + t.color + t.combatName : "")
+            s.sendMessage(" " + t.color + "§l" + t.normalName + (t.transforms() ? " §7→ 전투 시 " + t.color + t.combatLabel() : "")
                     + " §8| §7" + t.weapon.korean + " §8| §7ID: " + t.name());
         }
         s.sendMessage("§7지급: §f/starrpg give <닉네임> pet:<ID>");

@@ -2,8 +2,8 @@ package kr.starserver.starrpg;
 
 /** 아군 펫 종류. combatModel이 normalModel과 다르면 전투에 들어갈 때 복장(모델)이 바뀐다. */
 public enum PetType {
-    RICO("세컨드", "리코", "rico_normal", "rico_combat", false, "§a", Weapon.SWORD),
-    RAPI("수영복", "라피", "rapi_normal", "rapi_combat", true, "§c", Weapon.GATLING),
+    RICO("린", "리코", "rico_normal", "rico_combat", false, "§a", Weapon.SWORD),
+    RAPI("라피", "라피", "rapi_normal", "rapi_combat", true, "§c", Weapon.GATLING),
     RED("레드후드", "레드후드", "pet_red", "pet_red", true, "§4", Weapon.RIFLE),
     BLUE("스노우화이트", "스노우화이트", "pet_blue", "pet_blue", true, "§9", Weapon.SNIPER),
     SILVER("신데렐라", "신데렐라", "pet_silver", "pet_silver", true, "§7", Weapon.SHIELD),
@@ -49,6 +49,11 @@ public enum PetType {
         this.combatModel = combatModel;
         this.gun = gun;
         this.color = color;
+    }
+
+    /** 전투 모습 이름 (평소 이름과 같으면 '무장한 모습') */
+    public String combatLabel() {
+        return normalName.equals(combatName) ? "무장한 모습" : combatName;
     }
 
     public boolean transforms() {
