@@ -53,11 +53,12 @@ def render(src, out, yaw=-35, W=900, H=700, alpha=False):
     FN = {'north': (0, 0, -1), 'south': (0, 0, 1), 'east': (1, 0, 0), 'west': (-1, 0, 0), 'up': (0, 1, 0), 'down': (0, -1, 0)}
     faces = []
     for e in m['elements']:
-        if 'from' not in e or 'faces' not in e: continue
+        if 'from' not in e or 'faces' not in e or e.get('visibility') is False: continue
         a, b = e['from'], e['to']; r = e.get('rotation', [0, 0, 0]); o = e.get('origin', [0, 0, 0])
         chain = []; g = parent.get(e['uuid'])
         while g: chain.append(groups[g]); g = parent.get(g)
         for fname, fd in e['faces'].items():
+            if 'texture' in fd and (fd['texture'] is None or str(fd['texture']) not in ('0', '#0')): continue
             if fname == 'north': q = [(b[0],a[1],a[2]),(a[0],a[1],a[2]),(a[0],b[1],a[2]),(b[0],b[1],a[2])]
             elif fname == 'south': q = [(a[0],a[1],b[2]),(b[0],a[1],b[2]),(b[0],b[1],b[2]),(a[0],b[1],b[2])]
             elif fname == 'east': q = [(b[0],a[1],b[2]),(b[0],a[1],a[2]),(b[0],b[1],a[2]),(b[0],b[1],b[2])]

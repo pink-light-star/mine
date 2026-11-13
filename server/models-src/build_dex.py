@@ -34,16 +34,20 @@ def pack_bbmodel(path):
     E = {e["uuid"]: e for e in m["elements"]}
     G = {g["uuid"]: g for g in m.get("groups", [])}
     order = ["east", "west", "up", "down", "south", "north"]
+    def face_ok(fd):   # 텍스처 없는 면(안 보임)과 스킬 효과 그림(2번째 이후 텍스처)은 그리지 않는다
+        t = fd.get("texture")
+        return t is not None and str(t) in ("0", "#0")
     def el(e):
         return [*map(r3, e["from"]), *map(r3, e["to"]), *map(r3, e["origin"]), *map(r3, e.get("rotation", [0, 0, 0])),
-                [uv(e["faces"][f]["uv"]) for f in order]]
+                [uv(e["faces"][f]["uv"]) if face_ok(e["faces"][f]) else -1 for f in order]]
     def node(n):
         g = G.get(n["uuid"], n)
         kids = []
         for c in n["children"]:
             if isinstance(c, str):
                 e = E.get(c)
-                if e and "from" in e and "faces" in e and all(f in e["faces"] for f in order):
+                if e and "from" in e and "faces" in e and e.get("visibility") is not False and all(f in e["faces"] for f in order) \
+                        and any(face_ok(e["faces"][f]) for f in order):
                     kids.append(el(e))
             else:
                 kids.append(node(c))
@@ -77,7 +81,7 @@ def pack_item(model_json, tex_png):
         if "rotation" in e:
             ax = "xyz".index(e["rotation"]["axis"]); rot[ax] = e["rotation"]["angle"]; org = e["rotation"]["origin"]
         els.append([*map(r3, e["from"]), *map(r3, e["to"]), *map(r3, org), *rot,
-                    [uv(e["faces"][f]["uv"]) if f in e["faces"] else uv([0, 0, 0, 0]) for f in order]])
+                    [uv(e["faces"][f]["uv"]) if f in e["faces"] else -1 for f in order]])
     tex = "data:image/png;base64," + base64.b64encode(open(tex_png, "rb").read()).decode()
     return {"res": 16, "tex": tex, "uv": uvs, "tree": [{"n": "item", "o": [8, 0, 8], "r": [0, 0, 0], "c": els}],
             "anims": {}, "cubes": len(els), "item": True}

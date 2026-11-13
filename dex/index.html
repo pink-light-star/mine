@@ -147,6 +147,7 @@ const D2R = Math.PI / 180;
 const msin = d => Math.sin(d * D2R), mcos = d => Math.cos(d * D2R);
 let current = null, bones = {}, rest = {}, anim = null, t0 = 0;
 const texCache = {};
+const HIDDEN = new THREE.MeshBasicMaterial({ visible: false });
 
 function compile(expr) {
   const js = String(expr).replace(/math\.sin\(/g, "msin(").replace(/math\.cos\(/g, "mcos(").replace(/math\.abs\(/g, "Math.abs(").replace(/q\.anim_time/g, "t");
@@ -173,10 +174,12 @@ function build(key) {
     const size = [0, 1, 2].map(i => Math.max(0.01, e[3 + i] - e[i]));
     const geo = new THREE.BoxGeometry(...size), uv = geo.attributes.uv;
     e[12].forEach((ui, fi) => {
+      geo.groups[fi].materialIndex = ui < 0 ? 1 : 0;   // -1 = 그리지 않는 면 (빈 면·스킬 효과)
+      if (ui < 0) return;
       const r = m.uv[ui], u1 = r[0] / R, u2 = r[2] / R, v1 = 1 - r[1] / R, v2 = 1 - r[3] / R, b = fi * 4;
       uv.setXY(b, u1, v1); uv.setXY(b + 1, u2, v1); uv.setXY(b + 2, u1, v2); uv.setXY(b + 3, u2, v2);
     });
-    const mesh = new THREE.Mesh(geo, mat), pivot = new THREE.Group();
+    const mesh = new THREE.Mesh(geo, [mat, HIDDEN]), pivot = new THREE.Group();
     pivot.position.set(e[6] - po[0], e[7] - po[1], e[8] - po[2]);
     pivot.rotation.set(e[9] * D2R, e[10] * D2R, e[11] * D2R, "ZYX");
     mesh.position.set((e[0] + e[3]) / 2 - e[6], (e[1] + e[4]) / 2 - e[7], (e[2] + e[5]) / 2 - e[8]);
