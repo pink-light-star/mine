@@ -228,6 +228,13 @@ def main():
     data["models"] = models
     js = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
     open(os.path.join(OUT, "dex-data.json"), "w", encoding="utf-8").write(js)
+    import hashlib   # 데이터가 바뀌면 페이지가 새 파일을 받도록 버전 값을 바꿔 넣는다
+    ver = hashlib.sha1(js.encode()).hexdigest()[:10]
+    ip = os.path.join(OUT, "index.html")
+    if os.path.exists(ip):
+        h = open(ip, encoding="utf-8").read()
+        h = re.sub(r'const DATA_VER = "[^"]*";', f'const DATA_VER = "{ver}";', h)
+        open(ip, "w", encoding="utf-8").write(h)
     print(f"몹 {len(data['mobs'])} · 탈것 {len(data['mounts'])} · 펫 {len(data['pets'])} · 장비 {len(data['gear'])} · 3D 모델 {len(models)} · 데이터 {len(js)//1024}KB")
 
 if __name__ == "__main__":

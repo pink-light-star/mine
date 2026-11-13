@@ -129,7 +129,8 @@ const won = n => n.toLocaleString("ko-KR") + "원";
 const ANIM_KO = { idle: "대기", walk: "걷기", fly: "비행", attack: "공격" };
 
 let DATA;
-try { DATA = await (await fetch("dex-data.json")).json(); }
+const DATA_VER = "6e780ad911";   // build_dex.py 가 데이터 해시로 바꿔 넣는다 (예전 파일이 캐시에 남지 않게)
+try { DATA = await (await fetch("dex-data.json?v=" + DATA_VER)).json(); }
 catch (e) { $("#count").textContent = "도감 데이터를 불러오지 못했어요. 새로고침해 주세요."; throw e; }
 
 // ------------------------------------------------------------ 3D 뷰어
@@ -271,7 +272,7 @@ try { const s = localStorage.getItem("dex-tab"); if (TABS.some(t => t.id === s))
 if (TABS.some(t => t.id === location.hash.slice(1))) tab = location.hash.slice(1);
 
 function card(it, sub, thumb, cls = "") {
-  const img = thumb ? `<img src="${esc(thumb)}" alt="" loading="lazy" class="${thumb.includes("/i_") ? "px" : ""}">` : `<span class="ph">${esc((it.name || "?")[0])}</span>`;
+  const img = thumb ? `<img src="${esc(thumb)}?v=${DATA_VER}" alt="" loading="lazy" class="${thumb.includes("/i_") ? "px" : ""}">` : `<span class="ph">${esc((it.name || "?")[0])}</span>`;
   return `<button type="button" class="card ${cls}" data-id="${esc(it.id)}" aria-current="${selected === it}"><div class="thumb">${img}</div><div><div class="nm">${esc(it.name)}</div><div class="meta">${sub}</div></div></button>`;
 }
 function renderTabs() {
