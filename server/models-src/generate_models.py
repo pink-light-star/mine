@@ -2183,118 +2183,198 @@ def black_dragon(name, black="#1b1b22", belly="#4a4038", flame=("#c81e1e", "#ff5
     return m
 
 
-def dark_rider(name="dark_rider", steel="#56616b", dark="#262c33", light="#93a3ae", glow="#3fe0ff", glow2="#b8f6ff",
-               cloth="#174450", horse="#1e2227", horse2="#30363d", seed=81):
-    """흑기사: 검은 판금 갑옷에 청록 빛줄기, 장창을 든 기사가 갑옷 입은 검은 군마를 탄 보스. 앞 = -Z"""
+def _plate_rows(glow_row=None, rivets=True):
+    """판금 질감: 경사 테두리(위·왼쪽 밝게, 아래·오른쪽 어둡게) + 은은한 대각선 광택 + (선택) 청록 빛줄"""
+    rows = []
+    for y in range(16):
+        r = ""
+        for x in range(16):
+            if x == 0 or y == 0: c = "l"
+            elif x == 15 or y == 15: c = "d"
+            elif x == 1 or y == 1: c = "m"
+            elif x == 14 or y == 14: c = "k"
+            elif glow_row is not None and y in (glow_row, glow_row + 1) and 3 <= x <= 12: c = "g" if y == glow_row else "G"
+            elif rivets and (x, y) in ((3, 3), (12, 3), (3, 12), (12, 12)): c = "r"
+            elif 0 <= (x + y) - 9 <= 1: c = "m"
+            else: c = "b"
+            r += c
+        rows.append(r)
+    return rows
+
+def _hide_rows():
+    """말 털결: 세로로 흐르는 결 + 잔잔한 얼룩"""
+    rows = []
+    for y in range(16):
+        r = ""
+        for x in range(16):
+            v = (x * 7 + y * 3 + (x * y) % 5) % 11
+            r += "k" if v == 0 else ("h" if v in (3, 7) else ("H" if v == 5 else "b"))
+        rows.append(r)
+    return rows
+
+def _cloth_rows():
+    """천: 세로 주름 + 아래 청록 테두리"""
+    rows = []
+    for y in range(16):
+        r = ""
+        for x in range(16):
+            if y >= 14: r += "g" if y == 14 else "d"
+            elif x % 4 == 0: r += "d"
+            elif x % 4 == 1: r += "l"
+            else: r += "b"
+        rows.append(r)
+    return rows
+
+def dark_rider(name="dark_rider", seed=81):
+    """흑기사: 갑옷 입은 검은 군마를 탄 마왕군 기사. 판금 질감 그림 + 청록 빛줄. 앞 = -Z"""
     m = Model(name, seed)
-    # ── 말 몸통 ──
-    m.bone("body", [0, 16, 0])
-    box(m, "body", 0, 11, 0, 10, 10, 22, horse)                                    # 몸통
-    box(m, "body", 0, 12.5, -8.5, 9, 8, 6, horse2)                                 # 가슴
-    box(m, "body", 0, 12, 8, 9.6, 9, 7, horse2)                                    # 엉덩이
-    for sx in (-1, 1):                                                              # 마갑 (옆 판금 + 청록 빛줄)
-        box(m, "body", sx * 5.15, 12, -2, 0.6, 7.5, 14, steel)
-        box(m, "body", sx * 5.5, 15.5, -2, 0.3, 0.5, 13.5, glow)
-        box(m, "body", sx * 5.5, 12.2, -2, 0.3, 0.6, 14.2, dark)
-        for z in (-7, -2, 3):
-            box(m, "body", sx * 5.55, 13.5, z, 0.3, 1.2, 1.2, light)               # 리벳
-    box(m, "body", 0, 20.8, 1, 10.4, 0.6, 12, cloth)                               # 안장 천
-    for sx in (-1, 1):
-        box(m, "body", sx * 5.3, 16.5, 1, 0.4, 4.6, 11, cloth)
-        box(m, "body", sx * 5.45, 16.3, 1, 0.3, 0.5, 11.2, glow)                   # 천 끝 빛줄
-    box(m, "body", 0, 21.2, 1, 6, 1.0, 7, dark)                                    # 안장
-    box(m, "body", 0, 22.0, -2.6, 4, 1.6, 1.2, dark)
-    box(m, "body", 0, 22.0, 4.4, 5, 1.4, 1.2, dark)
-    box(m, "body", 0, 13.2, -11.6, 7, 6, 1.0, steel)                               # 가슴 판금
-    box(m, "body", 0, 15.6, -12.2, 2, 2, 0.4, glow)                                # 가슴 문장
-    # ── 목·머리 ──
-    m.bone("neck", [0, 19, -10], "body")
-    _seg(m, "neck", (0, 18.5, -10), (0, 26, -15), 5.2, 5.6, horse)
-    _seg(m, "neck", (0, 19.5, -11.5), (0, 26.5, -16.2), 4.4, 0.8, steel)           # 목 판금 (위)
-    for k in range(5):                                                              # 갈기 (가시 + 청록 끝)
-        y, z = 21 + k * 1.4, -9.2 - k * 1.1
-        box(m, "neck", 0, y, z, 0.8, 2.2, 1.2, dark, rot=[30, 0, 0], pivot=[0, y, z])
-        box(m, "neck", 0, y + 2.0, z + 1.1, 0.5, 0.6, 0.6, glow)
-    m.bone("head", [0, 26, -15], "neck")
-    _seg(m, "head", (0, 27.5, -15), (0, 23.5, -23.5), 4.6, 4.8, horse)             # 머리 (아래로 숙임)
-    _seg(m, "head", (0, 29.6, -15.2), (0, 25.6, -23.2), 4.0, 0.7, steel)           # 투구 판 (chanfron)
-    box(m, "head", 0, 28.6, -19.8, 0.8, 0.8, 4.2, dark, rot=[-25, 0, 0], pivot=[0, 29, -18])   # 이마 뿔
-    box(m, "head", 0, 29.6, -22.4, 0.5, 0.5, 1.4, glow2, rot=[-25, 0, 0], pivot=[0, 29, -18])
-    for sx in (-1, 1):
-        box(m, "head", sx * 2.42, 26.2, -17.8, 0.2, 0.8, 1.6, glow)                # 빛나는 눈
-        box(m, "head", sx * 1.3, 29.4, -14.6, 0.9, 2.2, 0.9, dark, rot=[-15, 0, sx * 10])   # 귀
-        box(m, "head", sx * 2.5, 24.0, -20.5, 0.3, 0.4, 3, light)                  # 굴레
-    box(m, "head", 0, 22.6, -23.6, 3.6, 1.2, 1.6, horse2)                          # 주둥이
-    # ── 다리 ──
-    for nm, x, z in (("fleg_l", -3.2, -8), ("fleg_r", 3.2, -8), ("bleg_l", -3.2, 8), ("bleg_r", 3.2, 8)):
-        m.bone(nm, [x, 12, z], "body")
-        box(m, nm, x, 1.2, z, 2.8, 11, 2.8, horse)
-        box(m, nm, x, 5.0, z, 3.2, 4.4, 3.2, steel)                                # 정강이 판금
-        box(m, nm, x, 7.2, z - 1.5, 2.2, 0.5, 0.3, glow)
-        box(m, nm, x, 0, z, 3.2, 1.4, 3.2, dark)                                   # 발굽
-        box(m, nm, x, 1.4, z, 3.4, 0.7, 3.4, light)
-    # ── 꼬리 ──
-    m.bone("tail", [0, 19, 11.5], "body")
-    for k, (dx, c) in enumerate(((0, horse2), (-0.8, horse), (0.8, horse))):
-        _seg(m, "tail", (dx * 0.3, 19, 11.5), (dx, 9.5, 15 + k * 0.4), 1.2, 1.2, c)
-    box(m, "tail", 0, 9.0, 15.4, 0.6, 1.2, 0.6, glow)
+    steel, dark, glow, glow2, horse = "#4b5560", "#1d2228", "#3fe0ff", "#c8faff", "#1b1f24"
+    def AF(key):
+        return {f: ("art", key) for f in ("north", "south", "east", "west", "up", "down")}
+    PP = {"b": steel, "m": shade(steel, 22), "l": shade(steel, 48), "k": shade(steel, -30), "d": dark,
+          "g": glow, "G": shade(glow, -35), "r": "#9fb0bc", "_noisy": "b"}
+    PL = AF(m.art("plate", _plate_rows(), PP))                          # 판금
+    PG = AF(m.art("plate_glow", _plate_rows(glow_row=7), PP))           # 판금 + 빛줄
+    PD = AF(m.art("plate_dark", _plate_rows(rivets=False), {**PP, "b": dark, "m": shade(dark, 18), "l": shade(dark, 40), "k": "#101317"}))
+    HD = AF(m.art("hide", _hide_rows(), {"b": horse, "h": shade(horse, 14), "H": shade(horse, 26), "k": "#0d0f12", "_noisy": "b"}))
+    CL = AF(m.art("cloth", _cloth_rows(), {"b": "#163a44", "l": "#1f4f5c", "d": "#0c2329", "g": glow}))
+    GL = AF(m.art("glow", ["".join("W" if 5 <= x <= 10 and 5 <= y <= 10 else "g" for x in range(16)) for y in range(16)],
+                  {"g": glow, "W": glow2}))
+    def B(bone, cx, y, cz, w, h, d, faces, **kw):
+        box(m, bone, cx, y, cz, w, h, d, steel, faces=faces, **kw)
+    def S(bone, a, b2, w, h, faces):
+        _seg(m, bone, a, b2, w, h, steel, faces=faces)
 
-    # ── 기사 ──
-    m.bone("rider", [0, 24, 1], "body")
-    for sx in (-1, 1):                                                              # 다리 (말 옆구리를 감쌈)
-        _seg(m, "rider", (sx * 3.0, 24, 1.2), (sx * 5.8, 21, -2.2), 2.6, 2.6, steel)
-        _seg(m, "rider", (sx * 5.9, 21.4, -2.0), (sx * 6.2, 15.4, -1.2), 2.4, 2.4, steel)
-        box(m, "rider", sx * 6.2, 14.6, -2.0, 2.6, 1.4, 3.6, dark)                 # 철 장화
-        box(m, "rider", sx * 6.0, 20.3, -2.9, 2.0, 1.6, 0.6, light)                # 무릎 보호대
-        box(m, "rider", sx * 6.0, 20.9, -3.2, 0.8, 0.5, 0.2, glow)
-    box(m, "rider", 0, 24, 1.2, 7.4, 9.6, 4.4, steel)                              # 흉갑
-    box(m, "rider", 0, 26.8, -1.1, 5.4, 5.6, 0.6, dark)                            # 가슴 판
-    box(m, "rider", 0, 28.6, -1.5, 1.6, 1.6, 0.4, glow)                            # 청록 핵
-    box(m, "rider", 0, 29.0, -1.7, 0.8, 0.8, 0.3, glow2)
+    # ───────── 말 ─────────
+    m.bone("body", [0, 17, 0])
+    B("body", 0, 12.4, 0, 9.4, 9.0, 18, HD)                              # 몸통
+    B("body", 0, 12.0, -9.0, 8.8, 9.6, 5.0, HD)                           # 가슴
+    B("body", 0, 21.0, -9.4, 7.0, 1.2, 4.2, HD)                           # 기갑(어깨 위)
+    B("body", 0, 12.6, 9.6, 9.8, 9.4, 7.0, HD)                            # 엉덩이
+    B("body", 0, 21.8, 10.2, 8.2, 1.4, 5.4, HD)
+    B("body", 0, 11.8, 0, 7.6, 0.8, 14, PD)                               # 배 아래
+    # 마갑
+    B("body", 0, 16.4, 9.6, 10.6, 6.6, 8.2, PG)                           # 엉덩이 판금(크루퍼)
+    B("body", 0, 22.6, 10.0, 7.0, 0.8, 5.6, PL)
     for sx in (-1, 1):
-        box(m, "rider", sx * 1.6, 24.4, -1.2, 0.3, 4.2, 0.3, glow)                 # 흉갑 빛줄
-    box(m, "rider", 0, 23.2, 1.2, 7.8, 1.2, 4.8, dark)                             # 허리띠
+        B("body", sx * 5.0, 13.6, 0.6, 0.6, 7.2, 10.4, PG)                # 옆구리 판금
+        B("body", sx * 5.25, 11.0, 0.6, 0.4, 2.8, 20.0, CL)               # 마의 (천 자락)
+        for z in (-3.6, 4.8):
+            B("body", sx * 5.35, 17.6, z, 0.4, 1.0, 1.0, GL)              # 빛나는 장식 못
+    B("body", 0, 12.8, -11.9, 9.8, 7.6, 1.2, PG)                          # 가슴 판금(페이트럴)
+    B("body", 0, 15.6, -12.7, 2.2, 2.2, 0.4, GL)                          # 가슴 문장
+    for x in (-3.2, 0, 3.2):
+        box(m, "body", x, 14.2, -13.4, 0.9, 0.9, 2.4, dark, rot=[0, 0, 0])  # 가슴 가시
+        box(m, "body", x, 14.4, -14.9, 0.5, 0.5, 0.8, glow)
+    # 안장
+    B("body", 0, 21.4, 1.2, 6.4, 1.0, 7.6, PD)
+    B("body", 0, 22.2, -2.4, 4.4, 1.8, 1.2, PD)
+    B("body", 0, 22.2, 4.8, 5.4, 1.6, 1.2, PD)
     for sx in (-1, 1):
-        box(m, "rider", sx * 2.4, 21.4, -1.2, 2.4, 2.6, 0.6, steel, rot=[-15, 0, 0])   # 앞 갑판
-    # 망토
-    m.bone("cape", [0, 33, 3.6], "rider")
-    box(m, "cape", 0, 23, 3.8, 7.6, 10, 0.5, cloth)
-    box(m, "cape", 0, 17.5, 6.4, 8.4, 6.2, 0.5, cloth, rot=[38, 0, 0], pivot=[0, 23, 3.8])
-    box(m, "cape", 0, 17.3, 6.5, 8.5, 0.5, 0.6, glow, rot=[38, 0, 0], pivot=[0, 23, 3.8])
+        box(m, "body", sx * 3.3, 16.0, 1.2, 0.3, 5.6, 0.6, dark)          # 등자 끈
+        B("body", sx * 3.5, 15.2, 0.6, 0.8, 0.8, 2.0, PL)                 # 등자
+
+    # 목 (아치형) + 목 판금(크리넷) + 가시 갈기
+    m.bone("neck", [0, 20, -9], "body")
+    _tube(m, "neck", [(0, 19.0, -9.2), (0, 23.0, -12.4), (0, 27.4, -14.8)], [3.2, 2.8, 2.4], horse, HD)
+    for k, (a, b2) in enumerate((((0, 21.6, -9.6), (0, 24.0, -11.6)), ((0, 24.4, -11.9), (0, 26.6, -13.6)), ((0, 27.0, -13.9), (0, 29.0, -15.0)))):
+        S("neck", (a[0], a[1] + 1.6, a[2] + 0.6), (b2[0], b2[1] + 1.6, b2[2] + 0.6), 4.6 - k * 0.4, 0.9, PG)   # 겹친 판
+    for k in range(6):
+        y, z = 21.2 + k * 1.35, -8.6 - k * 1.05
+        box(m, "neck", 0, y + 1.2, z + 1.0, 0.6, 2.4, 1.2, dark, rot=[35, 0, 0], pivot=[0, y + 1.2, z + 1.0])
+        box(m, "neck", 0, y + 3.2, z + 2.3, 0.4, 0.6, 0.5, glow)
+
+    # 머리
+    m.bone("head", [0, 27.6, -15], "neck")
+    S("head", (0, 29.0, -15.2), (0, 26.6, -19.8), 4.2, 4.6, HD)           # 두개골
+    S("head", (0, 26.8, -19.6), (0, 24.6, -24.0), 3.3, 3.4, HD)           # 주둥이
+    S("head", (0, 31.0, -15.4), (0, 26.6, -23.8), 3.6, 0.7, PG)           # 얼굴 판금(챈프론)
+    box(m, "head", 0, 30.4, -18.6, 0.9, 0.9, 4.0, dark, rot=[-30, 0, 0], pivot=[0, 30.6, -17.2])   # 이마 뿔
+    box(m, "head", 0, 31.8, -21.0, 0.5, 0.5, 1.4, glow2, rot=[-30, 0, 0], pivot=[0, 30.6, -17.2])
+    for sx in (-1, 1):
+        box(m, "head", sx * 2.15, 27.6, -17.6, 0.3, 0.9, 1.6, glow)        # 빛나는 눈
+        box(m, "head", sx * 2.2, 28.4, -17.6, 0.35, 0.4, 2.0, dark)        # 눈두덩
+        box(m, "head", sx * 1.3, 30.0, -14.8, 0.8, 2.2, 0.9, horse, rot=[-15, 0, sx * 12], pivot=[sx * 1.3, 30.0, -14.8])   # 귀
+        B("head", sx * 1.85, 26.2, -17.2, 0.5, 2.4, 3.0, PL)               # 볼 판금
+        box(m, "head", sx * 1.2, 24.9, -24.15, 0.7, 0.5, 0.2, "#050607")   # 콧구멍
+        box(m, "head", sx * 1.75, 24.6, -22.0, 0.25, 0.4, 2.6, "#7a8790")   # 굴레
+    box(m, "head", 0, 24.2, -22.4, 2.8, 0.7, 3.2, horse)                  # 아래턱
+
+    # 다리 (관절: 윗다리 · 무릎 · 정강이 · 발목털 · 발굽)
+    for nm, x, z, hind in (("fleg_l", -2.9, -8.6, False), ("fleg_r", 2.9, -8.6, False), ("bleg_l", -3.0, 9.6, True), ("bleg_r", 3.0, 9.6, True)):
+        m.bone(nm, [x, 13, z], "body")
+        B(nm, x, 7.4, z, 2.8 if not hind else 3.2, 6.0, 3.0 if not hind else 3.6, HD)   # 윗다리
+        B(nm, x, 6.6, z, 2.4, 1.0, 2.4, HD)                                # 무릎
+        B(nm, x, 2.2, z + (0.3 if hind else 0), 1.8, 4.6, 1.9, HD)         # 정강이
+        B(nm, x, 8.4, z - 1.55, 2.4, 3.6, 0.4, PG)                         # 정강이 판금(앞)
+        B(nm, x, 1.4, z, 2.4, 1.2, 2.4, HD)                                # 발목
+        B(nm, x, 0.9, z + 0.8, 2.6, 1.0, 1.2, CL)                          # 발목 털
+        B(nm, x, 0, z - 0.2, 2.6, 1.5, 2.8, PD)                            # 발굽
+
+    # 꼬리
+    m.bone("tail", [0, 21, 12.8], "body")
+    for k, dx in enumerate((0, -0.9, 0.9)):
+        _tube(m, "tail", [(dx * 0.3, 21, 12.8), (dx * 0.6, 17, 15.2), (dx, 11, 16.0 + k * 0.3)], [0.9, 0.8, 0.6], horse, HD)
+    box(m, "tail", 0, 20.4, 13.4, 1.6, 1.4, 1.6, steel, faces=PL)          # 꼬리 고리
+
+    # ───────── 기사 ─────────
+    m.bone("rider", [0, 23, 1.2], "body")
+    B("rider", 0, 22.8, 1.4, 6.6, 2.6, 4.6, PD)                           # 허리·엉덩이
+    for sx in (-1, 1):                                                     # 다리 (말 옆구리를 감쌈)
+        S("rider", (sx * 2.6, 24.0, 1.6), (sx * 5.9, 21.6, -2.4), 2.8, 2.8, PL)
+        S("rider", (sx * 6.0, 21.8, -2.2), (sx * 6.2, 15.6, -1.4), 2.5, 2.5, PL)
+        B("rider", sx * 6.0, 20.6, -3.4, 2.2, 2.2, 0.8, PG)                # 무릎 판
+        B("rider", sx * 6.2, 14.6, -2.2, 2.6, 1.4, 3.8, PD)                # 쇠장화
+        box(m, "rider", sx * 6.2, 15.1, -4.2, 1.2, 0.8, 0.6, dark)         # 박차 끝
+        B("rider", sx * 2.4, 21.0, -1.2, 2.6, 3.0, 0.7, PG, rot=[-14, 0, 0])   # 앞 허리 판 (태싯)
+    B("rider", 0, 25.4, 1.4, 7.8, 7.6, 4.8, PL)                           # 흉갑
+    B("rider", 0, 26.0, -1.25, 6.2, 6.0, 0.8, PG)                          # 가슴 판 (빛줄)
+    B("rider", 0, 29.4, -1.75, 1.8, 1.8, 0.4, GL)                          # 청록 핵
+    for sx in (-1, 1):
+        box(m, "rider", sx * 2.0, 26.2, -1.75, 0.3, 3.0, 0.3, glow)         # 흉갑 빛줄
+    B("rider", 0, 32.8, 1.4, 5.2, 1.4, 4.4, PD)                            # 목가리개
+    # 망토 (두 단, 끝 청록 테두리)
+    m.bone("cape", [0, 32.6, 3.8], "rider")
+    box(m, "cape", 0, 22.4, 4.1, 8.4, 10.6, 0.5, "#163a44", faces=CL)
+    box(m, "cape", 0, 15.8, 7.2, 9.4, 7.6, 0.5, "#163a44", faces=CL, rot=[40, 0, 0], pivot=[0, 22.6, 4.1])
     # 투구
-    m.bone("rhead", [0, 33.6, 1.2], "rider")
-    box(m, "rhead", 0, 33.6, 1.2, 5.2, 5.6, 5.2, steel)
-    box(m, "rhead", 0, 35.8, -1.45, 4.0, 0.7, 0.2, glow)                           # 눈 틈 (빛남)
-    box(m, "rhead", 0, 34.0, -1.5, 1.0, 1.6, 0.3, dark)                            # 숨구멍 판
-    box(m, "rhead", 0, 33.4, 1.2, 5.6, 1.0, 5.6, dark)                             # 목 가리개
-    for k, (y, z, h) in enumerate(((39.2, 1.4, 2.4), (38.6, 3.0, 2.8), (37.6, 4.4, 2.2))):   # 뒤로 솟은 볏 가시
-        box(m, "rhead", 0, y, z, 0.8, h, 0.9, dark, rot=[-30, 0, 0], pivot=[0, y, z])
+    m.bone("rhead", [0, 34.0, 1.4], "rider")
+    B("rhead", 0, 34.0, 1.4, 5.2, 6.0, 5.4, PL)
+    B("rhead", 0, 34.2, -1.35, 4.4, 3.4, 0.4, PD)                          # 얼굴 가리개
+    box(m, "rhead", 0, 37.2, -1.6, 4.2, 0.6, 0.3, glow)                    # 눈 틈 (빛남)
+    box(m, "rhead", 0, 35.0, -1.65, 0.6, 2.0, 0.3, glow2)                  # 가운데 빛줄
+    box(m, "rhead", 0, 33.8, -0.9, 2.2, 1.6, 1.4, dark, rot=[-20, 0, 0], pivot=[0, 34.4, -0.4])   # 뾰족한 턱 가리개
+    B("rhead", 0, 33.8, 1.4, 5.8, 1.0, 5.8, PD)                            # 목 테
+    for k, (y, z, h, w) in enumerate(((39.6, 0.6, 3.2, 0.8), (39.2, 2.4, 3.6, 0.8), (38.2, 4.2, 3.0, 0.7), (37.0, 5.4, 2.2, 0.6))):
+        box(m, "rhead", 0, y, z, w, h, 1.0, dark, rot=[-40, 0, 0], pivot=[0, y, z])         # 뒤로 뻗은 볏 날
+        box(m, "rhead", 0, y + h - 0.4, z, w * 0.6, 0.5, 0.5, glow, rot=[-40, 0, 0], pivot=[0, y, z])
     for sx in (-1, 1):
-        box(m, "rhead", sx * 2.9, 36.4, 1.6, 0.8, 0.8, 3.6, dark, rot=[0, sx * -20, 20 * sx], pivot=[sx * 2.6, 36.8, 1.6])   # 옆 뿔
-    # 어깨 (층층 가시 견갑)
+        box(m, "rhead", sx * 3.0, 37.6, 1.8, 0.8, 0.8, 4.0, dark, rot=[0, sx * -25, sx * 25], pivot=[sx * 2.6, 37.8, 1.6])   # 옆 뿔
+    # 어깨 (층층 가시 견갑) + 팔
     for sx, arm in ((-1, "larm"), (1, "rarm")):
-        m.bone(arm, [sx * 4.4, 32.4, 1.2], "rider")
-        box(m, arm, sx * 5.2, 30.4, 1.2, 3.6, 3.4, 4.6, steel)
-        box(m, arm, sx * 5.6, 32.6, 1.2, 4.4, 1.2, 5.4, dark)
-        box(m, arm, sx * 5.8, 33.6, 1.2, 3.6, 1.0, 4.6, steel)
-        box(m, arm, sx * 7.2, 32.8, 1.2, 0.3, 0.6, 5.0, glow)                      # 견갑 빛줄
-        for z in (-0.6, 1.4, 3.2):
-            box(m, arm, sx * 6.2, 34.3, z, 0.7, 2.0, 0.7, dark, rot=[0, 0, sx * -20], pivot=[sx * 6.2, 34.3, z])   # 가시
-    # 오른팔: 장창을 앞으로 비스듬히 세워 듦
-    _seg(m, "rarm", (5.4, 30.6, 1.2), (5.8, 26.2, -2.6), 2.4, 2.4, steel)
-    box(m, "rarm", 5.8, 25.0, -3.0, 2.8, 2.4, 2.8, dark)                           # 건틀릿
-    _seg(m, "rarm", (5.8, 21.0, 2.0), (5.8, 45.0, -14.0), 0.8, 0.8, dark)          # 창대
-    _seg(m, "rarm", (5.8, 27.0, -2.0), (5.8, 29.6, -3.8), 1.4, 1.4, light)         # 손잡이 고리
-    _seg(m, "rarm", (5.8, 44.6, -13.7), (5.8, 49.0, -16.6), 1.4, 0.5, glow)        # 창날 (빛남)
-    _seg(m, "rarm", (5.8, 48.4, -16.2), (5.8, 50.4, -17.6), 0.7, 0.4, glow2)
-    _seg(m, "rarm", (5.8, 43.6, -13.0), (5.8, 44.8, -13.8), 2.4, 0.6, light)        # 창날 받침
-    # 왼팔: 고삐를 잡음
-    _seg(m, "larm", (-5.4, 30.6, 1.2), (-4.6, 26.0, -3.4), 2.4, 2.4, steel)
-    box(m, "larm", -4.0, 24.6, -4.2, 2.6, 2.2, 2.6, dark)
-    _seg(m, "larm", (-3.4, 25.4, -5.0), (-1.6, 25.0, -14.0), 0.3, 0.3, light)       # 고삐
+        m.bone(arm, [sx * 4.6, 32.6, 1.4], "rider")
+        B(arm, sx * 5.4, 30.0, 1.4, 3.8, 3.8, 4.8, PL)
+        for k, (y, w, d) in enumerate(((31.6, 4.8, 5.8), (32.8, 4.4, 5.4), (33.8, 3.8, 4.8))):
+            B(arm, sx * (5.8 + k * 0.2), y, 1.4, w, 1.2, d, PG if k == 1 else PD, rot=[0, 0, sx * -12], pivot=[sx * 4.6, y, 1.4])
+        for z in (-0.8, 1.4, 3.6):
+            box(m, arm, sx * 6.6, 34.6, z, 0.8, 2.6, 0.8, dark, rot=[0, 0, sx * -25], pivot=[sx * 6.6, 34.6, z])   # 견갑 가시
+            box(m, arm, sx * 7.4, 36.6, z, 0.5, 0.6, 0.5, glow)
+    S("rarm", (5.6, 30.4, 1.4), (5.9, 26.4, -2.4), 2.4, 2.4, PL)           # 오른팔
+    B("rarm", 5.9, 25.0, -2.9, 2.8, 2.4, 2.8, PD)                          # 건틀릿
+    box(m, "rarm", 5.9, 26.2, -2.9, 2.9, 0.4, 2.9, glow)
+    _seg(m, "rarm", (5.9, 20.0, 3.0), (5.9, 47.0, -15.0), 0.8, 0.8, dark)   # 창대
+    _seg(m, "rarm", (5.9, 26.6, -1.6), (5.9, 29.6, -3.6), 2.2, 2.2, steel)  # 손잡이 가드
+    _seg(m, "rarm", (5.9, 29.6, -3.6), (5.9, 30.6, -4.3), 1.2, 1.2, steel)
+    _seg(m, "rarm", (5.9, 45.8, -14.2), (5.9, 50.6, -17.4), 1.4, 0.5, glow)  # 창날
+    _seg(m, "rarm", (5.9, 50.0, -17.0), (5.9, 52.2, -18.5), 0.7, 0.4, glow2)
+    _seg(m, "rarm", (5.9, 45.0, -13.6), (5.9, 45.9, -14.2), 2.4, 0.6, steel)  # 날 받침
+    box(m, "rarm", 5.9, 40.6, -10.4, 0.25, 2.6, 4.0, "#163a44", faces=CL, rot=[-34, 0, 0], pivot=[5.9, 43.0, -12.0])   # 깃발
+    S("larm", (-5.6, 30.4, 1.4), (-4.8, 26.2, -3.2), 2.4, 2.4, PL)         # 왼팔
+    B("larm", -4.2, 24.8, -4.0, 2.6, 2.2, 2.6, PD)
+    _seg(m, "larm", (-3.6, 25.6, -4.8), (-1.7, 25.2, -13.8), 0.3, 0.3, "#7a8790")   # 고삐
+    _seg(m, "larm", (3.6, 25.6, -4.8), (1.7, 25.2, -13.8), 0.3, 0.3, "#7a8790")
 
-    hitbox(m, 16, 40)
-    # ── 애니메이션 ──
+    hitbox(m, 16, 42)
     T = lambda f, ph=0: f"math.sin(q.anim_time * 360 * {f} + {ph})"
     def ride(f, leg, bob):
         ch = {"body": {"rotation": (f"{T(f * 2)} * {bob * 0.3}", 0, 0)},
@@ -2380,7 +2460,7 @@ def build_all():
     mount_horse().save()                               # 장식 탈것: 왕실 기사마
     mount_wolf().save()                                # 장식 탈것: 늑대왕
     mount_fox().save()                                 # 장식 탈것: 신령 여우
-    texturize(dark_rider()).save()                         # 보스: 흑기사 (기마)
+    dark_rider().save()                         # 보스: 흑기사 (기마)
     mount_dragon().save()                                 # 신화 탈것: 비룡
     print("완료:", os.path.abspath(OUT))
 

@@ -129,7 +129,7 @@ const won = n => n.toLocaleString("ko-KR") + "원";
 const ANIM_KO = { idle: "대기", walk: "걷기", fly: "비행", attack: "공격" };
 
 let DATA;
-const DATA_VER = "8b7bd1e615";   // build_dex.py 가 데이터 해시로 바꿔 넣는다 (예전 파일이 캐시에 남지 않게)
+const DATA_VER = "5dd020b150";   // build_dex.py 가 데이터 해시로 바꿔 넣는다 (예전 파일이 캐시에 남지 않게)
 try { DATA = await (await fetch("dex-data.json?v=" + DATA_VER)).json(); }
 catch (e) { $("#count").textContent = "도감 데이터를 불러오지 못했어요. 새로고침해 주세요."; throw e; }
 
