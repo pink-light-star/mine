@@ -29,6 +29,8 @@ public enum Species {
     // 야생 몹(MythicMobs, species 태그)으로 나오는 외부 모델 탈것
     DEER("사슴", EntityType.HORSE, 0.50, 0.9, false, Grade.UNIQUE, 1.0, "mc_deer"),
     SPIRIT_WOLF("영혼 늑대", EntityType.HORSE, 0.55, 0.9, false, Grade.HERO, 1.0, "mc_spiritwolf"),
+    BOAR("멧돼지", EntityType.HORSE, 0.42, 0.6, false, Grade.RARE, 1.0, "mc_boar"),
+    EVIL_WOLF("악령 늑대", EntityType.HORSE, 0.52, 0.9, false, Grade.ANCIENT, 1.0, "mc_evilwolf"),
 
     // ----- 비행 동물 -----
     BEE("왕꿀벌", EntityType.BEE, 0.45, 0, true, Grade.RARE, 3.0),

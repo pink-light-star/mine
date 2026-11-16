@@ -150,6 +150,8 @@ final class Dex implements Listener {
             case DRAGON -> Material.DRAGON_HEAD;
             case DEER -> Material.LEATHER;
             case SPIRIT_WOLF -> Material.SOUL_LANTERN;
+            case BOAR -> Material.PORKCHOP;
+            case EVIL_WOLF -> Material.WITHER_ROSE;
             default -> {
                 Material egg = Material.matchMaterial(sp.type.name() + "_SPAWN_EGG");
                 yield egg != null ? egg : Material.SADDLE;
@@ -161,6 +163,8 @@ final class Dex implements Listener {
         return switch (sp) {
             case WHALE -> "§7적룡 30% · 메두사·미노타우로스·크루가 10%";
             case DEER -> "§7숲·초원의 야생 사슴을 그물총으로 §f" + Math.round(sp.grade.capture * 50) + "~" + Math.round(sp.grade.capture * 150) + "%";
+            case BOAR -> "§7숲·타이가의 멧돼지와 싸워 그물총으로 §f" + Math.round(sp.grade.capture * 50) + "~" + Math.round(sp.grade.capture * 150) + "%";
+            case EVIL_WOLF -> "§7밤의 숲·타이가에 나오는 악령 늑대와 싸워 그물총으로 §f" + Math.round(sp.grade.capture * 50) + "~" + Math.round(sp.grade.capture * 150) + "%";
             case SPIRIT_WOLF -> "§7눈 덮인 숲에 밤에만 나오는 영혼 늑대를 그물총으로 §f" + Math.round(sp.grade.capture * 50) + "~" + Math.round(sp.grade.capture * 150) + "%";
             case BROOM -> "§7/그물상점 에서 구매";
             case DRAGON -> "§7용기사 전직 보상 · 적룡 처치 10%";

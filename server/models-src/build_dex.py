@@ -102,8 +102,11 @@ GRADES = {"COMMON": ("일반", 0.60), "RARE": ("레어", 0.40), "UNIQUE": ("유�
 SPECIAL_HOW = {"WHALE": "적룡 30% · 메두사·미노타우로스·크루가 10%", "BROOM": "/그물상점 에서 구매",
                "DRAGON": "용기사 전직 보상 · 적룡 처치 10%",
                "DEER": "숲·초원의 야생 사슴을 그물총으로 13~38%",
-               "SPIRIT_WOLF": "눈 덮인 숲에 밤에만 나오는 영혼 늑대를 그물총으로 3~8%"}
+               "SPIRIT_WOLF": "눈 덮인 숲에 밤에만 나오는 영혼 늑대를 그물총으로 3~8%",
+               "BOAR": "숲·타이가의 멧돼지와 싸워 그물총으로 20~60%",
+               "EVIL_WOLF": "밤의 숲·타이가에 나오는 악령 늑대와 싸워 그물총으로 6~18%"}
 MOUNT_NOTE = {"mc_deer": "큰 뿔 수사슴 · mcmodels: MexBot", "mc_spiritwolf": "은빛 털의 영혼 늑대 · mcmodels: MexBot",
+              "mc_boar": "엄니 달린 멧돼지 · mcmodels: MexBot", "mc_evilwolf": "붉은 눈의 검은 늑대 · mcmodels: MexBot",
               "mount_horse": "바닐라 말 위에 루비 왕관과 깃털", "mount_wolf": "붉은 망토와 왕관을 두른 늑대왕",
               "mount_fox": "벚꽃 화관과 금방울", "sky_whale": "하늘을 헤엄치는 별빛 고래",
               "broom": "덩굴 손잡이와 랜턴이 달린 빗자루", "mount_dragon": "타고 좌클릭하면 화염 숨결"}

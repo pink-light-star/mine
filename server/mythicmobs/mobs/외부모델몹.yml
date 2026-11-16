@@ -112,6 +112,7 @@
     Silent: true
   Skills:
   - model{mid=mc_evilwolf} @self ~onSpawn
+  - addtag{tag=species:EVIL_WOLF} @self ~onSpawn
   - state{mid=mc_evilwolf;s=attack} @self ~onAttack
   - sound{s=entity.wolf.growl;v=1;p=0.6} @self ~onTimer:100
   Drops:
@@ -132,6 +133,7 @@
     Silent: true
   Skills:
   - model{mid=mc_boar} @self ~onSpawn
+  - addtag{tag=species:BOAR} @self ~onSpawn
   - state{mid=mc_boar;s=attack} @self ~onAttack
   - throw{velocity=6;velocityY=2} @target ~onAttack 0.4
   - sound{s=entity.hoglin.ambient;v=1;p=1.2} @self ~onTimer:120
