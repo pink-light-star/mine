@@ -32,6 +32,7 @@ GitHub Pages로 열려요.
 | `dex/` | 도감 사이트 (3D 모델 데이터 `dex-data.json`, 썸네일) |
 | `commands/` | 명령어 사이트 |
 | `docs/작업기록.md` | 날짜별 진행, 코드 파일별 설명, 문제와 해결을 정리한 작업 기록 |
+| `docs/대화기록.txt` | 같은 대화를 메모장으로 읽기 쉬운 일반 텍스트로 |
 | `docs/대화기록.md` | 제작하면서 나눈 대화 (도구 출력·시스템 메시지는 빼고, 이메일 같은 개인정보는 가림) |
 | `server/plugin-starrpg/` | StarRPG 플러그인 소스. `build.sh` 로 빌드 |
 | `server/models-src/` | 3D 모델 생성기. `generate_models.py` 가 BetterModel 모델을, `forge/` 가 입체 무기·방어구를 만들어요. `build_dex.py` 는 도감 데이터를 만들어요 |

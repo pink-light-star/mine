@@ -40,6 +40,20 @@ for line in open(src, encoding="utf-8"):
     if "<task-notification>" in text: continue
     rows.append((d.get("timestamp", ""), d["type"], text))
 
+if out.endswith(".txt"):   # 메모장으로 읽는 일반 텍스트
+    with open(out, "w", encoding="utf-8") as f:
+        f.write("별빛 서버 제작 대화 기록\n")
+        f.write("사용자와 Claude가 주고받은 말만 시간 순서대로 모았어요. 도구 실행 결과와 시스템 메시지는 뺐고, 이메일·토큰 같은 개인정보는 가렸어요.\n")
+        day = None
+        for ts, who, text in rows:
+            try: t = datetime.datetime.fromisoformat(ts.replace("Z", "+00:00")).astimezone(datetime.timezone(datetime.timedelta(hours=9)))
+            except Exception: t = None
+            if t and t.date() != day:
+                day = t.date(); f.write("\n" + "=" * 60 + f"\n{day.isoformat()}\n" + "=" * 60 + "\n")
+            hm = t.strftime("%H:%M") if t else ""
+            f.write(f"\n[{hm}] {'사용자' if who == 'user' else 'Claude'}\n{text}\n")
+    print(len(rows), "개 메시지"); sys.exit(0)
+
 with open(out, "w", encoding="utf-8") as f:
     f.write("# 별빛 서버 제작 대화 기록\n\n사용자와 Claude가 주고받은 말만 시간 순서대로 모았어요. 도구 실행 결과와 시스템 메시지는 뺐고, 이메일·토큰 같은 개인정보는 가렸어요.\n\n")
     day = None
