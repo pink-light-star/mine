@@ -161,6 +161,7 @@
   - GOLDEN_SWORD HAND
   - LEATHER_HELMET{color=0x4C7A2B} HEAD
   Skills:
+  - model{mid=mc_goblin} @self ~onSpawn
   - command{c="eco take <target.name> 100";asop=false} @target ~onAttack 0.3
   - message{m="&a[고블린] &f낄낄! 돈 좀 빌려간다~"} @target ~onAttack 0.3
   - command{c="eco give <trigger.name> 300"} @trigger ~onDeath

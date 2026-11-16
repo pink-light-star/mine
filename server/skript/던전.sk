@@ -65,15 +65,15 @@ on load:
     dBoss("orc", "보스_오크대족장:1", "오크 대족장 크루가")
 
     dDef("mushroom", "dungeon", "&d독버섯 숲", 15, red mushroom, "night", "rain", false, "독 포자가 떠다니는 축축한 숲")
-    dWave("mushroom", "독거미:6")
-    dWave("mushroom", "독거미:4,버섯_마녀:2")
-    dWave("mushroom", "독거미:5,버섯_마녀:3,썩은_망자:2")
+    dWave("mushroom", "독거미:4,슈룸링:4")
+    dWave("mushroom", "독거미:3,슈룸링:3,버섯_마녀:2")
+    dWave("mushroom", "독거미:4,버섯_마녀:3,저주받은_숲:2")
     dBoss("mushroom", "보스_대마법사:1", "푸른 대마법사")
 
     dDef("frost", "dungeon", "&b얼어붙은 골짜기", 20, blue ice, "night", "clear", false, "원혼이 얼어붙은 차가운 골짜기")
     dWave("frost", "얼음_원혼:6")
     dWave("frost", "얼음_원혼:4,떠도는_원혼:4")
-    dWave("frost", "얼음_원혼:5,해골_마법사:3")
+    dWave("frost", "얼음_원혼:4,해골_마법사:2,저주받은_얼음:2")
     dBoss("frost", "리치:1,얼음_원혼:4", "얼음의 리치")
 
     dDef("olympus", "dungeon", "&e올림포스의 시련 &7(그리스 신화)", 25, goat horn, "day", "clear", false, "신화 속 괴물들이 지키는 시련의 땅")

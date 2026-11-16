@@ -1,0 +1,171 @@
+# mcmodels.net 무료 모델을 쓰는 몹 (모델 ID는 mc_ 로 시작)
+# 슈룸링: Grumblin "Shroomling" · 저주받은 자: QueueModels "Cursed One" · 노틸러스: 1Bit
+# 늑대·멧돼지·사슴: MexBot "LEGACY Taiga Pack"
+
+슈룸링:
+  Type: ZOMBIE
+  Display: '&d슈룸링'
+  Health: 22
+  Damage: 4
+  Faction: 버섯
+  Options:
+    Baby: true
+    MovementSpeed: 0.3
+    PreventOtherDrops: true
+    PreventSunburn: true
+    Silent: true
+  Skills:
+  - model{mid=mc_shroomling} @self ~onSpawn
+  - state{mid=mc_shroomling;s=attack} @self ~onAttack
+  - potion{type=POISON;duration=60;level=0} @target ~onAttack 0.5
+  - effect:particles{p=spore_blossom_air;a=10;hS=0.6;vS=0.6} @self ~onTimer:40
+  Drops:
+  - RED_MUSHROOM 1to2 0.6
+  - exp 14
+
+저주받은_숲:
+  Type: ZOMBIE
+  Display: '&2저주받은 자 &7(숲)'
+  Health: 60
+  Damage: 7
+  Faction: 저주
+  Options:
+    MovementSpeed: 0.26
+    PreventOtherDrops: true
+    PreventSunburn: true
+    Silent: true
+  Skills:
+  - model{mid=mc_cursed_forest} @self ~onSpawn
+  - state{mid=mc_cursed_forest;s=attack} @self ~onAttack
+  - potion{type=SLOWNESS;duration=40;level=1} @target ~onAttack 0.4
+  - message{m="&2[저주받은 자] &f뿌리가... 너를 붙잡는다..."} @target ~onAttack 0.15
+  Drops:
+  - 별의조각 1 0.15
+  - exp 40
+
+저주받은_얼음:
+  Type: ZOMBIE
+  Display: '&b저주받은 자 &7(얼음)'
+  Health: 60
+  Damage: 7
+  Faction: 저주
+  Options:
+    MovementSpeed: 0.26
+    PreventOtherDrops: true
+    PreventSunburn: true
+    Silent: true
+  Skills:
+  - model{mid=mc_cursed_ice} @self ~onSpawn
+  - state{mid=mc_cursed_ice;s=attack} @self ~onAttack
+  - potion{type=SLOWNESS;duration=60;level=2} @target ~onAttack 0.4
+  - effect:particles{p=snowflake;a=12;hS=0.6;vS=0.8} @self ~onTimer:30
+  Drops:
+  - 별의조각 1 0.15
+  - exp 40
+
+저주받은_수정:
+  Type: ZOMBIE
+  Display: '&5저주받은 자 &7(수정)'
+  Health: 80
+  Damage: 9
+  Faction: 저주
+  Options:
+    MovementSpeed: 0.25
+    PreventOtherDrops: true
+    PreventSunburn: true
+    KnockbackResistance: 0.5
+    Silent: true
+  Skills:
+  - model{mid=mc_cursed_crystal} @self ~onSpawn
+  - state{mid=mc_cursed_crystal;s=attack} @self ~onAttack
+  - damage{a=3} @PlayersInRadius{r=3} ~onTimer:120
+  - effect:particles{p=end_rod;a=20;hS=1.5;vS=0.5} @self ~onTimer:120
+  Drops:
+  - 별의조각 1to2 0.3
+  - exp 60
+
+노틸러스:
+  Type: DROWNED
+  Display: '&c노틸러스'
+  Health: 30
+  Damage: 5
+  Options:
+    MovementSpeed: 0.25
+    PreventOtherDrops: true
+    Silent: true
+  Skills:
+  - model{mid=mc_nautilus} @self ~onSpawn
+  Drops:
+  - NAUTILUS_SHELL 1 0.3
+  - exp 20
+
+악령_늑대:
+  Type: ZOMBIE
+  Display: '&8악령 늑대'
+  Health: 40
+  Damage: 6
+  Faction: 야수
+  Options:
+    MovementSpeed: 0.36
+    PreventOtherDrops: true
+    PreventSunburn: true
+    Silent: true
+  Skills:
+  - model{mid=mc_evilwolf} @self ~onSpawn
+  - state{mid=mc_evilwolf;s=attack} @self ~onAttack
+  - sound{s=entity.wolf.growl;v=1;p=0.6} @self ~onTimer:100
+  Drops:
+  - BONE 1to3 0.8
+  - exp 25
+
+멧돼지:
+  Type: ZOMBIE
+  Display: '&6멧돼지'
+  Health: 36
+  Damage: 5
+  Faction: 야수
+  Options:
+    MovementSpeed: 0.3
+    KnockbackResistance: 0.4
+    PreventOtherDrops: true
+    PreventSunburn: true
+    Silent: true
+  Skills:
+  - model{mid=mc_boar} @self ~onSpawn
+  - state{mid=mc_boar;s=attack} @self ~onAttack
+  - throw{velocity=6;velocityY=2} @target ~onAttack 0.4
+  - sound{s=entity.hoglin.ambient;v=1;p=1.2} @self ~onTimer:120
+  Drops:
+  - PORKCHOP 1to3 1
+  - LEATHER 0to2 0.6
+  - exp 18
+
+# ── 그물총으로 잡는 야생 탈것 (species 태그로 탈것 종류를 정한다) ──
+야생_사슴:
+  Type: HORSE
+  Display: '&e야생 사슴'
+  Health: 24
+  Options:
+    MovementSpeed: 0.28
+    PreventOtherDrops: true
+    Silent: true
+  Skills:
+  - model{mid=mc_deer} @self ~onSpawn
+  - addtag{tag=species:DEER} @self ~onSpawn
+  Drops:
+  - exp 10
+
+야생_영혼늑대:
+  Type: WOLF
+  Display: '&b야생 영혼 늑대'
+  Health: 34
+  Options:
+    MovementSpeed: 0.32
+    PreventOtherDrops: true
+    Silent: true
+  Skills:
+  - model{mid=mc_spiritwolf} @self ~onSpawn
+  - addtag{tag=species:SPIRIT_WOLF} @self ~onSpawn
+  - effect:particles{p=soul;a=6;hS=0.5;vS=0.5} @self ~onTimer:40
+  Drops:
+  - exp 20

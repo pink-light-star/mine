@@ -63,6 +63,14 @@ final class Dex implements Listener {
             new Mob("§2§l🐍 메두사", "medusa", 650, 10, "§c보스", Material.BOW, "별빛 고래 10%"),
             new Mob("§6§l키클롭스", "cyclops", 220, 15, "§6정예", Material.STONE, "외눈 거인"),
             new Mob("§4§l케르베로스", "cerberus", 120, 11, "§6정예", Material.BONE, "머리 셋 지옥견"),
+            new Mob("§5저주받은 자 (수정)", "mc_cursed_crystal", 80, 9, "§6정예", Material.AMETHYST_SHARD, "주변에 수정 폭발 · mcmodels: QueueModels"),
+            new Mob("§2저주받은 자 (숲)", "mc_cursed_forest", 60, 7, "§6정예", Material.OAK_SAPLING, "독버섯 숲 · 뿌리로 묶어 느리게 · mcmodels: QueueModels"),
+            new Mob("§b저주받은 자 (얼음)", "mc_cursed_ice", 60, 7, "§6정예", Material.PACKED_ICE, "얼어붙은 골짜기 · 얼려서 느리게 · mcmodels: QueueModels"),
+            new Mob("§8악령 늑대", "mc_evilwolf", 40, 6, "§7몬스터", Material.BONE, "밤 숲·타이가 · mcmodels: MexBot"),
+            new Mob("§6멧돼지", "mc_boar", 36, 5, "§7몬스터", Material.PORKCHOP, "숲·타이가 · 들이받아 날림 · mcmodels: MexBot"),
+            new Mob("§c노틸러스", "mc_nautilus", 30, 5, "§7몬스터", Material.NAUTILUS_SHELL, "바다 · mcmodels: 1Bit"),
+            new Mob("§d슈룸링", "mc_shroomling", 22, 4, "§7몬스터", Material.RED_MUSHROOM, "독버섯 숲 · 독 포자 · mcmodels: Grumblin"),
+            new Mob("§a고블린", "mc_goblin", 20, 4, "§7몬스터", Material.GOLD_NUGGET, "고블린 소굴 · 창병과 도적 · mcmodels: Grumblin"),
             new Mob("§b사이렌", "siren", 45, 6, "§7몬스터", Material.PRISMARINE_SHARD, "바다의 노래하는 마물"),
             new Mob("§2오크 전사", "orc_warrior", 40, 7, "§7몬스터", Material.IRON_AXE, "오크 부족"),
             new Mob("§a오크 주술사", "orc_shaman", 35, 0, "§7몬스터", Material.STICK, "오크 부족 · 아군 치유"),
@@ -140,6 +148,8 @@ final class Dex implements Listener {
             case WHALE -> Material.HEART_OF_THE_SEA;
             case BROOM -> Material.BRUSH;
             case DRAGON -> Material.DRAGON_HEAD;
+            case DEER -> Material.LEATHER;
+            case SPIRIT_WOLF -> Material.SOUL_LANTERN;
             default -> {
                 Material egg = Material.matchMaterial(sp.type.name() + "_SPAWN_EGG");
                 yield egg != null ? egg : Material.SADDLE;
@@ -150,6 +160,8 @@ final class Dex implements Listener {
     private static String mountHow(Species sp) {
         return switch (sp) {
             case WHALE -> "§7적룡 30% · 메두사·미노타우로스·크루가 10%";
+            case DEER -> "§7숲·초원의 야생 사슴을 그물총으로 §f" + Math.round(sp.grade.capture * 50) + "~" + Math.round(sp.grade.capture * 150) + "%";
+            case SPIRIT_WOLF -> "§7눈 덮인 숲에 밤에만 나오는 영혼 늑대를 그물총으로 §f" + Math.round(sp.grade.capture * 50) + "~" + Math.round(sp.grade.capture * 150) + "%";
             case BROOM -> "§7/그물상점 에서 구매";
             case DRAGON -> "§7용기사 전직 보상 · 적룡 처치 10%";
             default -> sp.grade.capture > 0

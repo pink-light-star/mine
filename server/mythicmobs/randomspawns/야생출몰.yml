@@ -1,0 +1,44 @@
+# 외부 모델 몹의 야생 출몰
+노틸러스출몰:
+  Type: 노틸러스
+  Worlds: world
+  Chance: 0.08
+  Priority: 2
+  Action: REPLACE
+  Biomes: OCEAN,DEEP_OCEAN,LUKEWARM_OCEAN,WARM_OCEAN,DEEP_LUKEWARM_OCEAN
+
+악령늑대출몰:
+  Type: 악령_늑대
+  Worlds: world
+  Chance: 0.06
+  Priority: 2
+  Action: REPLACE
+  Biomes: FOREST,TAIGA,OLD_GROWTH_PINE_TAIGA,OLD_GROWTH_SPRUCE_TAIGA,DARK_FOREST
+  Conditions:
+  - night true
+
+멧돼지출몰:
+  Type: 멧돼지
+  Worlds: world
+  Chance: 0.07
+  Priority: 2
+  Action: REPLACE
+  Biomes: FOREST,BIRCH_FOREST,TAIGA,OLD_GROWTH_PINE_TAIGA,OLD_GROWTH_SPRUCE_TAIGA
+
+사슴출몰:
+  Type: 야생_사슴
+  Worlds: world
+  Chance: 0.1
+  Priority: 2
+  Action: REPLACE
+  Biomes: FOREST,BIRCH_FOREST,MEADOW,TAIGA,OLD_GROWTH_BIRCH_FOREST
+
+영혼늑대출몰:
+  Type: 야생_영혼늑대
+  Worlds: world
+  Chance: 0.03
+  Priority: 2
+  Action: REPLACE
+  Biomes: SNOWY_TAIGA,GROVE,SNOWY_SLOPES,SNOWY_PLAINS
+  Conditions:
+  - night true

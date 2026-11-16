@@ -434,7 +434,8 @@ public class StarRPG extends JavaPlugin implements Listener {
 
         Location loc = target.getLocation();
         if (isMount(target)) { p.sendActionBar("§c이미 주인이 있는 탈것입니다."); return; }
-        Species sp = Species.wild(target.getType());
+        Species sp = Species.tagged(target.getScoreboardTags());
+        if (sp == null) sp = Species.wild(target.getType());
         if (sp == null) { p.sendActionBar("§c이 생물은 포획할 수 없습니다. §7(/탈것도감)"); return; }
         double max = target.getAttribute(Attribute.MAX_HEALTH).getValue();
         if (max > 150) { p.sendActionBar("§c너무 강력해서 그물이 통하지 않는다!"); return; }

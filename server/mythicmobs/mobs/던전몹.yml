@@ -101,6 +101,7 @@
   - IRON_SHOVEL HAND
   - LEATHER_HELMET{color=0x4C7A2B} HEAD
   Skills:
+  - model{mid=mc_goblin} @self ~onSpawn
   Options:
     Baby: true
     MovementSpeed: 0.33

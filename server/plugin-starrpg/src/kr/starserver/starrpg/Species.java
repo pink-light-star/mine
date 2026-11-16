@@ -26,6 +26,9 @@ public enum Species {
     SNIFFER("스니퍼", EntityType.SNIFFER, 0.26, 0.4, false, Grade.HERO, 1.0),
     STRIDER("스트라이더", EntityType.STRIDER, 0.30, 0.5, false, Grade.ANCIENT, 1.3),
     RAVAGER("라바저", EntityType.RAVAGER, 0.40, 0.6, false, Grade.HERO, 1.0),
+    // 야생 몹(MythicMobs, species 태그)으로 나오는 외부 모델 탈것
+    DEER("사슴", EntityType.HORSE, 0.50, 0.9, false, Grade.UNIQUE, 1.0, "mc_deer"),
+    SPIRIT_WOLF("영혼 늑대", EntityType.HORSE, 0.55, 0.9, false, Grade.HERO, 1.0, "mc_spiritwolf"),
 
     // ----- 비행 동물 -----
     BEE("왕꿀벌", EntityType.BEE, 0.45, 0, true, Grade.RARE, 3.0),
@@ -81,6 +84,15 @@ public enum Species {
     public static Species wild(EntityType t) {
         for (Species s : values()) {
             if (s.type == t && s.capture > 0) return s;
+        }
+        return null;
+    }
+
+    /** 몹에 붙은 'species:종류' 태그로 탈것 종류를 찾는다 (MythicMobs 야생 탈것) */
+    public static Species tagged(java.util.Set<String> tags) {
+        for (String t : tags) {
+            if (!t.startsWith("species:")) continue;
+            try { return valueOf(t.substring(8)); } catch (IllegalArgumentException ignored) { }
         }
         return null;
     }

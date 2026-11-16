@@ -100,8 +100,11 @@ def mobs():
 GRADES = {"COMMON": ("일반", 0.60), "RARE": ("레어", 0.40), "UNIQUE": ("유니크", 0.25), "ANCIENT": ("고대", 0.12),
           "HERO": ("영웅", 0.05), "LEGEND": ("전설", 0), "MYTH": ("신화", 0)}
 SPECIAL_HOW = {"WHALE": "적룡 30% · 메두사·미노타우로스·크루가 10%", "BROOM": "/그물상점 에서 구매",
-               "DRAGON": "용기사 전직 보상 · 적룡 처치 10%"}
-MOUNT_NOTE = {"mount_horse": "바닐라 말 위에 루비 왕관과 깃털", "mount_wolf": "붉은 망토와 왕관을 두른 늑대왕",
+               "DRAGON": "용기사 전직 보상 · 적룡 처치 10%",
+               "DEER": "숲·초원의 야생 사슴을 그물총으로 13~38%",
+               "SPIRIT_WOLF": "눈 덮인 숲에 밤에만 나오는 영혼 늑대를 그물총으로 3~8%"}
+MOUNT_NOTE = {"mc_deer": "큰 뿔 수사슴 · mcmodels: MexBot", "mc_spiritwolf": "은빛 털의 영혼 늑대 · mcmodels: MexBot",
+              "mount_horse": "바닐라 말 위에 루비 왕관과 깃털", "mount_wolf": "붉은 망토와 왕관을 두른 늑대왕",
               "mount_fox": "벚꽃 화관과 금방울", "sky_whale": "하늘을 헤엄치는 별빛 고래",
               "broom": "덩굴 손잡이와 랜턴이 달린 빗자루", "mount_dragon": "타고 좌클릭하면 화염 숨결"}
 
@@ -225,6 +228,13 @@ def main():
             if pm:
                 models["item_" + g["id"]] = pm; g["model"] = "item_" + g["id"]
                 item_thumb(mj, tx, g)
+    # 외부 제작 모델(mcmodels, mc_ 로 시작)은 공개 사이트에 3D 데이터를 올리지 않고 썸네일만 쓴다 (재배포 방지)
+    for group in ("mobs", "mounts", "pets"):
+        for e in data[group]:
+            if (e.get("model") or "").startswith("mc_"):
+                e["external"] = True
+    for k in [k for k in models if k.startswith("mc_")]:
+        del models[k]
     data["models"] = models
     js = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
     open(os.path.join(OUT, "dex-data.json"), "w", encoding="utf-8").write(js)
