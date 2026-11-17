@@ -1,0 +1,219 @@
+# ─────────────────────────────────────────────
+#  던전 컷신 — 입장 컷신(약 9초)과 보스 등장 컷신(약 4초)
+#  컷신 동안 파티원은 관전 모드로 카메라를 따라간다. 쉬프트를 누르면 넘긴다.
+#  카메라는 바닐라 /tp ... facing 으로 매 틱 옮긴다 (던전 월드: dungeon)
+# ─────────────────────────────────────────────
+
+options:
+    p: &4[던전] &f
+
+# 던전별 분위기: 소리, 입자, 입장 두 번째 줄 대사
+function cDef(id: text, snd: text, ptc: text, line: text):
+    set {-cine::%{_id}%::snd} to {_snd}
+    set {-cine::%{_id}%::ptc} to {_ptc}
+    set {-cine::%{_id}%::line} to {_line}
+
+# 보스 등장 대사 (b = 보스 단계 번호)
+function cBoss(id: text, b: number, quote: text):
+    set {-cine::%{_id}%::boss::%{_b}%} to {_quote}
+
+on load:
+    cDef("goblin", "entity.vindicator.celebrate", "crit", "훔친 금화가 산더미처럼 쌓여 있다")
+    cBoss("goblin", 1, "낄낄! 내 금화에 손대는 놈은 누구냐!")
+    cDef("undead", "ambient.cave", "soul", "무덤 아래에서 뼈가 부딪히는 소리가 들린다")
+    cBoss("undead", 1, "산 자여... 너도 곧 우리 곁에 눕게 되리라.")
+    cDef("orc", "event.raid.horn", "campfire_cosy_smoke", "북소리가 울리고 도끼날이 번뜩인다")
+    cBoss("orc", 1, "약한 놈은 부족에 필요 없다! 덤벼라!")
+    cDef("mushroom", "ambient.crimson_forest.mood", "spore_blossom_air", "버섯들이 꿈틀대며 일어서기 시작한다")
+    cBoss("mushroom", 1, "이 숲의 포자가 너희를 삼킬 것이다.")
+    cDef("frost", "ambient.soul_sand_valley.mood", "snowflake", "숨결마저 얼어붙는 골짜기")
+    cBoss("frost", 1, "얼어붙은 영혼들이여, 깨어나라!")
+    cDef("olympus", "block.bell.resonate", "end_rod", "노랫소리와 날갯짓이 점점 다가온다")
+    cBoss("olympus", 1, "내 눈을 마주 보아라... 그것이 마지막일 테니.")
+    cBoss("olympus", 2, "미궁의 주인이 침입자를 짓밟는다!")
+    cDef("lava", "block.lava.ambient", "lava", "끓어오르는 강을 건너 중앙 고원으로")
+    cBoss("lava", 1, "마왕님의 이름으로... 너희를 심판하겠다.")
+    cDef("tower", "entity.lightning_bolt.thunder", "witch", "번개가 탑 꼭대기를 때린다")
+    cBoss("tower", 1, "의식은 이미 시작됐다. 너희가 마지막 제물이다.")
+    cDef("star", "block.beacon.activate", "end_rod", "별빛이 시험의 길을 비춘다")
+    cBoss("star", 1, "별의 이름으로 묻겠다. 너는 자격이 있는가?")
+    cDef("volcano", "entity.blaze.ambient", "flame", "불길이 솟는 화산의 심장부")
+    cBoss("volcano", 1, "모든 것을 재로 만들어 주마!")
+    cDef("demon", "entity.wither.ambient", "soul_fire_flame", "마왕성의 문이 무겁게 열린다")
+    cBoss("demon", 1, "말발굽 소리가 들리는가... 그것이 너희의 마지막 소리다.")
+    cBoss("demon", 2, "마왕님께 가려면 우리를 넘어야 한다.")
+    cDef("raid_dragon", "entity.ender_dragon.growl", "flame", "오크 대군 너머, 붉은 날개가 하늘을 가린다")
+    cBoss("raid_dragon", 1, "적룡님께 바칠 제물이 왔구나!")
+    cBoss("raid_dragon", 2, "인간 따위가... 감히 내 둥지에 발을 들이다니!")
+    cDef("raid_demon", "ambient.basalt_deltas.mood", "soul_fire_flame", "마왕군의 모든 지휘관이 한자리에 모였다")
+    cBoss("raid_demon", 1, "마왕님의 이름으로... 너희를 심판하겠다.")
+    cBoss("raid_demon", 2, "불꽃과 별빛이 함께 너희를 막으리라.")
+    cBoss("raid_demon", 3, "신화가 무너질 때, 세상도 무너진다.")
+
+# ── 카메라 ──
+function cCam(id: text, x: number, y: number, z: number, tx: number, ty: number, tz: number):
+    set {_w} to {-dgd::%{_id}%::world}
+    loop {dg::%{_id}%::party::*}:
+        execute console command "execute in minecraft:%{_w}% run tp %name of loop-value% %{_x}% %{_y}% %{_z}% facing %{_tx}% %{_ty}% %{_tz}%"
+
+function cPtc(id: text, x: number, y: number, z: number):
+    set {_p} to {-cine::%{_id}%::ptc} ? "end_rod"
+    execute console command "execute in minecraft:%{-dgd::%{_id}%::world}% run particle minecraft:%{_p}% %{_x}% %{_y}% %{_z}% 2 1.5 2 0.02 30 force"
+
+function cGoing(id: text) :: boolean:
+    {dg::%{_id}%::cine} is true
+    {-cine::%{_id}%::skip} is not set
+    size of {dg::%{_id}%::party::*} > 0
+    return true
+
+# 직선 이동: a → b, 바라보는 곳 t1 → t2 (부드럽게 가속·감속)
+function cShot(id: text, a: location, b: location, t1: location, t2: location, ticks: number):
+    loop {_ticks} times:
+        cGoing({_id}) is true
+        set {_f} to loop-number / {_ticks}
+        set {_e} to {_f} * {_f} * (3 - 2 * {_f})
+        set {_x} to x-coordinate of {_a} + (x-coordinate of {_b} - x-coordinate of {_a}) * {_e}
+        set {_y} to y-coordinate of {_a} + (y-coordinate of {_b} - y-coordinate of {_a}) * {_e}
+        set {_z} to z-coordinate of {_a} + (z-coordinate of {_b} - z-coordinate of {_a}) * {_e}
+        set {_tx} to x-coordinate of {_t1} + (x-coordinate of {_t2} - x-coordinate of {_t1}) * {_e}
+        set {_ty} to y-coordinate of {_t1} + (y-coordinate of {_t2} - y-coordinate of {_t1}) * {_e}
+        set {_tz} to z-coordinate of {_t1} + (z-coordinate of {_t2} - z-coordinate of {_t1}) * {_e}
+        cCam({_id}, {_x}, {_y}, {_z}, {_tx}, {_ty}, {_tz})
+        if mod(loop-number, 10) = 0:
+            cPtc({_id}, {_tx}, {_ty}, {_tz})
+        wait 1 tick
+
+# 원을 그리며 돌기: 가운데 c, 반지름 r, 높이 h, 각도 a0 → a1 (도)
+function cOrbit(id: text, c: location, r: number, h: number, a0: number, a1: number, ticks: number):
+    loop {_ticks} times:
+        cGoing({_id}) is true
+        set {_f} to loop-number / {_ticks}
+        set {_e} to {_f} * {_f} * (3 - 2 * {_f})
+        set {_a} to {_a0} + ({_a1} - {_a0}) * {_e}
+        set {_x} to x-coordinate of {_c} + cos({_a}) * {_r}
+        set {_z} to z-coordinate of {_c} + sin({_a}) * {_r}
+        cCam({_id}, {_x}, y-coordinate of {_c} + {_h}, {_z}, x-coordinate of {_c}, y-coordinate of {_c} + 1.5, z-coordinate of {_c})
+        if mod(loop-number, 10) = 0:
+            cPtc({_id}, x-coordinate of {_c}, y-coordinate of {_c} + 1.5, z-coordinate of {_c})
+        wait 1 tick
+
+# 파티원을 관전 모드로 (원래 위치·게임 모드 기억)
+function cBegin(id: text):
+    set {dg::%{_id}%::cine} to true
+    delete {-cine::%{_id}%::skip}
+    set {_snd} to {-cine::%{_id}%::snd} ? "ambient.cave"
+    loop {dg::%{_id}%::party::*}:
+        set {-cine::gm::%uuid of loop-value%} to gamemode of loop-value
+        set {-cine::back::%uuid of loop-value%} to location of loop-value
+        set {-cine::in::%uuid of loop-value%} to {_id}
+        set gamemode of loop-value to spectator
+        apply blindness to loop-value for 1 second
+        play sound {_snd} with volume 1 to loop-value
+        send action bar colored "&7쉬프트: 컷신 넘기기" to loop-value
+
+# 원래 자리·게임 모드로 돌려놓기
+function cEnd(id: text):
+    loop {dg::%{_id}%::party::*}:
+        set {-cine::to::%uuid of loop-value%} to {-cine::back::%uuid of loop-value%} ? dLoc({_id}, 0)
+    cRestore({_id})
+
+# 모두 한 곳(to)으로 돌려놓기
+function cEndAt(id: text, to: location):
+    loop {dg::%{_id}%::party::*}:
+        set {-cine::to::%uuid of loop-value%} to {_to}
+    cRestore({_id})
+
+function cRestore(id: text):
+    loop {dg::%{_id}%::party::*}:
+        apply blindness to loop-value for 1 second
+        teleport loop-value to {-cine::to::%uuid of loop-value%}
+        delete {-cine::to::%uuid of loop-value%}
+        set gamemode of loop-value to ({-cine::gm::%uuid of loop-value%} ? survival)
+        delete {-cine::gm::%uuid of loop-value%}
+        delete {-cine::back::%uuid of loop-value%}
+        delete {-cine::in::%uuid of loop-value%}
+    set {dg::%{_id}%::cine} to false
+    delete {-cine::%{_id}%::skip}
+
+# ── 입장 컷신 ──
+function dCineIntro(id: text):
+    cBegin({_id})
+    set {_c} to dCenter({_id})
+    set {_p0} to dLoc({_id}, 0)
+    set {_p1} to dLoc({_id}, 1)
+    set {_pb} to dLoc({_id}, 4)
+    set {_name} to {-dgd::%{_id}%::name}
+    set {_last} to {-dgd::%{_id}%::bosses}
+    set {_bt} to {-dgd::%{_id}%::bosstitle::%{_last}%}
+    # 1) 하늘에서 던전을 한 바퀴
+    loop {dg::%{_id}%::party::*}:
+        send title colored {_name} with subtitle colored "&7%{-dgd::%{_id}%::desc}%" to loop-value for 3 seconds
+    cOrbit({_id}, {_c}, 30, 28, 200, 300, 70)
+    # 2) 입구로 내려오며 첫 길을 비춘다
+    set {_line} to {-cine::%{_id}%::line} ? ""
+    if cGoing({_id}) is true:
+        loop {dg::%{_id}%::party::*}:
+            send title "" with subtitle colored "&f%{_line}%" to loop-value for 3 seconds
+        cShot({_id}, {_p0} ~ vector(-6, 22, -6), {_p0} ~ vector(-2, 3, -2), {_p0}, {_p1}, 60)
+    # 3) 그리고 그 끝에는... 보스 자리
+    if cGoing({_id}) is true:
+        loop {dg::%{_id}%::party::*}:
+            send title colored "&4그리고 그 끝에는..." with subtitle colored "&c%{_bt}%" to loop-value for 3 seconds
+            play sound "entity.wither.ambient" with volume 0.5 to loop-value
+        cShot({_id}, {_pb} ~ vector(10, 7, 10), {_pb} ~ vector(6, 4, 6), {_pb} ~ vector(0, 2, 0), {_pb} ~ vector(0, 2, 0), 50)
+    cEndAt({_id}, {_p0})
+    wait 1 tick
+    dCineDone({_id})
+
+# 입장 컷신이 끝난 뒤 (원래 입장 안내)
+function dCineDone(id: text):
+    set {_n} to size of {dg::%{_id}%::party::*}
+    dTitle({_id}, "%{-dgd::%{_id}%::name}%", "%dDiffName({dg::%{_id}%::diff})% &7· 파티 %{_n}%명")
+    dMsg({_id}, "&f입장! 나침반과 &c불꽃 기둥&f을 따라가세요. 목숨은 파티 합쳐 &c%{dg::%{_id}%::lives}%번&f이에요.")
+    dMsg({_id}, "&7나가기: /던전 나가기")
+
+# ── 보스 등장 컷신 ──
+function dCineBoss(id: text, b: number):
+    set {_pb} to dLoc({_id}, 4)
+    # 컷신 동안 보스·몹은 멈춰 있게
+    loop all living entities in radius 25 of {_pb}:
+        loop-entity is not a player
+        apply slowness 255 to loop-entity for 5 seconds
+        apply resistance 255 to loop-entity for 5 seconds
+        apply weakness 255 to loop-entity for 5 seconds
+    cBegin({_id})
+    set {_bt} to {-dgd::%{_id}%::bosstitle::%{_b}%}
+    set {_q} to {-cine::%{_id}%::boss::%{_b}%} ? "..."
+    loop {dg::%{_id}%::party::*}:
+        send title colored "&4&l☠ %{_bt}% ☠" with subtitle colored "&f""%{_q}%""" to loop-value for 4 seconds
+        play sound "entity.ravager.roar" with volume 1 to loop-value
+    cOrbit({_id}, {_pb}, 7, 3, 240, 330, 75)
+    cEnd({_id})
+    dTitle({_id}, "&c&l보스를 쓰러뜨리세요!", "&7%{_bt}%")
+
+# 쉬프트: 컷신 넘기기 (파티 전체)
+on toggle sneak:
+    set {_id} to {-cine::in::%uuid of player%}
+    {_id} is set
+    {dg::%{_id}%::cine} is true
+    {-cine::%{_id}%::skip} is not set
+    set {-cine::%{_id}%::skip} to true
+    dMsg({_id}, "&7%player%님이 컷신을 넘겼어요.")
+
+# 컷신 도중 나간 사람은 다시 들어올 때 원래대로
+on join:
+    set {_id} to {-cine::in::%uuid of player%}
+    {_id} is set
+    wait 1 second
+    set gamemode of player to ({-cine::gm::%uuid of player%} ? survival)
+    delete {-cine::gm::%uuid of player%}
+    delete {-cine::back::%uuid of player%}
+    delete {-cine::in::%uuid of player%}
+
+# 서버가 꺼졌다 켜져서 기억이 사라진 경우: 던전 월드에서 관전 모드로 남아 있으면 되돌린다
+on join:
+    "%world of player%" is "dungeon"
+    player's gamemode is spectator
+    player is not op
+    wait 2 seconds
+    set gamemode of player to survival

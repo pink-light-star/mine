@@ -255,6 +255,9 @@ function dSpawnStage(id: text):
         play sound "entity.wither.spawn" with volume 0.4 to loop-value
     wait 10 ticks
     dScale({_id})
+    # 보스 단계면 보스 등장 컷신 (컷신.sk)
+    if {_s} > {_w}:
+        dCineBoss({_id}, {_s} - {_w})
 
 function dEnd(id: text, win: boolean):
     set {_d} to {dg::%{_id}%::diff}
@@ -350,9 +353,8 @@ function dStart(leader: player, id: text, d: number):
             set {_names} to "%{_names}%, %loop-value%"
     set {dg::%{_id}%::names} to {_names}
     wait 1 tick
-    dTitle({_id}, "%{-dgd::%{_id}%::name}%", "%dDiffName({_d})% &7· 파티 %{_n}%명")
-    dMsg({_id}, "&f입장! 나침반과 &c불꽃 기둥&f을 따라가세요. 목숨은 파티 합쳐 &c%{dg::%{_id}%::lives}%번&f이에요.")
-    dMsg({_id}, "&7나가기: /던전 나가기")
+    # 입장 컷신 (끝나면 입장 안내를 띄운다: 컷신.sk)
+    dCineIntro({_id})
 
 # 매초 진행
 every second:
@@ -384,6 +386,8 @@ function dTick(id: text):
     loop {dg::%{_id}%::party::*}:
         set compass target of loop-value to {_l}
     execute console command "execute in minecraft:%{-dgd::%{_id}%::world}% run particle minecraft:flame %x-coordinate of {_l}% %y-coordinate of {_l} + 3% %z-coordinate of {_l}% 0.2 3 0.2 0.01 40 force"
+    if {dg::%{_id}%::cine} is true:
+        stop
     if {dg::%{_id}%::spawned} is false:
         loop {dg::%{_id}%::party::*}:
             if distance between loop-value and {_l} < 12:
