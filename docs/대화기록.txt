@@ -4830,28 +4830,103 @@ txt를 만들었어요(메시지 863개). md 버전도 새로 만들고, README�
 영어로 된 메시지가 403개, 약 6만 8천 자예요. 양이 많아서 네 덩어리로 나눠 동시에 번역할게요.
 
 [09:55] Claude
-While the translation runs, I'll update the export script so it can apply the translations.
+번역이 진행되는 동안, 번역을 적용할 수 있게 내보내기 스크립트를 고칠게요.
 
 [09:56] Claude
-I'll finish once the four translation agents report back.
+번역 에이전트 네 개가 모두 결과를 보내면 마무리할게요.
 
 [09:57] Claude
-Part 3 is done. I'll spot-check a few translations against the original to confirm each one landed on the right message.
+3부가 끝났어요. 번역 몇 개를 원문과 대조해서 각각 맞는 메시지에 들어갔는지 확인할게요.
 
 [09:57] Claude
-Part 3's translations match the originals. Waiting on the other three.
+3부 번역은 원문과 맞아요. 나머지 세 부분을 기다리는 중이에요.
 
 [09:57] Claude
-Part 4 is done too. Waiting on parts 1 and 2.
+4부도 끝났어요. 1부와 2부를 기다리는 중이에요.
 
 [09:58] Claude
-Part 2 is done. One part left.
+2부가 끝났어요. 한 부분 남았어요.
 
 [09:58] Claude
-Still waiting on part 1, the longest one.
+가장 긴 1부를 아직 기다리는 중이에요.
 
 [09:58] Claude
-All four translations are back. I'll spot-check parts 1, 2, and 4 the same way, then regenerate the logs.
+번역 네 부분이 모두 돌아왔어요. 1·2·4부도 같은 방식으로 대조한 뒤 기록을 다시 만들게요.
 
 [09:58] Claude
-All 403 are in place. The 5 left in English are commands, web addresses, and the like, which are meant to stay as they are. I'll rebuild the logs with the translations and upload them to GitHub.
+403개 모두 들어갔어요. 영어로 남은 5개는 명령어나 웹 주소처럼 원래 그대로 두는 것들이에요. 번역을 넣어 기록을 다시 만들고 깃허브에 올릴게요.
+
+[09:59] Claude
+대화 기록을 한국어로 번역해서 깃허브에 다시 올렸어요.
+
+- **번역한 것:** 진행 중에 영어로 남긴 Claude 메시지 403개를 한국어로 옮겼어요. "체크섬이 맞아요. 이제 플러그인과 실행 스크립트를 준비할게요." 같은 문장이에요.
+- **확인한 것:** 번역문이 각각 맞는 원문 자리에 들어갔는지 군데군데 대조해 봤어요.
+- **그대로 둔 것:** 명령어, 파일 경로, 웹 주소, 플러그인 이름은 원래대로 남겼어요. 영어 그대로인 메시지 5개는 명령어나 주소만 있는 것들이에요.
+- **파일:** txt와 md 둘 다 최신 대화까지 담아(879개 메시지) 다시 만들었어요.
+  - https://github.com/pink-light-star/mine/blob/main/docs/대화기록.txt
+  - https://github.com/pink-light-star/mine/blob/main/docs/대화기록.md
+
+이메일과 토큰은 번역본에서도 가려져 있어요.
+
+[10:17] 사용자
+그래
+
+[10:17] Claude
+네! 다른 작업이 생기면 언제든 말해 주세요.
+
+[11:53] 사용자
+그리고 컷신도 만들어줄래? 각 던전마다
+
+[11:53] Claude
+던전마다 입장할 때 나오는 컷신을 만들게요. 먼저 던전 입장 코드와, MythicMobs 컷신 기능을 쓸 수 있는지 볼게요.
+
+[11:53] Claude
+5시간 사용 한도에 도달했어요 · 오후 2시 50분(서울)에 초기화돼요
+
+[14:33] 사용자
+다시 시도해 주세요
+
+[14:33] Claude
+5시간 사용 한도에 도달했어요 · 오후 2시 50분(서울)에 초기화돼요
+
+[14:51] 사용자
+작업 도중에 사용 한도에 걸렸는데, 이제 초기화됐어요. 하던 데서 이어서 해 주세요.
+
+[14:54] Claude
+Skript가 제대로 읽지 못할 수 있는 몇 줄(문자열 안의 겹따옴표, 매개변수 기본값)을 고치고, 던전 코드에 연결할게요.
+
+[14:54] Claude
+연결했어요. 서버가 꺼져 있어서, 스크립트가 오류 없이 불러와지는지 잠깐 켜서 확인하고 다시 끌게요.
+
+[14:56] Claude
+이번 실행 기록이 맞고, `컷신.sk`를 포함한 스크립트 11개가 모두 오류 없이 불러와졌어요. 서버를 다시 끄고 깃허브에 올릴게요.
+
+[14:56] Claude
+던전 13곳 모두에 컷신을 넣었어요. 서버를 켜서 컷신 스크립트가 오류 없이 불러와지는 것까지 확인했지만, 접속자가 없어 실제 컷신 화면은 아직 보지 못했어요. 다음에 던전에 들어가 보시면 바로 나와요.
+
+**입장 컷신 (약 9초)**
+1. 하늘 위에서 던전을 한 바퀴 돌며 던전 이름과 설명이 떠요.
+2. 입구로 내려오면서 첫 번째 길을 비추고, 던전마다 다른 대사가 나와요. 예를 들어 오크 전초기지는 "북소리가 울리고 도끼날이 번뜩인다"예요.
+3. "그리고 그 끝에는..."이라는 문구와 함께 보스가 기다리는 자리를 보여 주고 보스 이름이 나와요.
+
+**보스 등장 컷신 (약 4초)**
+- 보스가 나오면 카메라가 보스 주위를 돌면서 보스 대사가 나와요. 예를 들어 이그니스는 "인간 따위가... 감히 내 둥지에 발을 들이다니!"라고 말해요.
+- 컷신 동안 보스와 몹은 멈춰 있어서 공격받지 않아요.
+
+**공통**
+- **던전마다 다른 분위기:** 소리와 효과가 달라요. 고블린 소굴은 웃음소리, 얼어붙은 골짜기는 눈송이, 적룡의 둥지는 용의 포효가 나와요.
+- **카메라:** 컷신 동안은 관전 모드로 카메라를 따라가요. 끝나면 원래 자리와 게임 모드로 돌아와요.
+- **넘기기:** 파티원 누구든 **쉬프트**를 누르면 파티 전체가 넘겨요.
+- **진행 멈춤:** 컷신 중에는 다음 웨이브가 나오지 않게 던전 진행을 멈춰요.
+- **도중에 나간 경우:** 다시 들어오면 원래 게임 모드로 돌려놔요.
+
+서버는 다시 꺼 두었어요. 깃허브에 스크립트를 올리고 작업 기록에도 추가했어요.
+
+[18:39] 사용자
+그래. 대화내역도 깃에올렸지?
+
+[18:39] Claude
+대화 기록은 번역해서 올릴 때까지의 내용만 들어 있어요. 컷신 작업 이후의 대화는 아직 없어서 지금 갱신할게요. 먼저 새로 생긴 영어 메시지가 있는지 볼게요.
+
+[18:40] Claude
+There are 15 new English messages. They're short, so I'll translate them directly.
