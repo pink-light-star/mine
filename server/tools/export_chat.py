@@ -4,6 +4,12 @@
 import json, re, sys, datetime
 
 src, out = sys.argv[1], sys.argv[2]
+# 선택: 영어 메시지의 한국어 번역 (uuid → 번역문) JSON 파일
+TR = {}
+if len(sys.argv) > 3:
+    import glob as _g
+    for f in _g.glob(sys.argv[3]):
+        TR.update(json.load(open(f, encoding="utf-8")))
 EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 TOKEN = re.compile(r"(gh[opsu]_[A-Za-z0-9]{10,}|sk-[A-Za-z0-9]{10,})")
 TAGS = re.compile(r"<(system-reminder|command-[a-z]+|local-command-[a-z]+|antml:[a-z_]+|task-notification|ide_[a-z_]+)[^>]*>.*?</\1>", re.S)
@@ -34,7 +40,7 @@ for line in open(src, encoding="utf-8"):
             elif b.get("type") == "image" and d["type"] == "user": parts.append("[이미지 첨부]")
             elif b.get("type") == "tool_result": parts = None; break
     if not parts: continue
-    text = clean("\n".join(parts))
+    text = clean(TR.get(u) or "\n".join(parts))
     if not text or text.startswith("This session is being continued") or text.startswith("[Request interrupted"):
         continue
     if "<task-notification>" in text: continue
