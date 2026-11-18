@@ -132,7 +132,6 @@ final class Menu implements Listener {
         button(h, 41, Material.ANVIL, "§6§l대장간", "대장간", "§7몹·보스 재료로 능력 무기·방어구 제작", "§7요구 레벨·요구 능력치 있음");
         button(h, 43, Material.BOOK, "§f§l명령어 도움말", "명령어", "§7한국어 명령어 모음");
         // 성장·함께하기 (아래 줄)
-        button(h, 45, Material.PLAYER_HEAD, "§d§l파티", "파티", "§7파티 만들기·초대·파티 채팅", "§7근처 파티원 경험치 30% 나눔");
         button(h, 46, Material.ANVIL, "§6§l장비 강화", "강화", "§7손에 든 장비를 +10까지", "§7+6부터는 별의 조각 필요");
         button(h, 47, Material.CLOCK, "§a§l출석 체크", "출석", "§7매일 보상, 7일 연속이면 큰 보상");
         button(h, 48, Material.DRAGON_HEAD, "§c§l월드 보스", "월드보스", "§72시간마다 나타나는 강한 보스", "§7함께 싸우면 모두 보상");

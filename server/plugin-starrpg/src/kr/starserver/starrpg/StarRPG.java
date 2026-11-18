@@ -739,7 +739,7 @@ public class StarRPG extends JavaPlugin implements Listener {
         s.sendMessage("§e이동 §f/스폰 /집 /집설정 /집삭제 /돌아가기 /워프 /텔포 /텔포부르기 /수락 /거절");
         s.sendMessage("§e성장 §f/전직 /스킬 /능력치 /칭호 /이름꾸미기");
         s.sendMessage("§e퀘스트 §f/퀘스트 /월드퀘스트 /일일의뢰 /출석");
-        s.sendMessage("§e함께하기 §f/파티 §7(채팅 앞에 ! 는 파티 채팅) §f/결투 /월드보스 /레벨순위");
+        s.sendMessage("§e함께하기 §f/결투 /월드보스 /레벨순위");
         s.sendMessage("§e전투·장비 §f/던전 §7(나가기: /던전 나가기) §f/대장간 /강화 /장비 /잡화점");
         s.sendMessage("§e도감 §f/도감 §7(탈것·펫·보스, 누르면 3D 모델) §f/장비도감 /물고기도감");
         s.sendMessage("§e펫·탈것 §f/뽑기 /뽑기 확률 /펫목록 /탈것도감 /그물상점");
