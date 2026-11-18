@@ -38,7 +38,8 @@ function wbSpawn():
         stop
     set {-wb::boss} to {_boss}
     set metadata value "worldboss" of {_boss} to true
-    set max health of {_boss} to max health of {_boss} * 4
+    # 접속 인원(3~6명 서버)에 맞춰: 1명 1.6배 … 6명 4.6배
+    set max health of {_boss} to max health of {_boss} * (1 + 0.6 * number of all players)
     heal {_boss}
     set {-wb::name} to uncolored name of {_boss} ? {_id}
     delete {-wb::dmg::*}

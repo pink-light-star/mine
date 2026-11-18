@@ -306,7 +306,8 @@ function dStart(leader: player, id: text, d: number):
         stop
     set {_raid} to {-dgd::%{_id}%::raid}
     set {_r} to 10 if {_raid} is true, otherwise 6
-    set {_max} to 10 if {_raid} is true, otherwise 5
+    # 서버 인원 3~6명 기준: 일반·레이드 모두 최대 6명
+    set {_max} to 6
     set {_cdm} to 60 if {_raid} is true, otherwise 10
     delete {dg::%{_id}%::party::*}
     loop all players in radius {_r} of {_leader}:
@@ -338,7 +339,7 @@ function dStart(leader: player, id: text, d: number):
     set {dg::%{_id}%::stage} to 1
     set {dg::%{_id}%::spawned} to false
     set {dg::%{_id}%::deaths} to 0
-    set {dg::%{_id}%::lives} to 10 if {_raid} is true, otherwise 5
+    set {dg::%{_id}%::lives} to 6 if {_raid} is true, otherwise 5
     set {dg::%{_id}%::started} to now
     dClearMobs({_id})
     set {_names} to ""
