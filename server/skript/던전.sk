@@ -332,8 +332,14 @@ function dStart(leader: player, id: text, d: number):
     set {_dd::*} to 1, 1.4 and 2
     set {dg::%{_id}%::hpmul} to (1 + {_lv} * 0.04) * {_hd::%{_d}%}
     set {dg::%{_id}%::dmgmul} to (1.2 + {_lv} * 0.05) * {_dd::%{_d}%}
+    # 혼자 기준 밸런스: 1명일 때가 가장 약하고, 사람이 늘면 강해진다
     if {_raid} is true:
-        set {dg::%{_id}%::hpmul} to {dg::%{_id}%::hpmul} * (1 + 0.6 * ({_n} - 1))
+        # 레이드: 1명 체력 60%·피해 70% → 1명 늘 때마다 체력 +40%p, 피해 +6%p
+        set {dg::%{_id}%::hpmul} to {dg::%{_id}%::hpmul} * (0.6 + 0.4 * ({_n} - 1))
+        set {dg::%{_id}%::dmgmul} to {dg::%{_id}%::dmgmul} * (0.7 + 0.06 * ({_n} - 1))
+    else if {_n} = 1:
+        # 일반 던전 혼자: 체력 80%
+        set {dg::%{_id}%::hpmul} to {dg::%{_id}%::hpmul} * 0.8
     set {dg::%{_id}%::active} to true
     set {dg::%{_id}%::diff} to {_d}
     set {dg::%{_id}%::stage} to 1

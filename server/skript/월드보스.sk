@@ -38,8 +38,8 @@ function wbSpawn():
         stop
     set {-wb::boss} to {_boss}
     set metadata value "worldboss" of {_boss} to true
-    # 접속 인원(3~6명 서버)에 맞춰: 1명 1.6배 … 6명 4.6배
-    set max health of {_boss} to max health of {_boss} * (1 + 0.6 * number of all players)
+    # 혼자서도 잡을 수 있게 체력 1.5배 (일반 보스보다 조금 강한 정도)
+    set max health of {_boss} to max health of {_boss} * 1.5
     heal {_boss}
     set {-wb::name} to uncolored name of {_boss} ? {_id}
     delete {-wb::dmg::*}
@@ -80,10 +80,11 @@ on death:
     victim = {-wb::boss}
     delete {-wb::boss}
     set {_top} to 0
-    loop {-wb::dmg::*}:
-        if loop-value > {_top}:
-            set {_top} to loop-value
-            set {_topu} to loop-index
+    loop indices of {-wb::dmg::*}:
+        set {_v} to {-wb::dmg::%loop-value%}
+        if {_v} > {_top}:
+            set {_top} to {_v}
+            set {_topu} to loop-value
     broadcast colored "{@p}&a&l%{-wb::name}% 처치!&f 함께 싸운 모두에게 보상을 줬어요."
     loop indices of {-wb::dmg::*}:
         set {_pl} to {-wb::who::%loop-value%}
