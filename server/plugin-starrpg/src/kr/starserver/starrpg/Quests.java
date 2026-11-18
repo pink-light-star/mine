@@ -73,6 +73,19 @@ final class Quests implements Listener {
         NPCS.put("forge", new String[]{"§6§l대장장이 길드장 §f하인츠", "하인츠", "WEAPONSMITH", "DESERT", "cmd:대장간"});
         NPCS.put("parkour", new String[]{"§8§l??? §7수상한 등반가", "등반가", "NITWIT", "TAIGA", "cmd:파쿠르"});
         NPCS.put("stylist", new String[]{"§b§l이름 장인 §f모모", "이름 장인", "SHEPHERD", "SAVANNA", "cmd:이름꾸미기"});
+        // 직업군 교관: 그 직업군 스킬을 가르친다 (초보자는 1단계만, 초초보자 계열은 모두)
+        NPCS.put("t_warrior", new String[]{"§c§l전사 교관 §f브로크", "전사 교관", "WEAPONSMITH", "TAIGA", "trainer:WARRIOR"});
+        NPCS.put("t_archer", new String[]{"§2§l궁수 교관 §f실바", "궁수 교관", "FLETCHER", "SAVANNA", "trainer:ARCHER"});
+        NPCS.put("t_mage", new String[]{"§9§l마법사 교관 §f멀린", "마법사 교관", "LIBRARIAN", "SNOW", "trainer:MAGE"});
+        NPCS.put("t_rogue", new String[]{"§8§l도적 교관 §f섀도", "도적 교관", "LEATHERWORKER", "SWAMP", "trainer:ROGUE"});
+        NPCS.put("t_cleric", new String[]{"§e§l성직자 교관 §f루시오", "성직자 교관", "CLERIC", "DESERT", "trainer:CLERIC"});
+        NPCS.put("t_swordsman", new String[]{"§3§l검사 교관 §f아르센", "검사 교관", "WEAPONSMITH", "PLAINS", "trainer:SWORDSMAN"});
+        NPCS.put("t_ninja", new String[]{"§8§l닌자 교관 §f하야테", "닌자 교관", "NITWIT", "JUNGLE", "trainer:NINJA"});
+        NPCS.put("t_monk", new String[]{"§6§l무투가 교관 §f철수", "무투가 교관", "ARMORER", "DESERT", "trainer:MONK"});
+        NPCS.put("t_moon_priest", new String[]{"§1§l달의 사제 교관 §f셀레네", "달의 사제 교관", "CLERIC", "SNOW", "trainer:MOON_PRIEST"});
+        NPCS.put("t_gunslinger", new String[]{"§7§l건슬링거 교관 §f잭", "건슬링거 교관", "TOOLSMITH", "SAVANNA", "trainer:GUNSLINGER"});
+        NPCS.put("t_lancer", new String[]{"§c§l창술사 교관 §f레오닉", "창술사 교관", "ARMORER", "TAIGA", "trainer:LANCER"});
+        NPCS.put("t_bard", new String[]{"§d§l음유시인 교관 §f멜로디", "음유시인 교관", "SHEPHERD", "PLAINS", "trainer:BARD"});
     }
 
     // ===== 메인·수집·히든 퀘스트 =====
@@ -135,6 +148,27 @@ final class Quests implements Listener {
             new Quest("hq5", "guard", "거인의 곡괭이", "§8(히든) 광석 1,000개를 캤다.", Type.MINE, "", 1000, 20000, 15000, 2, "§6[광산의 거인]", null),
             new Quest("hq6", "fisher", "심해의 노래", "§8(히든) 물고기 300마리를 낚았다.", Type.FISH, "", 300, 15000, 12000, 2, "§b[심해의 기사]", null),
             new Quest("hq7", "elder", "태양을 기르는 자", "§8(히든) 다 자란 작물 2,000개를 수확했다.", Type.FARM, "", 2000, 20000, 15000, 2, "§6[태양의 농부]", null),
+            // ===== 히든 스킬 퀘스트 (자동 진행 · 완료하면 히든 스킬을 깨우침) =====
+            new Quest("hs1", "hunter", "피의 사냥", "§8(히든 스킬) 좀비 300마리를 사냥했다.", Type.KILL, "ZOMBIE", 300, 8000, 6000, 1, null, null),
+            new Quest("hs2", "kid", "박쥐의 친구", "§8(히든 스킬) 박쥐 30마리를 잡았다.", Type.KILL, "BAT", 30, 8000, 6000, 1, null, null),
+            new Quest("hs3", "scholar", "핏빛 달 아래", "§8(히든 스킬) 데몬 나이트나 흑기사를 5번 쓰러뜨렸다.", Type.KILL, "데몬|흑기사", 5, 8000, 6000, 1, null, null),
+            new Quest("hs4", "smith", "용의 숨결", "§8(히든 스킬) 블레이즈 100마리를 처치했다.", Type.KILL, "BLAZE", 100, 8000, 6000, 1, null, null),
+            new Quest("hs5", "guard", "하늘을 가르는 날개", "§8(히든 스킬) 팬텀 50마리를 떨어뜨렸다.", Type.KILL, "PHANTOM", 50, 8000, 6000, 1, null, null),
+            new Quest("hs6", "smith", "용의 포효", "§8(히든 스킬) 적룡 이그니스를 3번 쓰러뜨렸다.", Type.KILL, "적룡", 3, 8000, 6000, 1, null, null),
+            new Quest("hs7", "forge", "불꽃 칼날", "§8(히든 스킬) 마그마 큐브 100마리를 처치했다.", Type.KILL, "MAGMA_CUBE", 100, 8000, 6000, 1, null, null),
+            new Quest("hs8", "guard", "번개 구동", "§8(히든 스킬) 크리퍼 200마리를 처치했다.", Type.KILL, "CREEPER", 200, 8000, 6000, 1, null, null),
+            new Quest("hs9", "scholar", "빙결의 지배", "§8(히든 스킬) 스트레이·얼음 원혼 100마리를 처치했다.", Type.KILL, "STRAY|원혼", 100, 8000, 6000, 1, null, null),
+            new Quest("hs10", "scholar", "폭풍을 부르는 자", "§8(히든 스킬) 메두사를 3번 쓰러뜨렸다.", Type.KILL, "메두사", 3, 8000, 6000, 1, null, null),
+            new Quest("hs11", "priest", "심판의 창", "§8(히든 스킬) 스켈레톤 500마리를 처치했다.", Type.KILL, "SKELETON", 500, 8000, 6000, 1, null, null),
+            new Quest("hs12", "priest", "천사의 날개", "§8(히든 스킬) 하피 30마리를 처치했다.", Type.KILL, "하피", 30, 8000, 6000, 1, null, null),
+            new Quest("hs13", "priest", "은총의 반전", "§8(히든 스킬) 언데드 군주 리치를 5번 쓰러뜨렸다.", Type.KILL, "리치", 5, 8000, 6000, 1, null, null),
+            new Quest("hs14", "hunter", "정밀한 손끝", "§8(히든 스킬) 거미 300마리를 처치했다.", Type.KILL, "SPIDER", 300, 8000, 6000, 1, null, null),
+            new Quest("hs15", "hunter", "그림자 속으로", "§8(히든 스킬) 엔더맨 50마리를 처치했다.", Type.KILL, "ENDERMAN", 50, 8000, 6000, 1, null, null),
+            new Quest("hs16", "hunter", "차원을 넘는 탄환", "§8(히든 스킬) 미노타우로스를 3번 쓰러뜨렸다.", Type.KILL, "미노타우로스", 3, 8000, 6000, 1, null, null),
+            new Quest("hs17", "elder", "드러눕기의 달인", "§8(히든 스킬) 다 자란 작물 500개를 수확했다.", Type.FARM, "", 500, 8000, 6000, 1, null, null),
+            new Quest("hs18", "fisher", "엄마 찬스", "§8(히든 스킬) 물고기 100마리를 낚았다.", Type.FISH, "", 100, 8000, 6000, 1, null, null),
+            new Quest("hs19", "guild", "백수의 분노", "§8(히든 스킬) 블록 5,000개를 부쉈다.", Type.BREAK, "", 5000, 8000, 6000, 1, null, null),
+            new Quest("hs20", "guild", "월급날", "§8(히든 스킬) 광석 500개를 캤다.", Type.MINE, "", 500, 8000, 6000, 1, null, null),
             new Quest("h4", "kid", "괜찮아", "§8(히든) 우는 아이를 달래보자...", Type.HIDDEN, "(괜찮아|울지마|걱정마|힘내)", 1, 1000, 500, 1, "§d[다정한 모험가]", null));
 
     // ===== 일일 퀘스트 풀 =====
@@ -368,6 +402,36 @@ final class Quests implements Listener {
         return w.getHighestBlockYAt(x, z) <= y;   // 지붕 밑이 아닌 바깥
     }
 
+    /** 직업군 교관 12명을 스폰 둘레(반지름 12칸)에 원형으로 배치 (이미 있는 교관은 지우고 다시) */
+    int spawnTrainers(World w) {
+        for (Villager old : w.getEntitiesByClass(Villager.class)) {
+            String oid = old.getPersistentDataContainer().get(NPC, PersistentDataType.STRING);
+            if (oid != null && oid.startsWith("t_")) old.remove();
+        }
+        Location c = w.getSpawnLocation();
+        List<String> ids = new ArrayList<>();
+        for (String id : NPCS.keySet()) if (id.startsWith("t_")) ids.add(id);
+        int n = 0;
+        for (int i = 0; i < ids.size(); i++) {
+            Location at = null;
+            for (double r = 12; r <= 30 && at == null; r += 1.5) {
+                double a = 2 * Math.PI * i / ids.size() + r * 0.03;
+                int x = (int) Math.round(c.getX() + Math.cos(a) * r), z = (int) Math.round(c.getZ() + Math.sin(a) * r);
+                int y = groundY(w, x, z, c.getBlockY());
+                if (Math.abs(y - c.getBlockY()) <= 10 && goodSpot(w, x, y, z)) at = new Location(w, x + 0.5, y, z + 0.5);
+            }
+            if (at == null) {   // 마땅한 자리가 없으면 반지름 12칸 땅 위에 그냥 세운다
+                double a = 2 * Math.PI * i / ids.size();
+                int x = (int) Math.round(c.getX() + Math.cos(a) * 12), z = (int) Math.round(c.getZ() + Math.sin(a) * 12);
+                at = new Location(w, x + 0.5, groundY(w, x, z, c.getBlockY()), z + 0.5);
+            }
+            at.setDirection(c.toVector().subtract(at.toVector()).setY(0));
+            spawnNpcAt(at, ids.get(i));
+            n++;
+        }
+        return n;
+    }
+
     /** 월드 스폰 근처 곳곳에 모든 NPC를 흩어서 배치 (이미 있는 NPC는 지우고 다시) */
     int spawnAllAtSpawn(World w) {
         for (Villager old : w.getEntitiesByClass(Villager.class)) {
@@ -423,6 +487,7 @@ final class Quests implements Listener {
         if (role.equals("daily")) openDaily(p);
         else if (role.equals("class")) plugin.rpg().openClassMenu(p);
         else if (role.startsWith("cmd:")) p.performCommand(role.substring(4));
+        else if (role.startsWith("trainer:")) plugin.tree().openTree(p, role.substring(8), true);
         else if (p.isSneaking() || !quickQuest(p, id)) openNpc(p, id);
     }
 
@@ -520,7 +585,32 @@ final class Quests implements Listener {
 
     /** 자동 진행 히든 퀘스트: 수락 없이 처음부터 기록, 다 채우면 바로 완료 */
     static final Set<String> AUTO_HIDDEN = Set.of("hq1", "hq2", "hq3", "hq4", "hq5", "hq6", "hq7");
-    static boolean autoHidden(Quest q) { return AUTO_HIDDEN.contains(q.id()); }
+    static boolean autoHidden(Quest q) { return AUTO_HIDDEN.contains(q.id()) || q.id().startsWith("hs"); }
+
+    /** 히든 스킬 퀘스트 보상: 퀘스트 ID → 스킬 트리 ID */
+    static final Map<String, String> SKILL_REWARD = new HashMap<>();
+    static {
+        SKILL_REWARD.put("hs1", "HIDDEN_BITE,HIDDEN_BLOOD_RAIN");
+        SKILL_REWARD.put("hs2", "HIDDEN_BAT_FORM");
+        SKILL_REWARD.put("hs3", "HIDDEN_BLOOD_MOON");
+        SKILL_REWARD.put("hs4", "HIDDEN_DRAGON_BREATH");
+        SKILL_REWARD.put("hs5", "HIDDEN_DRAGON_DIVE");
+        SKILL_REWARD.put("hs6", "HIDDEN_DRAGON_ROAR");
+        SKILL_REWARD.put("hs7", "HIDDEN_INFERNO_OVERLAY");
+        SKILL_REWARD.put("hs8", "HIDDEN_OVERVOLT_DRIVE");
+        SKILL_REWARD.put("hs9", "HIDDEN_GLACIAL_DOMINION");
+        SKILL_REWARD.put("hs10", "HIDDEN_TEMPEST_CALL");
+        SKILL_REWARD.put("hs11", "HIDDEN_JUDGMENT_SPEAR");
+        SKILL_REWARD.put("hs12", "HIDDEN_DIVINE_WING");
+        SKILL_REWARD.put("hs13", "HIDDEN_GRACE");
+        SKILL_REWARD.put("hs14", "HIDDEN_PRECISION_SHOT");
+        SKILL_REWARD.put("hs15", "HIDDEN_COVER");
+        SKILL_REWARD.put("hs16", "HIDDEN_DIMENSION_SHOT");
+        SKILL_REWARD.put("hs17", "HIDDEN_LIE_DOWN");
+        SKILL_REWARD.put("hs18", "HIDDEN_MOM_CHANCE");
+        SKILL_REWARD.put("hs19", "HIDDEN_NEET_RAGE");
+        SKILL_REWARD.put("hs20", "HIDDEN_NEET_ULT");
+    }
 
     /** 히든 퀘스트 장비 보상 (Skript 대장간 아이템) */
     static final Map<String, List<String>> ITEM_REWARD = Map.of(
@@ -536,6 +626,15 @@ final class Quests implements Listener {
         if (q.xp() > 0) plugin.rpg().addXp(p, q.xp());
         if (q.tickets() > 0) plugin.giveItem(p, gacha.ticket(q.tickets()));
         if (q.title() != null) addTitle(p, q.title());
+        String sk = SKILL_REWARD.get(q.id());
+        if (sk != null) {
+            for (String id : sk.split(",")) {
+                plugin.tree().learn(p, id);
+                SkillTree.TS ts = plugin.tree().byId.get(id);
+                if (ts != null) p.sendMessage(P + "§d히든 스킬 §f" + plugin.tree().nameOf(ts) + "§d을(를) 깨우쳤어요! §7(초초보자 계열만 쓸 수 있어요)");
+            }
+            Bukkit.broadcastMessage(P + "§b" + p.getName() + "§f님이 히든 퀘스트 §d" + q.name() + "§f을(를) 완료하고 히든 스킬을 깨우쳤습니다!");
+        }
         List<String> items = ITEM_REWARD.get(q.id());
         if (items != null) {
             for (String it : items) Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "대장간관리 지급 " + p.getName() + " " + it);

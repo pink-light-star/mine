@@ -1,0 +1,80 @@
+# 밤에 일반 몹 대신 언데드가 나옴 (마을 80칸 안은 Skript가 자연 스폰 자체를 막음)
+해골병사출몰:
+  Type: 해골_병사
+  Worlds: world
+  Chance: 0.12
+  Priority: 1
+  Action: REPLACE
+  Conditions:
+  - night true
+
+해골궁수장출몰:
+  Type: 해골_궁수장
+  Worlds: world
+  Chance: 0.07
+  Priority: 1
+  Action: REPLACE
+  Conditions:
+  - night true
+
+썩은망자출몰:
+  Type: 썩은_망자
+  Worlds: world
+  Chance: 0.12
+  Priority: 1
+  Action: REPLACE
+  Biomes: SWAMP,MANGROVE_SWAMP,DARK_FOREST,FOREST,PLAINS,TAIGA
+  Conditions:
+  - night true
+
+굶주린구울출몰:
+  Type: 굶주린_구울
+  Worlds: world
+  Chance: 0.15
+  Priority: 1
+  Action: REPLACE
+  Biomes: DESERT,BADLANDS,ERODED_BADLANDS,WOODED_BADLANDS,SAVANNA
+
+얼음원혼출몰:
+  Type: 얼음_원혼
+  Worlds: world
+  Chance: 0.2
+  Priority: 1
+  Action: REPLACE
+  Biomes: SNOWY_PLAINS,SNOWY_TAIGA,ICE_SPIKES,FROZEN_PEAKS,SNOWY_SLOPES,GROVE,FROZEN_RIVER
+
+떠도는원혼출몰:
+  Type: 떠도는_원혼
+  Worlds: world
+  Chance: 0.05
+  Priority: 1
+  Action: REPLACE
+  Biomes: DARK_FOREST,SWAMP,DEEP_DARK,SOUL_SAND_VALLEY
+  Conditions:
+  - night true
+
+해골마법사출몰:
+  Type: 해골_마법사
+  Worlds: world
+  Chance: 0.04
+  Priority: 1
+  Action: REPLACE
+  Conditions:
+  - night true
+
+고블린도적출몰:
+  Type: 고블린_도적
+  Worlds: world
+  Chance: 0.05
+  Priority: 1
+  Action: REPLACE
+  Biomes: PLAINS,FOREST,BIRCH_FOREST,MEADOW,SAVANNA
+
+리치출몰:
+  Type: 리치
+  Worlds: world
+  Chance: 0.004
+  Priority: 2
+  Action: REPLACE
+  Conditions:
+  - night true

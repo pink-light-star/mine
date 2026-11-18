@@ -79,6 +79,7 @@
 # ===== 보스 드롭 재료 =====
 별의조각:
   Id: AMETHYST_SHARD
+  ItemModel: starserver:drop/star_shard
   Display: '&b별의 조각'
   Lore:
   - '&7보스에게서 얻는 빛나는 조각.'
@@ -91,6 +92,7 @@
 # ===== 오크/드래곤 드롭 =====
 오크의송곳니:
   Id: BONE
+  ItemModel: starserver:drop/orc_tusk
   Display: '&2오크의 송곳니'
   Lore:
   - '&7오크에게서 뽑아낸 거친 송곳니.'
@@ -98,6 +100,7 @@
 
 용의비늘:
   Id: PRISMARINE_SHARD
+  ItemModel: starserver:drop/dragon_scale
   Display: '&c&l용의 비늘'
   Lore:
   - '&7적룡 이그니스의 비늘. 뜨겁다.'
@@ -125,26 +128,31 @@
 # ===== 신화 몹 드롭 =====
 사이렌의비늘:
   Id: PRISMARINE_SHARD
+  ItemModel: starserver:drop/siren_scale
   Display: '&b사이렌의 비늘'
   Lore:
   - '&7노래하는 바다 요괴의 비늘.'
 하피의깃털:
   Id: FEATHER
+  ItemModel: starserver:drop/harpy_feather
   Display: '&e하피의 깃털'
   Lore:
   - '&7바람을 품은 깃털.'
 지옥견의이빨:
   Id: BLAZE_ROD
+  ItemModel: starserver:drop/hellhound_fang
   Display: '&4지옥견의 이빨'
   Lore:
   - '&7저승 문지기의 이빨. 아직 뜨겁다.'
 거인의눈:
   Id: ENDER_EYE
+  ItemModel: starserver:drop/giant_eye
   Display: '&6거인의 눈'
   Lore:
   - '&7키클롭스의 하나뿐인 눈.'
 미노타우로스의뿔:
   Id: GOAT_HORN
+  ItemModel: starserver:drop/minotaur_horn
   Display: '&c&l미노타우로스의 뿔'
   Lore:
   - '&7미궁의 괴물이 남긴 거대한 뿔.'
@@ -162,6 +170,7 @@
 
 망자의뼈:
   Id: BONE
+  ItemModel: starserver:drop/dead_bone
   Display: '&7망자의 뼈'
   Lore:
   - '&8언데드에게서 얻은 차가운 뼈.'
@@ -169,6 +178,7 @@
 
 원혼의정수:
   Id: GHAST_TEAR
+  ItemModel: starserver:drop/wraith_essence
   Display: '&b원혼의 정수'
   Lore:
   - '&8원혼이 남긴 푸른 눈물.'

@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * 전투 직업.
- * tier 0 = 초보자, 1 = 1차 전직(Lv.10), 2 = 2차 전직(Lv.30), 3 = 히든 직업(조건 충족 시 Lv.30).
+ * tier 0 = 초보자, 1 = 1차 전직(Lv.10), 2 = 2차 전직(Lv.30), 4 = 3차 전직(Lv.45), 3 = 히든 직업.
  * skills: 스킬1(F), 스킬2(Shift+좌클릭), 스킬3(Shift+우클릭), 궁극기(Shift 두 번)
  */
 public enum RpgClass {
@@ -128,6 +128,88 @@ public enum RpgClass {
             "춤추며 싸우는 음유시인.", "이동 속도 증가, 최대 MP +40",
             List.of(Skill.SONG_COURAGE, Skill.SONG_SWIFT, Skill.DISSONANCE, Skill.SWORD_DANCE)),
 
+    // ----- 3차 (Lv.45, 2차 직업에서) — 2차 직업 패시브 + 최대 체력 +4 -----
+    BLOOD_LORD("블러드 로드", 4, BERSERKER, "§4§l", Material.NETHERITE_AXE,
+            "피로 싸우는 광전사의 끝. 체력이 낮을수록 강해진다.", "2차 직업 능력 + 최대 체력 +4",
+            BERSERKER.skills),
+    CRUSADER("크루세이더", 4, PALADIN, "§4§l", Material.GOLDEN_SWORD,
+            "빛의 방패로 전장을 지배하는 성기사의 끝.", "2차 직업 능력 + 최대 체력 +4",
+            PALADIN.skills),
+    HAWKEYE("호크아이", 4, SNIPER, "§2§l", Material.CROSSBOW,
+            "매의 눈으로 단 한 발도 빗나가지 않는 저격수.", "2차 직업 능력 + 최대 체력 +4",
+            SNIPER.skills),
+    WINDWALKER("윈드워커", 4, RANGER, "§2§l", Material.FEATHER,
+            "바람을 타고 숲을 누비는 사냥꾼.", "2차 직업 능력 + 최대 체력 +4",
+            RANGER.skills),
+    ARCHMAGE("아크메이지", 4, ELEMENTALIST, "§b§l", Material.NETHER_STAR,
+            "모든 원소를 손끝에 둔 대마법사.", "2차 직업 능력 + 최대 체력 +4",
+            ELEMENTALIST.skills),
+    LICH_LORD("리치 로드", 4, WARLOCK, "§b§l", Material.WITHER_SKELETON_SKULL,
+            "죽음마저 부리는 흑마법의 군주.", "2차 직업 능력 + 최대 체력 +4",
+            WARLOCK.skills),
+    NIGHTMARE("나이트메어", 4, ASSASSIN, "§8§l", Material.NETHERITE_SWORD,
+            "악몽처럼 나타나 사라지는 암살자.", "2차 직업 능력 + 최대 체력 +4",
+            ASSASSIN.skills),
+    SHADOW_MASTER("섀도우 마스터", 4, SHADOW_DANCER, "§8§l", Material.ECHO_SHARD,
+            "그림자를 군대처럼 부리는 무희.", "2차 직업 능력 + 최대 체력 +4",
+            SHADOW_DANCER.skills),
+    SAINT("세인트", 4, HIGH_PRIEST, "§e§l", Material.TOTEM_OF_UNDYING,
+            "기적을 일으키는 살아 있는 성인.", "2차 직업 능력 + 최대 체력 +4",
+            HIGH_PRIEST.skills),
+    INQUISITOR("인퀴지터", 4, JUDGE, "§e§l", Material.BLAZE_ROD,
+            "신의 이름으로 악을 불태우는 심문관.", "2차 직업 능력 + 최대 체력 +4",
+            JUDGE.skills),
+    GRAND_MASTER("그랜드 마스터", 4, SWORD_MASTER, "§3§l", Material.DIAMOND_SWORD,
+            "오러 블레이드를 완성한 서양 검술의 정점.", "2차 직업 능력 + 최대 체력 +4",
+            SWORD_MASTER.skills),
+    SWORD_GOD("검신", 4, BLADE_SAINT, "§3§l", Material.NETHERITE_SWORD,
+            "한 번 휘두르면 하늘이 갈라지는 동양 검의 신.", "2차 직업 능력 + 최대 체력 +4",
+            BLADE_SAINT.skills),
+    KAGE("카게", 4, JONIN, "§8§l", Material.BLACK_DYE,
+            "마을 하나를 지키는 그림자 닌자의 우두머리.", "2차 직업 능력 + 최대 체력 +4",
+            JONIN.skills),
+    MUYEONG("무영", 4, PHANTOM, "§8§l", Material.PHANTOM_MEMBRANE,
+            "그림자조차 남기지 않는 환영검의 끝.", "2차 직업 능력 + 최대 체력 +4",
+            PHANTOM.skills),
+    FIST_GOD("권신", 4, FIST_KING, "§6§l", Material.NETHERITE_INGOT,
+            "주먹 하나로 산을 부수는 권법의 신.", "2차 직업 능력 + 최대 체력 +4",
+            FIST_KING.skills),
+    SAGE("선인", 4, CHI_MASTER, "§6§l", Material.GLOWSTONE_DUST,
+            "천지의 기를 다루는 깨달은 자.", "2차 직업 능력 + 최대 체력 +4",
+            CHI_MASTER.skills),
+    LUNA_ORACLE("루나 오라클", 4, ECLIPSE_PRIEST, "§1§l", Material.ENDER_EYE,
+            "달의 뜻을 전하는 예언자.", "2차 직업 능력 + 최대 체력 +4",
+            ECLIPSE_PRIEST.skills),
+    DESPAIR_LORD("절망의 군주", 4, CURSE_WEAVER, "§1§l", Material.FERMENTED_SPIDER_EYE,
+            "모든 감정을 지배하는 저주의 왕.", "2차 직업 능력 + 최대 체력 +4",
+            CURSE_WEAVER.skills),
+    GUN_MASTER("건마스터", 4, DEADEYE, "§7§l", Material.SPYGLASS,
+            "총알 한 발로 승부를 내는 사격의 달인.", "2차 직업 능력 + 최대 체력 +4",
+            DEADEYE.skills),
+    DEMOLISHER("데몰리셔", 4, ARTILLERY, "§7§l", Material.TNT,
+            "전장을 통째로 날려버리는 포격의 왕.", "2차 직업 능력 + 최대 체력 +4",
+            ARTILLERY.skills),
+    OVERLORD("패왕", 4, WARLORD, "§c§l", Material.TRIDENT,
+            "천하를 창 하나로 평정한 패자.", "2차 직업 능력 + 최대 체력 +4",
+            WARLORD.skills),
+    BRUNHILD("브륀힐드", 4, VALKYRIE, "§c§l", Material.ELYTRA,
+            "전사자의 영혼을 이끄는 발키리의 여왕.", "2차 직업 능력 + 최대 체력 +4",
+            VALKYRIE.skills),
+    DIVA("디바", 4, MAESTRO, "§d§l", Material.JUKEBOX,
+            "목소리 하나로 전장을 바꾸는 전설의 가수.", "2차 직업 능력 + 최대 체력 +4",
+            MAESTRO.skills),
+    BLADE_DANCER("블레이드 댄서", 4, DANCER, "§d§l", Material.PINK_PETALS,
+            "칼날과 함께 춤추는 무희의 끝.", "2차 직업 능력 + 최대 체력 +4",
+            DANCER.skills),
+
+    // ----- 히든: 초초보자 계열 (모든 직업의 스킬을 배울 수 있다) -----
+    ULTRA_NOVICE("초초보자", 3, null, "§f§l", Material.BOOK,
+            "[히든] 초보자로 스킬 10개와 히든 스킬 1개를 모은 자. 직업에 상관없이 모든 스킬을 배울 수 있다.", "모든 직업군 교관에게서 스킬을 배움",
+            List.of(Skill.TACKLE)),
+    ULTRA_NOVICE2("초초초보자", 3, ULTRA_NOVICE, "§f§l§n", Material.WRITABLE_BOOK,
+            "[히든] 초초보자의 2차 각성. 스킬을 파괴해 스킬 파편을 얻고, 파편 100개로 스킬을 진화시킨다.", "모든 스킬 + 스킬 파괴·진화",
+            List.of(Skill.TACKLE)),
+
     // ----- 히든 -----
     DRAGON_KNIGHT("용기사", 3, null, "§c§l", Material.DRAGON_HEAD,
             "[히든] 적룡 이그니스를 쓰러뜨린 자만이 될 수 있다.", "최대 체력 +8, 화염 면역",
@@ -170,6 +252,15 @@ public enum RpgClass {
 
     public String display() {
         return color + korean;
+    }
+
+    /** 패시브 계산용: 3차 직업은 2차 직업의 패시브를 그대로 쓴다 */
+    public RpgClass base() {
+        return tier == 4 ? parent : this;
+    }
+
+    public String tierName() {
+        return switch (tier) { case 0 -> "초보자"; case 1 -> "1차"; case 2 -> "2차"; case 4 -> "3차"; default -> "히든"; };
     }
 
     /** 이 직업 계열의 1차 직업 (히든은 자기 자신) */

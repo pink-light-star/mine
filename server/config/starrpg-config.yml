@@ -1,5 +1,5 @@
 resource-pack:
-  public-url: https://drive.usercontent.google.com/download?id=1Z36nqeCrpC0U-T0EW_v_5mzzlql_4iIi&export=download&confirm=t&name=pack.zip
+  public-url: https://drive.usercontent.google.com/download?id=1-6iApz7IAdSWlw6UXERreyILPUHvS6ft&export=download&confirm=t&name=pack.zip
   enabled: true
   port: 8163
   file: plugins/BetterModel/build.zip

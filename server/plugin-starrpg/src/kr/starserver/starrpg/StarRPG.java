@@ -60,6 +60,7 @@ public class StarRPG extends JavaPlugin implements Listener {
     private Pets pets;
     private Gacha gacha;
     private Rpg rpg;
+    private SkillTree tree;
     private Quests quests;
     private Gear gear;
     Menu menu;
@@ -79,6 +80,8 @@ public class StarRPG extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(pets, this);
         gacha = new Gacha(this, pets, v -> economy);
         getServer().getPluginManager().registerEvents(gacha, this);
+        tree = new SkillTree(this);
+        getServer().getPluginManager().registerEvents(tree, this);
         rpg = new Rpg(this, pets);
         getServer().getPluginManager().registerEvents(rpg, this);
         quests = new Quests(this, gacha, v -> economy);
@@ -208,6 +211,8 @@ public class StarRPG extends JavaPlugin implements Listener {
     boolean isMountEntity(Entity e) { return isMount(e); }
 
     Rpg rpg() { return rpg; }
+    SkillTree tree() { return tree; }
+    void withdraw(Player p, double v) { if (economy != null) economy.withdrawPlayer(p, v); }
 
     boolean questDone(Player p, String id) { return quests != null && quests.done(p, id); }
 
@@ -702,7 +707,10 @@ public class StarRPG extends JavaPlugin implements Listener {
                     if (t != null) quests.forceComplete(t, a[2]);
                     return true;
                 }
-                if (a.length > 0 && (a[0].equals("스폰") || a[0].equalsIgnoreCase("spawn"))) {
+                if (a.length > 0 && a[0].equals("교관배치")) {
+                    World w = s instanceof Player pl ? pl.getWorld() : Bukkit.getWorlds().get(0);
+                    s.sendMessage(P + "스폰 둘레에 직업군 교관 " + quests.spawnTrainers(w) + "명을 배치했어요.");
+                } else if (a.length > 0 && (a[0].equals("스폰") || a[0].equalsIgnoreCase("spawn"))) {
                     World w = s instanceof Player pl ? pl.getWorld() : Bukkit.getWorlds().get(0);
                     s.sendMessage(P + "스폰 둘레에 NPC " + quests.spawnAllAtSpawn(w) + "명을 배치했어요.");
                 } else if (s instanceof Player pl) {
@@ -754,6 +762,26 @@ public class StarRPG extends JavaPlugin implements Listener {
     }
 
     private boolean adminCommand(CommandSender s, String[] a) {
+        // /관리 스킬 <닉네임> <스킬ID|이름> : 스킬 배우기 · /관리 스킬서 <닉네임> <스킬ID> : 히든 스킬서 · /관리 파편 <닉네임> <수>
+        if (a.length >= 3 && (a[0].equals("스킬") || a[0].equals("스킬서") || a[0].equalsIgnoreCase("skill") || a[0].equalsIgnoreCase("skillbook"))) {
+            Player t = Bukkit.getPlayerExact(a[1]);
+            if (t == null) { s.sendMessage(P + "§c플레이어를 찾을 수 없습니다."); return true; }
+            SkillTree.TS ts = tree.find(String.join(" ", Arrays.copyOfRange(a, 2, a.length)));
+            if (ts == null) { s.sendMessage(P + "§c그런 스킬이 없어요."); return true; }
+            if (a[0].equals("스킬서") || a[0].equalsIgnoreCase("skillbook")) giveItem(t, tree.hiddenBook(ts));
+            else { tree.learn(t, ts.id()); tree.ensureClassSkills(t); }
+            s.sendMessage(P + t.getName() + " ← " + tree.nameOf(ts));
+            return true;
+        }
+        if (a.length >= 1 && a[0].equals("스킬목록")) {
+            for (var e : tree.byLine.entrySet()) s.sendMessage("§e" + SkillTree.lineKo(e.getKey()) + "§7: " + String.join(", ", e.getValue().stream().map(x -> x.id()).toList()));
+            return true;
+        }
+        if (a.length >= 3 && a[0].equals("주문서")) {
+            Player t = Bukkit.getPlayerExact(a[1]);
+            if (t != null) giveItem(t, tree.scroll(a[2].toUpperCase(Locale.ROOT)));
+            return true;
+        }
         if (a.length >= 3) a[2] = switch (a[2]) {
             case "그물총" -> "netgun"; case "그물" -> "net"; case "뽑기권", "티켓" -> "ticket";
             default -> a[2].startsWith("펫:") ? "pet:" + a[2].substring(2) : a[2].startsWith("장비") ? "gear" + a[2].substring(2) : a[2];

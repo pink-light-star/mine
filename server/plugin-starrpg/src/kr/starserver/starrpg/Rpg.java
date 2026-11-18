@@ -39,10 +39,12 @@ final class Rpg implements Listener {
 
     private final StarRPG plugin;
     private final Skills skills;
+    SpecCaster spec;
     private final NamespacedKey NIGHT_KILLS;
     private final NamespacedKey LEVEL, XP, CLASS, BOSSES, HP_MOD, SPD_MOD, SKILL_PROJ, SKILL_DMG, SKILL_RAD;
     private final Map<UUID, Double> mp = new HashMap<>();
     private final Map<UUID, Map<Skill, Long>> cooldowns = new HashMap<>();
+    private final Map<UUID, Map<String, Long>> treeCd = new HashMap<>();
     private final Map<UUID, Long> confirm = new HashMap<>();
     private final Map<UUID, RpgClass> confirmClass = new HashMap<>();
     final Map<UUID, Long> vanishUntil = new HashMap<>();
@@ -51,6 +53,7 @@ final class Rpg implements Listener {
     Rpg(StarRPG plugin, Pets pets) {
         this.plugin = plugin;
         this.skills = new Skills(plugin, pets);
+        this.spec = new SpecCaster(plugin, skills);
         LEVEL = new NamespacedKey(plugin, "rpg_level");
         XP = new NamespacedKey(plugin, "rpg_xp");
         CLASS = new NamespacedKey(plugin, "rpg_class");
@@ -87,13 +90,13 @@ final class Rpg implements Listener {
     }
 
     double maxMp(Player p) {
-        RpgClass c = rpgClass(p);
+        RpgClass c = rpgClass(p).base();
         double bonus = switch (c) {
             case MAGE -> 50; case ELEMENTALIST -> 80; case WARLOCK -> 60;
             case BARD, ECLIPSE_PRIEST, DANCER -> 40; case CHI_MASTER -> 50; case MAESTRO, SPELLBLADE, ANGEL -> 60;
             default -> 0;
         };
-        return 100 + level(p) * 2 + bonus + statInt(p) * 3;
+        return 100 + level(p) * 2 + bonus + statInt(p) * 3 + plugin.tree().bonus(p, "mp");
     }
 
     double mp(Player p) {
@@ -119,17 +122,19 @@ final class Rpg implements Listener {
 
     void setClass(Player p, RpgClass c) {
         p.getPersistentDataContainer().set(CLASS, PersistentDataType.STRING, c.name());
+        plugin.tree().ensureClassSkills(p);
         applyStats(p);
     }
 
     /** 레벨·직업에 따른 체력/속도 보정 */
     void applyStats(Player p) {
-        RpgClass c = rpgClass(p);
+        RpgClass c0 = rpgClass(p);
+        RpgClass c = c0.base();
         double hpBonus = level(p) * 0.4 + switch (c) {
             case WARRIOR -> 4; case BERSERKER -> 6; case PALADIN, DRAGON_KNIGHT -> 8;
             case MONK, LANCER, ARTILLERY -> 2; case SWORD_MASTER, FIST_KING, VALKYRIE -> 4; case WARLORD, VAMPIRE -> 6;
             default -> 0;
-        };
+        } + (c0.tier == 4 ? 4 : 0) + plugin.tree().bonus(p, "hp");
         AttributeInstance hp = p.getAttribute(Attribute.MAX_HEALTH);
         if (hp != null) {
             hp.removeModifier(HP_MOD);
@@ -137,7 +142,7 @@ final class Rpg implements Listener {
         }
         double spd = switch (c) {
             case ROGUE, ASSASSIN, RANGER, NINJA, DANCER -> 0.10; case JONIN -> 0.12; case SHADOW_DANCER, PHANTOM -> 0.18; default -> 0;
-        };
+        } + plugin.tree().bonus(p, "spd") / 100.0;
         AttributeInstance sp = p.getAttribute(Attribute.MOVEMENT_SPEED);
         if (sp != null) {
             sp.removeModifier(SPD_MOD);
@@ -218,6 +223,8 @@ final class Rpg implements Listener {
         RpgClass c = rpgClass(p);
         if (lv == 10 && c == RpgClass.NOVICE) p.sendMessage(P + "§a§l1차 전직이 가능해요! §e/전직");
         if (lv == 30 && c.tier == 1) p.sendMessage(P + "§a§l2차 전직이 가능해요! §e/전직");
+        if (lv == 45 && c.tier == 2) p.sendMessage(P + "§a§l3차 전직이 가능해요! §e/전직");
+        if (lv == 20 || lv == 30 || lv == 45) p.sendMessage(P + "§b새 단계 스킬을 배울 수 있어요. §7직업군 교관을 찾아가 보세요. (/스킬)");
         if (lv == 30 && c == RpgClass.NOVICE) p.sendMessage(P + "§d§l...아직도 초보자? §f어딘가에서 이상한 직업이 열렸다. §e/전직");
         for (Skill s : c.skills) if (unlockLevel(c, s) == lv) p.sendMessage(P + "§b새 스킬: §f" + s.korean + " §7(" + keyOf(c, s) + ")");
         if (lv == MAX_LEVEL) Bukkit.broadcastMessage(P + "§6§l" + p.getName() + "§f님이 §6§l만렙(50)§f을 달성했습니다!");
@@ -244,7 +251,7 @@ final class Rpg implements Listener {
         if (name.contains("크루가")) markBoss(killer, "kruga");
         if (name.contains("메두사")) markBoss(killer, "medusa");
         if (name.contains("미노타우로스")) markBoss(killer, "minotaur");
-        if (rpgClass(killer) == RpgClass.WARLOCK) skills.heal(killer, 2);
+        if (rpgClass(killer).base() == RpgClass.WARLOCK) skills.heal(killer, 2);
         long tod = killer.getWorld().getTime();
         if (dead instanceof org.bukkit.entity.Monster && tod >= 13000 && tod <= 23000) {
             int n = killer.getPersistentDataContainer().getOrDefault(NIGHT_KILLS, PersistentDataType.INTEGER, 0) + 1;
@@ -281,10 +288,12 @@ final class Rpg implements Listener {
         for (Player p : Bukkit.getOnlinePlayers()) {
             exportMeta(p);
             double max = maxMp(p);
-            RpgClass c = rpgClass(p);
+            RpgClass c = rpgClass(p).base();
             long tod = p.getWorld().getTime();
             boolean night = tod >= 13000 && tod <= 23000;
-            double regen = 3 + level(p) * 0.05;
+            double regen = 3 + level(p) * 0.05 + plugin.tree().bonus(p, "mpr");
+            double hpReg = plugin.tree().bonus(p, "reg");
+            if (hpReg > 0 && p.getHealth() > 0) skills.heal(p, hpReg);
             if (night && (c == RpgClass.MOON_PRIEST || c == RpgClass.ECLIPSE_PRIEST)) regen *= 2;
             double cur = Math.min(max, mp(p) + regen);
             mp.put(p.getUniqueId(), cur);
@@ -333,32 +342,45 @@ final class Rpg implements Listener {
     }
 
     private void use(Player p, int slot) {
-        RpgClass c = rpgClass(p);
-        if (slot >= c.skills.size()) {
-            if (c == RpgClass.NOVICE && slot > 0) p.sendActionBar("§7초보자는 스킬이 하나뿐이에요. §e/전직");
-            return;
+        SkillTree tree = plugin.tree();
+        SkillTree.TS t = tree.slotSkill(p, slot);
+        Skill legacy;
+        String cdKey;
+        int mpCost, cdSec;
+        boolean evo = false;
+        if (t == null) {
+            if (slot == 0 && rpgClass(p) == RpgClass.NOVICE || slot == 0 && tree.ultra(p)) {   // 초보자 기본기
+                legacy = Skill.TACKLE; cdKey = "TACKLE"; mpCost = legacy.mp; cdSec = legacy.cooldown;
+            } else {
+                p.sendActionBar("§7이 키(" + SkillTree.SLOT_KO[slot] + ")에 장착한 스킬이 없어요. §e/스킬");
+                return;
+            }
+        } else {
+            legacy = tree.legacyOf(t);
+            cdKey = t.id();
+            evo = tree.isEvolved(p, t.id());
+            mpCost = (int) Math.round(tree.mpOf(t) * (evo ? 0.7 : 1));
+            cdSec = (int) Math.max(1, Math.round(tree.cdOf(t) * (evo ? 0.7 : 1)));
         }
-        Skill s = c.skills.get(slot);
-        if (level(p) < unlockLevel(c, s)) {
-            p.sendActionBar("§c" + s.korean + "§7은(는) Lv." + unlockLevel(c, s) + "부터 쓸 수 있어요.");
-            return;
-        }
+        String name = t == null ? legacy.korean : tree.nameOf(t);
         long now = System.currentTimeMillis();
-        Map<Skill, Long> cd = cooldowns.computeIfAbsent(p.getUniqueId(), k -> new EnumMap<>(Skill.class));
-        long left = cd.getOrDefault(s, 0L) - now;
+        Map<String, Long> cd = treeCd.computeIfAbsent(p.getUniqueId(), k -> new HashMap<>());
+        long left = cd.getOrDefault(cdKey, 0L) - now;
         if (left > 0) {
-            p.sendActionBar("§c" + s.korean + " §7쿨타임 " + String.format("%.1f", left / 1000.0) + "초");
+            p.sendActionBar("§c" + name + " §7쿨타임 " + String.format("%.1f", left / 1000.0) + "초");
             return;
         }
-        if (mp(p) < s.mp) {
-            p.sendActionBar("§9MP가 부족해요. §7(" + (int) mp(p) + "/" + s.mp + ")");
+        if (mp(p) < mpCost) {
+            p.sendActionBar("§9MP가 부족해요. §7(" + (int) mp(p) + "/" + mpCost + ")");
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.6f, 0.6f);
             return;
         }
-        if (skills.cast(p, s)) {
-            mp.put(p.getUniqueId(), mp(p) - s.mp);
-            cd.put(s, now + s.cooldown * 1000L);
-            p.sendActionBar("§b" + s.korean + "!");
+        if (evo) p.setMetadata("skill_evo", new org.bukkit.metadata.FixedMetadataValue(plugin, now + 4000));
+        boolean ok = legacy != null ? skills.cast(p, legacy) : spec.cast(p, t);
+        if (ok) {
+            mp.put(p.getUniqueId(), mp(p) - mpCost);
+            cd.put(cdKey, now + cdSec * 1000L);
+            p.sendActionBar("§b" + name + (evo ? " §d✦" : "") + "!");
         }
     }
 
@@ -381,7 +403,6 @@ final class Rpg implements Listener {
         Long prev = lastSneak.put(p.getUniqueId(), now);
         if (prev == null || now - prev > 350) return;
         lastSneak.remove(p.getUniqueId());
-        if (rpgClass(p).skills.size() < 4) { p.sendActionBar("§7궁극기는 2차·히든 직업부터 쓸 수 있어요."); return; }
         use(p, 3);
     }
 
@@ -444,10 +465,16 @@ final class Rpg implements Listener {
         if (e.getDamager() instanceof Player pl) p = pl;
         else if (e.getDamager() instanceof AbstractArrow a && a.getShooter() instanceof Player pl) { p = pl; arrow = true; }
         if (p == null || !(e.getEntity() instanceof LivingEntity target) || e.getEntity() instanceof Player) return;
-        RpgClass c = rpgClass(p);
+        RpgClass c = rpgClass(p).base();
+        // 스킬 트리 패시브: 원거리·근접 피해, 치명타, 흡혈
+        double crit = plugin.tree().bonus(p, "crit");
+        if (crit > 0 && ThreadLocalRandom.current().nextDouble() * 100 < crit) {
+            e.setDamage(e.getDamage() * 1.5);
+            target.getWorld().spawnParticle(Particle.CRIT, target.getLocation().add(0, 1, 0), 10, 0.3, 0.4, 0.3, 0.2);
+        }
         if (arrow) {
             double mult = switch (c) { case ARCHER, RANGER -> 1.2; case SNIPER -> 1.35; case DIMENSION_SNIPER -> 1.3; default -> 1.0; };
-            e.setDamage(e.getDamage() * mult);
+            e.setDamage(e.getDamage() * mult * (1 + plugin.tree().bonus(p, "rng") / 100.0));
         } else if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK || e.getCause() == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
             boolean bare = p.getInventory().getItemInMainHand().getType() == Material.AIR;
             double mult = switch (c) {
@@ -456,7 +483,7 @@ final class Rpg implements Listener {
                 case MONK, CHI_MASTER -> bare ? 2.5 : 1.0; case FIST_KING -> bare ? 3.5 : 1.0;
                 default -> 1.0;
             };
-            e.setDamage(e.getDamage() * mult);
+            e.setDamage(e.getDamage() * mult * (1 + plugin.tree().bonus(p, "mel") / 100.0));
             if (c == RpgClass.BLADE_SAINT && ThreadLocalRandom.current().nextInt(5) == 0) {
                 e.setDamage(e.getDamage() * 1.6);
                 target.getWorld().spawnParticle(Particle.SWEEP_ATTACK, target.getLocation().add(0, 1, 0), 2, 0.3, 0.3, 0.3, 0);
@@ -489,6 +516,16 @@ final class Rpg implements Listener {
         if (skills.rageUntil.getOrDefault(p.getUniqueId(), 0L) > now) {
             skills.heal(p, e.getFinalDamage() * 0.25);
         }
+        double steal = plugin.tree().bonus(p, "steal");
+        if (steal > 0) skills.heal(p, e.getDamage() * steal / 100.0);
+    }
+
+    /** 스킬 트리 패시브: 받는 피해 감소 */
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    public void onTreeDefense(EntityDamageEvent e) {
+        if (!(e.getEntity() instanceof Player p)) return;
+        double def = plugin.tree().bonus(p, "def");
+        if (def > 0) e.setDamage(e.getDamage() * Math.max(0.2, 1 - def / 100.0));
     }
 
     private boolean sweeping = false;
@@ -513,7 +550,7 @@ final class Rpg implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onFall(EntityDamageEvent e) {
         if (e.getEntity() instanceof Player vp && e.getCause() == EntityDamageEvent.DamageCause.FALL
-                && rpgClass(vp) == RpgClass.VALKYRIE) { e.setCancelled(true); return; }
+                && rpgClass(vp).base() == RpgClass.VALKYRIE) { e.setCancelled(true); return; }
         if (e.getEntity() instanceof Player p && e.getCause() == EntityDamageEvent.DamageCause.FALL
                 && plugin.noFallUntil(p) > System.currentTimeMillis()) e.setCancelled(true);
     }
@@ -554,6 +591,7 @@ final class Rpg implements Listener {
         Player p = e.getPlayer();
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (!p.isOnline()) return;
+            plugin.tree().ensureClassSkills(p);
             applyStats(p);
             if (!p.getPersistentDataContainer().has(LEVEL, PersistentDataType.INTEGER)) {
                 p.getPersistentDataContainer().set(LEVEL, PersistentDataType.INTEGER, 1);
@@ -593,9 +631,15 @@ final class Rpg implements Listener {
         if (c == RpgClass.NOVICE) {
             for (RpgClass r : RpgClass.values()) if (r.tier == 1) out.add(r);
             out.add(RpgClass.NEET_KING);
+            out.add(RpgClass.ULTRA_NOVICE);
         } else if (c.tier == 1) {
             for (RpgClass r : RpgClass.values()) if (r.parent == c) out.add(r);
-            for (RpgClass r : RpgClass.values()) if (r.tier == 3 && r != RpgClass.NEET_KING) out.add(r);
+            for (RpgClass r : RpgClass.values())
+                if (r.tier == 3 && r != RpgClass.NEET_KING && r != RpgClass.ULTRA_NOVICE && r != RpgClass.ULTRA_NOVICE2) out.add(r);
+        } else if (c.tier == 2) {
+            for (RpgClass r : RpgClass.values()) if (r.parent == c && r.tier == 4) out.add(r);
+        } else if (c == RpgClass.ULTRA_NOVICE) {
+            out.add(RpgClass.ULTRA_NOVICE2);
         }
         return out;
     }
@@ -605,6 +649,19 @@ final class Rpg implements Listener {
         int lv = level(p);
         if (to.tier == 1) return lv >= 10 ? null : "Lv.10 필요 (현재 Lv." + lv + ")";
         if (to.tier == 2) return lv >= 30 ? null : "Lv.30 필요 (현재 Lv." + lv + ")";
+        if (to.tier == 4) return lv >= 45 ? null : "Lv.45 필요 (현재 Lv." + lv + ")";
+        if (to == RpgClass.ULTRA_NOVICE) {   // 초보자로 Lv.20 + 스킬 10개 + 히든 스킬 1개
+            SkillTree tr = plugin.tree();
+            if (lv < 20) return "§k??????";
+            return tr.learnedCount(p) >= 10 && tr.hiddenCount(p) >= 1 ? null
+                    : "§k???? §8(스킬 " + Math.min(10, tr.learnedCount(p)) + "/10 · 히든 " + Math.min(1, tr.hiddenCount(p)) + "/1)";
+        }
+        if (to == RpgClass.ULTRA_NOVICE2) {  // 초초보자 Lv.35 + 스킬 15개 + 서로 다른 인정의 주문서 3장
+            SkillTree tr = plugin.tree();
+            if (lv < 35) return "Lv.35 필요";
+            int n = tr.learnedCount(p), sc = tr.scrollKinds(p);
+            return n >= 15 && sc >= 3 ? null : "스킬 " + Math.min(15, n) + "/15 · 인정의 주문서 " + Math.min(3, sc) + "/3";
+        }
         if (to == RpgClass.NEET_KING) return lv >= 30 ? null : "§k??????";
         if (to == RpgClass.DRAGON_KNIGHT) {
             if (lv < 30) return "Lv.30 필요";
@@ -689,13 +746,14 @@ final class Rpg implements Listener {
             return;
         }
         confirm.remove(p.getUniqueId());
+        if (to == RpgClass.ULTRA_NOVICE2) plugin.tree().takeScrolls(p);
         setClass(p, to);
         p.closeInventory();
         p.sendTitle(to.display(), "§f전직 완료!", 10, 60, 20);
         p.playSound(p.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
         p.getWorld().spawnParticle(Particle.END_ROD, p.getLocation().add(0, 1, 0), 80, 0.5, 1, 0.5, 0.1);
         Bukkit.broadcastMessage(P + "§b" + p.getName() + "§f님이 " + to.display() + "§f(으)로 전직했습니다!"
-                + (to.tier == 3 ? " §d§l[히든 직업]" : ""));
+                + (to.tier == 3 ? " §d§l[히든 직업]" : to.tier == 4 ? " §6§l[3차 전직]" : ""));
         p.sendMessage(P + "§7스킬 확인: §e/스킬");
         if (to == RpgClass.DRAGON_KNIGHT) {   // 용기사 전직 보상: 신화 탈것 흑룡
             plugin.giveItem(p, plugin.capsule(Species.DRAGON));
@@ -711,6 +769,11 @@ final class Rpg implements Listener {
     // ================================================================== 명령어 출력
 
     void showSkills(Player p) {
+        plugin.tree().ensureClassSkills(p);
+        plugin.tree().openTree(p, plugin.tree().myLine(p), false);
+    }
+
+    void showSkillsText(Player p) {
         RpgClass c = rpgClass(p);
         p.sendMessage("§d§m      §r " + c.display() + " §f스킬 §d§m      ");
         for (Skill s : c.skills) {
@@ -727,7 +790,7 @@ final class Rpg implements Listener {
         int lv = level(p);
         RpgClass c = rpgClass(p);
         s.sendMessage("§d§m      §r §f" + p.getName() + "의 정보 §d§m      ");
-        s.sendMessage(" §7직업: " + c.display() + " §8(" + (c.tier == 0 ? "초보자" : c.tier == 3 ? "히든" : c.tier + "차") + ")");
+        s.sendMessage(" §7직업: " + c.display() + " §8(" + c.tierName() + ")");
         s.sendMessage(" §7레벨: §fLv." + lv + (lv >= MAX_LEVEL ? " §6(만렙)" : " §7(" + xp(p) + "/" + need(lv) + " EXP)"));
         s.sendMessage(String.format(" §7체력: §c%.0f/%.0f  §7MP: §9%.0f/%.0f", p.getHealth(),
                 p.getAttribute(Attribute.MAX_HEALTH).getValue(), mp(p), maxMp(p)));

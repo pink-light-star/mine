@@ -28,7 +28,11 @@ def extent(j):
     hi = [max(e["to"][i] for e in j["elements"]) for i in range(3)]
     return max(h - l for h, l in zip(hi, lo))
 
-shutil.rmtree(OUT, ignore_errors=True)
+# 주의: pack-extra에는 다른 스크립트(대장간 장비·폰트·UI·외부 모델 등)가 만든 파일도 있으므로 폴더 통째로 지우지 않는다
+for _n in ITEMS:
+    for _f in (("models", "item", _n + ".json"), ("textures", "item", _n + ".png"), ("items", _n + ".json")):
+        _p = os.path.join(OUT, "assets", "starserver", *_f)
+        if os.path.exists(_p): os.remove(_p)
 ref = load(ITEMS[REF][0])
 ref_ext = extent(ref)
 for name, (mp, tp) in ITEMS.items():
@@ -74,3 +78,8 @@ for name, (mp, tp) in ITEMS.items():
     print(f"  {name}: 큐브 {len(j.get('elements', []))}개, 디스플레이 {sorted(disp)}")
 shutil.copy(os.path.join(SRC, "CREDITS.txt"), os.path.join(OUT, "CREDITS-hanmapo.txt"))
 print("완료:", os.path.abspath(OUT))
+# 무기 모델을 다시 만들면 폴더가 지워지므로, UI 테마와 드롭 아이콘도 다시 만든다
+import subprocess, sys
+GUI = os.path.join(HERE, "gui")
+subprocess.run([sys.executable, os.path.join(GUI, "make_ui_theme.py"), os.path.join(OUT, "assets")], check=True)
+subprocess.run([sys.executable, os.path.join(GUI, "make_drop_icons.py"), OUT], check=True)

@@ -1,0 +1,29 @@
+오크전사출몰:
+  Type: 오크_전사
+  Action: REPLACE
+  Chance: 0.15
+  Priority: 1
+  Worlds: world
+  Biomes: PLAINS,FOREST,SAVANNA,BIRCH_FOREST,DARK_FOREST
+  Conditions:
+  - night true
+
+오크궁수출몰:
+  Type: 오크_궁수
+  Action: REPLACE
+  Chance: 0.1
+  Priority: 1
+  Worlds: world
+  Biomes: PLAINS,FOREST,SAVANNA,BIRCH_FOREST,DARK_FOREST
+  Conditions:
+  - night true
+
+오크주술사출몰:
+  Type: 오크_주술사
+  Action: REPLACE
+  Chance: 0.04
+  Priority: 1
+  Worlds: world
+  Biomes: PLAINS,FOREST,SAVANNA,DARK_FOREST
+  Conditions:
+  - night true

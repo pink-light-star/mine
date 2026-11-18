@@ -1,0 +1,4312 @@
+{
+ "skills": [
+  {
+   "id": "WARRIOR_F1",
+   "line": "WARRIOR",
+   "slot": "F",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "WHIRLWIND"
+  },
+  {
+   "id": "WARRIOR_SL1",
+   "line": "WARRIOR",
+   "slot": "SL",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "LEAP_SLAM"
+  },
+  {
+   "id": "WARRIOR_SR1",
+   "line": "WARRIOR",
+   "slot": "SR",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "IRON_WALL"
+  },
+  {
+   "id": "WARRIOR_F2",
+   "line": "WARRIOR",
+   "slot": "F",
+   "rank": 2,
+   "level": 20,
+   "name": "대지 가르기",
+   "desc": "앞쪽 땅을 갈라 부채꼴로 베어냄.",
+   "kind": "cone",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "6",
+    "10"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "entity.player.attack.strong"
+  },
+  {
+   "id": "WARRIOR_F3",
+   "line": "WARRIOR",
+   "slot": "F",
+   "rank": 3,
+   "level": 30,
+   "name": "광폭 연타",
+   "desc": "주변을 세 번 연달아 후려침.",
+   "kind": "nova",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "4",
+    "14"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "entity.player.attack.strong"
+  },
+  {
+   "id": "WARRIOR_F4",
+   "line": "WARRIOR",
+   "slot": "F",
+   "rank": 4,
+   "level": 45,
+   "name": "파멸의 일격",
+   "desc": "앞의 모든 것을 짓부수는 거대한 내려찍기.",
+   "kind": "cone",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "8",
+    "26"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "entity.player.attack.strong"
+  },
+  {
+   "id": "WARRIOR_SL2",
+   "line": "WARRIOR",
+   "slot": "SL",
+   "rank": 2,
+   "level": 20,
+   "name": "돌진 베기",
+   "desc": "앞으로 돌진하며 지나간 적을 벰.",
+   "kind": "dash",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "8",
+    "10"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "entity.player.attack.strong"
+  },
+  {
+   "id": "WARRIOR_SL3",
+   "line": "WARRIOR",
+   "slot": "SL",
+   "rank": 3,
+   "level": 30,
+   "name": "지진",
+   "desc": "높이 뛰어올라 땅을 내려찍어 큰 지진을 일으킴.",
+   "kind": "leap",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "6",
+    "18"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "entity.player.attack.strong"
+  },
+  {
+   "id": "WARRIOR_SL4",
+   "line": "WARRIOR",
+   "slot": "SL",
+   "rank": 4,
+   "level": 45,
+   "name": "천지 붕괴",
+   "desc": "하늘에서 떨어지며 넓은 땅을 무너뜨림.",
+   "kind": "leap",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "9",
+    "30"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "entity.player.attack.strong"
+  },
+  {
+   "id": "WARRIOR_SR2",
+   "line": "WARRIOR",
+   "slot": "SR",
+   "rank": 2,
+   "level": 20,
+   "name": "전투 함성",
+   "desc": "함성을 질러 나와 주변 동료에게 힘을 줌.",
+   "kind": "buff",
+   "mp": 25,
+   "cd": 16,
+   "val": [
+    "strength:1",
+    "10",
+    "8"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "entity.player.attack.strong"
+  },
+  {
+   "id": "WARRIOR_SR3",
+   "line": "WARRIOR",
+   "slot": "SR",
+   "rank": 3,
+   "level": 30,
+   "name": "강철 피부",
+   "desc": "잠시 피부가 강철처럼 단단해짐.",
+   "kind": "buff",
+   "mp": 35,
+   "cd": 22,
+   "val": [
+    "resistance:2,slowness:0",
+    "8",
+    "0"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "entity.player.attack.strong"
+  },
+  {
+   "id": "WARRIOR_SR4",
+   "line": "WARRIOR",
+   "slot": "SR",
+   "rank": 4,
+   "level": 45,
+   "name": "불굴",
+   "desc": "쓰러지지 않는 의지로 체력을 크게 회복.",
+   "kind": "heal",
+   "mp": 50,
+   "cd": 32,
+   "val": [
+    "24",
+    "0"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "entity.player.attack.strong"
+  },
+  {
+   "id": "WARRIOR_SS2",
+   "line": "WARRIOR",
+   "slot": "SS",
+   "rank": 2,
+   "level": 20,
+   "name": "전쟁의 군주",
+   "desc": "주변 적을 날려버리고 10초 동안 힘 III.",
+   "kind": "nova",
+   "mp": 40,
+   "cd": 35,
+   "val": [
+    "6",
+    "22",
+    "strength:2:10"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "entity.player.attack.strong"
+  },
+  {
+   "id": "WARRIOR_SS3_BERSERKER",
+   "line": "WARRIOR",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "RAGE",
+   "branch": "BERSERKER"
+  },
+  {
+   "id": "WARRIOR_SS3_PALADIN",
+   "line": "WARRIOR",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "HOLY_BARRIER",
+   "branch": "PALADIN"
+  },
+  {
+   "id": "WARRIOR_SS4_BLOOD_LORD",
+   "line": "WARRIOR",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "피의 축제",
+   "desc": "주변을 피바다로 만드는 연속 베기.",
+   "kind": "nova",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "7",
+    "40"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "entity.player.attack.strong",
+   "branch": "BLOOD_LORD"
+  },
+  {
+   "id": "WARRIOR_SS4_CRUSADER",
+   "line": "WARRIOR",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "심판의 방패",
+   "desc": "빛의 방패를 내리꽂아 주변 적을 심판.",
+   "kind": "nova",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "8",
+    "36",
+    "resistance:2:8"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "entity.player.attack.strong",
+   "branch": "CRUSADER"
+  },
+  {
+   "id": "WARRIOR_P1",
+   "line": "WARRIOR",
+   "slot": "P",
+   "rank": 1,
+   "level": 10,
+   "name": "단련된 몸",
+   "desc": "최대 체력 +4",
+   "kind": "passive",
+   "bonus": "hp:4"
+  },
+  {
+   "id": "WARRIOR_P2",
+   "line": "WARRIOR",
+   "slot": "P",
+   "rank": 2,
+   "level": 20,
+   "name": "투사의 기술",
+   "desc": "근접 피해 +10%",
+   "kind": "passive",
+   "bonus": "mel:10"
+  },
+  {
+   "id": "WARRIOR_P3",
+   "line": "WARRIOR",
+   "slot": "P",
+   "rank": 3,
+   "level": 30,
+   "name": "강철 의지",
+   "desc": "받는 피해 -8%",
+   "kind": "passive",
+   "bonus": "def:8"
+  },
+  {
+   "id": "WARRIOR_P4",
+   "line": "WARRIOR",
+   "slot": "P",
+   "rank": 4,
+   "level": 45,
+   "name": "전장의 지배자",
+   "desc": "최대 체력 +8, 근접 피해 +10%",
+   "kind": "passive",
+   "bonus": "hp:8,mel:10"
+  },
+  {
+   "id": "ARCHER_F1",
+   "line": "ARCHER",
+   "slot": "F",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "MULTI_SHOT"
+  },
+  {
+   "id": "ARCHER_SL1",
+   "line": "ARCHER",
+   "slot": "SL",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "ARROW_RAIN"
+  },
+  {
+   "id": "ARCHER_SR1",
+   "line": "ARCHER",
+   "slot": "SR",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "BACKSTEP"
+  },
+  {
+   "id": "ARCHER_F2",
+   "line": "ARCHER",
+   "slot": "F",
+   "rank": 2,
+   "level": 20,
+   "name": "관통 화살",
+   "desc": "일직선을 꿰뚫는 화살.",
+   "kind": "beam",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "20",
+    "9"
+   ],
+   "p1": "CRIT",
+   "p2": "END_ROD",
+   "snd": "entity.arrow.shoot"
+  },
+  {
+   "id": "ARCHER_F3",
+   "line": "ARCHER",
+   "slot": "F",
+   "rank": 3,
+   "level": 30,
+   "name": "폭발 화살",
+   "desc": "맞은 곳에서 폭발하는 화살.",
+   "kind": "orb",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "3",
+    "15"
+   ],
+   "p1": "CRIT",
+   "p2": "END_ROD",
+   "snd": "entity.arrow.shoot"
+  },
+  {
+   "id": "ARCHER_F4",
+   "line": "ARCHER",
+   "slot": "F",
+   "rank": 4,
+   "level": 45,
+   "name": "유성 화살",
+   "desc": "별처럼 빛나며 모든 것을 꿰뚫는 화살.",
+   "kind": "beam",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "40",
+    "28"
+   ],
+   "p1": "CRIT",
+   "p2": "END_ROD",
+   "snd": "entity.arrow.shoot"
+  },
+  {
+   "id": "ARCHER_SL2",
+   "line": "ARCHER",
+   "slot": "SL",
+   "rank": 2,
+   "level": 20,
+   "name": "화살 폭풍",
+   "desc": "바라보는 곳에 화살이 쏟아짐.",
+   "kind": "rain",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "4",
+    "8",
+    "5"
+   ],
+   "p1": "CRIT",
+   "p2": "END_ROD",
+   "snd": "entity.arrow.shoot"
+  },
+  {
+   "id": "ARCHER_SL3",
+   "line": "ARCHER",
+   "slot": "SL",
+   "rank": 3,
+   "level": 30,
+   "name": "얼음 화살비",
+   "desc": "얼음 화살비로 적을 느리게 함.",
+   "kind": "rain",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "5",
+    "10",
+    "7",
+    "slowness:2:4"
+   ],
+   "p1": "CRIT",
+   "p2": "END_ROD",
+   "snd": "entity.arrow.shoot"
+  },
+  {
+   "id": "ARCHER_SL4",
+   "line": "ARCHER",
+   "slot": "SL",
+   "rank": 4,
+   "level": 45,
+   "name": "천공의 화살비",
+   "desc": "하늘을 뒤덮는 화살비.",
+   "kind": "rain",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "7",
+    "16",
+    "9"
+   ],
+   "p1": "CRIT",
+   "p2": "END_ROD",
+   "snd": "entity.arrow.shoot"
+  },
+  {
+   "id": "ARCHER_SR2",
+   "line": "ARCHER",
+   "slot": "SR",
+   "rank": 2,
+   "level": 20,
+   "name": "바람 걸음",
+   "desc": "바람처럼 빨라짐.",
+   "kind": "buff",
+   "mp": 25,
+   "cd": 16,
+   "val": [
+    "speed:2",
+    "8",
+    "0"
+   ],
+   "p1": "CRIT",
+   "p2": "END_ROD",
+   "snd": "entity.arrow.shoot"
+  },
+  {
+   "id": "ARCHER_SR3",
+   "line": "ARCHER",
+   "slot": "SR",
+   "rank": 3,
+   "level": 30,
+   "name": "매의 눈",
+   "desc": "잠시 모든 화살이 강해지고 적이 빛남.",
+   "kind": "buff",
+   "mp": 35,
+   "cd": 22,
+   "val": [
+    "strength:1,night_vision:0",
+    "12",
+    "0"
+   ],
+   "p1": "CRIT",
+   "p2": "END_ROD",
+   "snd": "entity.arrow.shoot"
+  },
+  {
+   "id": "ARCHER_SR4",
+   "line": "ARCHER",
+   "slot": "SR",
+   "rank": 4,
+   "level": 45,
+   "name": "자연의 가호",
+   "desc": "자연의 힘으로 체력 회복.",
+   "kind": "heal",
+   "mp": 50,
+   "cd": 32,
+   "val": [
+    "16",
+    "0"
+   ],
+   "p1": "CRIT",
+   "p2": "END_ROD",
+   "snd": "entity.arrow.shoot"
+  },
+  {
+   "id": "ARCHER_SS2",
+   "line": "ARCHER",
+   "slot": "SS",
+   "rank": 2,
+   "level": 20,
+   "name": "사냥꾼의 표식",
+   "desc": "적에게 표식을 남겨 계속 피해를 줌.",
+   "kind": "mark",
+   "mp": 40,
+   "cd": 35,
+   "val": [
+    "6",
+    "6"
+   ],
+   "p1": "CRIT",
+   "p2": "END_ROD",
+   "snd": "entity.arrow.shoot"
+  },
+  {
+   "id": "ARCHER_SS3_SNIPER",
+   "line": "ARCHER",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "PIERCING_SHOT",
+   "branch": "SNIPER"
+  },
+  {
+   "id": "ARCHER_SS3_RANGER",
+   "line": "ARCHER",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "SNARE_TRAP",
+   "branch": "RANGER"
+  },
+  {
+   "id": "ARCHER_SS4_HAWKEYE",
+   "line": "ARCHER",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "호크아이 샷",
+   "desc": "60칸 밖까지 닿는 절대 명중의 한 발.",
+   "kind": "beam",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "60",
+    "60"
+   ],
+   "p1": "CRIT",
+   "p2": "END_ROD",
+   "snd": "entity.arrow.shoot",
+   "branch": "HAWKEYE"
+  },
+  {
+   "id": "ARCHER_SS4_WINDWALKER",
+   "line": "ARCHER",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "폭풍의 사냥",
+   "desc": "바람과 함께 화살을 퍼부어 넓은 곳을 휩쓺.",
+   "kind": "rain",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "8",
+    "22",
+    "12"
+   ],
+   "p1": "CRIT",
+   "p2": "END_ROD",
+   "snd": "entity.arrow.shoot",
+   "branch": "WINDWALKER"
+  },
+  {
+   "id": "ARCHER_P1",
+   "line": "ARCHER",
+   "slot": "P",
+   "rank": 1,
+   "level": 10,
+   "name": "예리한 눈",
+   "desc": "원거리 피해 +10%",
+   "kind": "passive",
+   "bonus": "rng:10"
+  },
+  {
+   "id": "ARCHER_P2",
+   "line": "ARCHER",
+   "slot": "P",
+   "rank": 2,
+   "level": 20,
+   "name": "가벼운 발",
+   "desc": "이동 속도 +5%",
+   "kind": "passive",
+   "bonus": "spd:5"
+  },
+  {
+   "id": "ARCHER_P3",
+   "line": "ARCHER",
+   "slot": "P",
+   "rank": 3,
+   "level": 30,
+   "name": "급소 사격",
+   "desc": "치명타 확률 +10%",
+   "kind": "passive",
+   "bonus": "crit:10"
+  },
+  {
+   "id": "ARCHER_P4",
+   "line": "ARCHER",
+   "slot": "P",
+   "rank": 4,
+   "level": 45,
+   "name": "명궁",
+   "desc": "원거리 피해 +20%, 치명타 +5%",
+   "kind": "passive",
+   "bonus": "rng:20,crit:5"
+  },
+  {
+   "id": "MAGE_F1",
+   "line": "MAGE",
+   "slot": "F",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "FIREBALL"
+  },
+  {
+   "id": "MAGE_SL1",
+   "line": "MAGE",
+   "slot": "SL",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "ICE_SPEAR"
+  },
+  {
+   "id": "MAGE_SR1",
+   "line": "MAGE",
+   "slot": "SR",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "BLINK"
+  },
+  {
+   "id": "MAGE_F2",
+   "line": "MAGE",
+   "slot": "F",
+   "rank": 2,
+   "level": 20,
+   "name": "번개 화살",
+   "desc": "바라보는 적에게 번개를 내림.",
+   "kind": "beam",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "18",
+    "12"
+   ],
+   "p1": "FLAME",
+   "p2": "ELECTRIC_SPARK",
+   "snd": "entity.blaze.shoot"
+  },
+  {
+   "id": "MAGE_F3",
+   "line": "MAGE",
+   "slot": "F",
+   "rank": 3,
+   "level": 30,
+   "name": "화염 폭발",
+   "desc": "주변에 불길이 폭발함.",
+   "kind": "nova",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "5",
+    "16",
+    "fire"
+   ],
+   "p1": "FLAME",
+   "p2": "ELECTRIC_SPARK",
+   "snd": "entity.blaze.shoot"
+  },
+  {
+   "id": "MAGE_F4",
+   "line": "MAGE",
+   "slot": "F",
+   "rank": 4,
+   "level": 45,
+   "name": "뇌신의 창",
+   "desc": "번개로 만든 창이 일직선을 꿰뚫음.",
+   "kind": "beam",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "30",
+    "30"
+   ],
+   "p1": "FLAME",
+   "p2": "ELECTRIC_SPARK",
+   "snd": "entity.blaze.shoot"
+  },
+  {
+   "id": "MAGE_SL2",
+   "line": "MAGE",
+   "slot": "SL",
+   "rank": 2,
+   "level": 20,
+   "name": "서리 폭풍",
+   "desc": "바라보는 곳에 얼음 폭풍.",
+   "kind": "rain",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "5",
+    "10",
+    "6",
+    "slowness:2:4"
+   ],
+   "p1": "FLAME",
+   "p2": "ELECTRIC_SPARK",
+   "snd": "entity.blaze.shoot"
+  },
+  {
+   "id": "MAGE_SL3",
+   "line": "MAGE",
+   "slot": "SL",
+   "rank": 3,
+   "level": 30,
+   "name": "블랙홀",
+   "desc": "적들을 한곳으로 빨아들여 터뜨림.",
+   "kind": "pull",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "7",
+    "18"
+   ],
+   "p1": "FLAME",
+   "p2": "ELECTRIC_SPARK",
+   "snd": "entity.blaze.shoot"
+  },
+  {
+   "id": "MAGE_SL4",
+   "line": "MAGE",
+   "slot": "SL",
+   "rank": 4,
+   "level": 45,
+   "name": "절대 영도",
+   "desc": "넓은 범위를 얼려버림.",
+   "kind": "nova",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "8",
+    "26",
+    "slowness:4:5"
+   ],
+   "p1": "FLAME",
+   "p2": "ELECTRIC_SPARK",
+   "snd": "entity.blaze.shoot"
+  },
+  {
+   "id": "MAGE_SR2",
+   "line": "MAGE",
+   "slot": "SR",
+   "rank": 2,
+   "level": 20,
+   "name": "마나 보호막",
+   "desc": "마나로 몸을 감싸 피해를 줄임.",
+   "kind": "buff",
+   "mp": 25,
+   "cd": 16,
+   "val": [
+    "resistance:1,absorption:2",
+    "10",
+    "0"
+   ],
+   "p1": "FLAME",
+   "p2": "ELECTRIC_SPARK",
+   "snd": "entity.blaze.shoot"
+  },
+  {
+   "id": "MAGE_SR3",
+   "line": "MAGE",
+   "slot": "SR",
+   "rank": 3,
+   "level": 30,
+   "name": "시간 가속",
+   "desc": "시간을 빠르게 흘려 몸이 가벼워짐.",
+   "kind": "buff",
+   "mp": 35,
+   "cd": 22,
+   "val": [
+    "speed:1,haste:2",
+    "10",
+    "0"
+   ],
+   "p1": "FLAME",
+   "p2": "ELECTRIC_SPARK",
+   "snd": "entity.blaze.shoot"
+  },
+  {
+   "id": "MAGE_SR4",
+   "line": "MAGE",
+   "slot": "SR",
+   "rank": 4,
+   "level": 45,
+   "name": "비전 충전",
+   "desc": "마력을 모아 체력을 회복.",
+   "kind": "heal",
+   "mp": 50,
+   "cd": 32,
+   "val": [
+    "14",
+    "0"
+   ],
+   "p1": "FLAME",
+   "p2": "ELECTRIC_SPARK",
+   "snd": "entity.blaze.shoot"
+  },
+  {
+   "id": "MAGE_SS2",
+   "line": "MAGE",
+   "slot": "SS",
+   "rank": 2,
+   "level": 20,
+   "name": "원소 폭주",
+   "desc": "불·얼음·번개가 동시에 쏟아짐.",
+   "kind": "rain",
+   "mp": 40,
+   "cd": 35,
+   "val": [
+    "6",
+    "14",
+    "10"
+   ],
+   "p1": "FLAME",
+   "p2": "ELECTRIC_SPARK",
+   "snd": "entity.blaze.shoot"
+  },
+  {
+   "id": "MAGE_SS3_ELEMENTALIST",
+   "line": "MAGE",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "METEOR",
+   "branch": "ELEMENTALIST"
+  },
+  {
+   "id": "MAGE_SS3_WARLOCK",
+   "line": "MAGE",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "LIFE_DRAIN",
+   "branch": "WARLOCK"
+  },
+  {
+   "id": "MAGE_SS4_ARCHMAGE",
+   "line": "MAGE",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "천체 붕괴",
+   "desc": "하늘의 별을 떨어뜨려 모든 것을 태움.",
+   "kind": "rain",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "9",
+    "24",
+    "16",
+    "fire"
+   ],
+   "p1": "FLAME",
+   "p2": "ELECTRIC_SPARK",
+   "snd": "entity.blaze.shoot",
+   "branch": "ARCHMAGE"
+  },
+  {
+   "id": "MAGE_SS4_LICH_LORD",
+   "line": "MAGE",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "죽음의 손길",
+   "desc": "주변의 생명을 빨아들이는 검은 파동.",
+   "kind": "nova",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "8",
+    "34",
+    "wither:1:5"
+   ],
+   "p1": "FLAME",
+   "p2": "ELECTRIC_SPARK",
+   "snd": "entity.blaze.shoot",
+   "branch": "LICH_LORD"
+  },
+  {
+   "id": "MAGE_P1",
+   "line": "MAGE",
+   "slot": "P",
+   "rank": 1,
+   "level": 10,
+   "name": "마력 증폭",
+   "desc": "최대 MP +30",
+   "kind": "passive",
+   "bonus": "mp:30"
+  },
+  {
+   "id": "MAGE_P2",
+   "line": "MAGE",
+   "slot": "P",
+   "rank": 2,
+   "level": 20,
+   "name": "마나 순환",
+   "desc": "초당 MP 회복 +1",
+   "kind": "passive",
+   "bonus": "mpr:1"
+  },
+  {
+   "id": "MAGE_P3",
+   "line": "MAGE",
+   "slot": "P",
+   "rank": 3,
+   "level": 30,
+   "name": "주문 강화",
+   "desc": "스킬 피해 +10%",
+   "kind": "passive",
+   "bonus": "skl:10"
+  },
+  {
+   "id": "MAGE_P4",
+   "line": "MAGE",
+   "slot": "P",
+   "rank": 4,
+   "level": 45,
+   "name": "대마법사의 지혜",
+   "desc": "스킬 피해 +20%, 최대 MP +40",
+   "kind": "passive",
+   "bonus": "skl:20,mp:40"
+  },
+  {
+   "id": "ROGUE_F1",
+   "line": "ROGUE",
+   "slot": "F",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "AMBUSH"
+  },
+  {
+   "id": "ROGUE_SL1",
+   "line": "ROGUE",
+   "slot": "SL",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "POISON_BLADE"
+  },
+  {
+   "id": "ROGUE_SR1",
+   "line": "ROGUE",
+   "slot": "SR",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "VANISH"
+  },
+  {
+   "id": "ROGUE_F2",
+   "line": "ROGUE",
+   "slot": "F",
+   "rank": 2,
+   "level": 20,
+   "name": "급소 찌르기",
+   "desc": "앞의 적 급소를 찌름.",
+   "kind": "cone",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "4",
+    "12"
+   ],
+   "p1": "SMOKE",
+   "p2": "SQUID_INK",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "ROGUE_F3",
+   "line": "ROGUE",
+   "slot": "F",
+   "rank": 3,
+   "level": 30,
+   "name": "연속 베기",
+   "desc": "주변을 빠르게 여러 번 벰.",
+   "kind": "nova",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "3.5",
+    "16"
+   ],
+   "p1": "SMOKE",
+   "p2": "SQUID_INK",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "ROGUE_F4",
+   "line": "ROGUE",
+   "slot": "F",
+   "rank": 4,
+   "level": 45,
+   "name": "암흑 일섬",
+   "desc": "그림자를 가르는 단 한 번의 베기.",
+   "kind": "dash",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "12",
+    "30"
+   ],
+   "p1": "SMOKE",
+   "p2": "SQUID_INK",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "ROGUE_SL2",
+   "line": "ROGUE",
+   "slot": "SL",
+   "rank": 2,
+   "level": 20,
+   "name": "연막탄",
+   "desc": "연막을 터뜨려 적을 눈멀게 함.",
+   "kind": "nova",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "5",
+    "6",
+    "blindness:0:4"
+   ],
+   "p1": "SMOKE",
+   "p2": "SQUID_INK",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "ROGUE_SL3",
+   "line": "ROGUE",
+   "slot": "SL",
+   "rank": 3,
+   "level": 30,
+   "name": "독 안개",
+   "desc": "독 안개로 주변 적을 중독시킴.",
+   "kind": "nova",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "6",
+    "8",
+    "poison:1:6"
+   ],
+   "p1": "SMOKE",
+   "p2": "SQUID_INK",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "ROGUE_SL4",
+   "line": "ROGUE",
+   "slot": "SL",
+   "rank": 4,
+   "level": 45,
+   "name": "죽음의 안개",
+   "desc": "치명적인 독구름을 퍼뜨림.",
+   "kind": "pull",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "7",
+    "22",
+    "poison:2:6"
+   ],
+   "p1": "SMOKE",
+   "p2": "SQUID_INK",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "ROGUE_SR2",
+   "line": "ROGUE",
+   "slot": "SR",
+   "rank": 2,
+   "level": 20,
+   "name": "그림자 걸음",
+   "desc": "그림자 속으로 빠르게 이동.",
+   "kind": "dash",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "10",
+    "6"
+   ],
+   "p1": "SMOKE",
+   "p2": "SQUID_INK",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "ROGUE_SR3",
+   "line": "ROGUE",
+   "slot": "SR",
+   "rank": 3,
+   "level": 30,
+   "name": "민첩",
+   "desc": "몸놀림이 빨라짐.",
+   "kind": "buff",
+   "mp": 35,
+   "cd": 22,
+   "val": [
+    "speed:2,jump_boost:1",
+    "8",
+    "0"
+   ],
+   "p1": "SMOKE",
+   "p2": "SQUID_INK",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "ROGUE_SR4",
+   "line": "ROGUE",
+   "slot": "SR",
+   "rank": 4,
+   "level": 45,
+   "name": "응급 처치",
+   "desc": "상처를 빠르게 묶어 회복.",
+   "kind": "heal",
+   "mp": 50,
+   "cd": 32,
+   "val": [
+    "18",
+    "0"
+   ],
+   "p1": "SMOKE",
+   "p2": "SQUID_INK",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "ROGUE_SS2",
+   "line": "ROGUE",
+   "slot": "SS",
+   "rank": 2,
+   "level": 20,
+   "name": "독사의 이빨",
+   "desc": "적에게 독을 새겨 계속 피해.",
+   "kind": "mark",
+   "mp": 40,
+   "cd": 35,
+   "val": [
+    "7",
+    "6"
+   ],
+   "p1": "SMOKE",
+   "p2": "SQUID_INK",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "ROGUE_SS3_ASSASSIN",
+   "line": "ROGUE",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "SHADOW_EXECUTE",
+   "branch": "ASSASSIN"
+  },
+  {
+   "id": "ROGUE_SS3_SHADOW_DANCER",
+   "line": "ROGUE",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "BLADE_DANCE",
+   "branch": "SHADOW_DANCER"
+  },
+  {
+   "id": "ROGUE_SS4_NIGHTMARE",
+   "line": "ROGUE",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "악몽",
+   "desc": "그림자 속에서 모든 적을 베어냄.",
+   "kind": "nova",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "7",
+    "42",
+    "blindness:0:3"
+   ],
+   "p1": "SMOKE",
+   "p2": "SQUID_INK",
+   "snd": "entity.player.attack.sweep",
+   "branch": "NIGHTMARE"
+  },
+  {
+   "id": "ROGUE_SS4_SHADOW_MASTER",
+   "line": "ROGUE",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "그림자 군단",
+   "desc": "그림자 분신들이 사방을 벰.",
+   "kind": "rain",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "7",
+    "18",
+    "12"
+   ],
+   "p1": "SMOKE",
+   "p2": "SQUID_INK",
+   "snd": "entity.player.attack.sweep",
+   "branch": "SHADOW_MASTER"
+  },
+  {
+   "id": "ROGUE_P1",
+   "line": "ROGUE",
+   "slot": "P",
+   "rank": 1,
+   "level": 10,
+   "name": "날렵함",
+   "desc": "이동 속도 +6%",
+   "kind": "passive",
+   "bonus": "spd:6"
+  },
+  {
+   "id": "ROGUE_P2",
+   "line": "ROGUE",
+   "slot": "P",
+   "rank": 2,
+   "level": 20,
+   "name": "급소 찌르기",
+   "desc": "치명타 확률 +10%",
+   "kind": "passive",
+   "bonus": "crit:10"
+  },
+  {
+   "id": "ROGUE_P3",
+   "line": "ROGUE",
+   "slot": "P",
+   "rank": 3,
+   "level": 30,
+   "name": "피의 갈증",
+   "desc": "준 피해의 5% 회복",
+   "kind": "passive",
+   "bonus": "steal:5"
+  },
+  {
+   "id": "ROGUE_P4",
+   "line": "ROGUE",
+   "slot": "P",
+   "rank": 4,
+   "level": 45,
+   "name": "그림자의 주인",
+   "desc": "치명타 +10%, 근접 피해 +15%",
+   "kind": "passive",
+   "bonus": "crit:10,mel:15"
+  },
+  {
+   "id": "CLERIC_F1",
+   "line": "CLERIC",
+   "slot": "F",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "HEAL_LIGHT"
+  },
+  {
+   "id": "CLERIC_SL1",
+   "line": "CLERIC",
+   "slot": "SL",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "HOLY_SMITE"
+  },
+  {
+   "id": "CLERIC_SR1",
+   "line": "CLERIC",
+   "slot": "SR",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "BLESSING"
+  },
+  {
+   "id": "CLERIC_F2",
+   "line": "CLERIC",
+   "slot": "F",
+   "rank": 2,
+   "level": 20,
+   "name": "빛의 화살",
+   "desc": "빛의 화살로 적을 꿰뚫음.",
+   "kind": "beam",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "18",
+    "10"
+   ],
+   "p1": "END_ROD",
+   "p2": "GLOW",
+   "snd": "block.beacon.power_select"
+  },
+  {
+   "id": "CLERIC_F3",
+   "line": "CLERIC",
+   "slot": "F",
+   "rank": 3,
+   "level": 30,
+   "name": "신성한 파동",
+   "desc": "주변 적에게 신성한 피해, 아군은 회복.",
+   "kind": "nova",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "5",
+    "14",
+    "heal"
+   ],
+   "p1": "END_ROD",
+   "p2": "GLOW",
+   "snd": "block.beacon.power_select"
+  },
+  {
+   "id": "CLERIC_F4",
+   "line": "CLERIC",
+   "slot": "F",
+   "rank": 4,
+   "level": 45,
+   "name": "천상의 빛",
+   "desc": "하늘의 빛기둥이 적을 태움.",
+   "kind": "rain",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "6",
+    "10",
+    "16"
+   ],
+   "p1": "END_ROD",
+   "p2": "GLOW",
+   "snd": "block.beacon.power_select"
+  },
+  {
+   "id": "CLERIC_SL2",
+   "line": "CLERIC",
+   "slot": "SL",
+   "rank": 2,
+   "level": 20,
+   "name": "정화",
+   "desc": "나와 주변 동료의 나쁜 효과를 지움.",
+   "kind": "heal",
+   "mp": 25,
+   "cd": 16,
+   "val": [
+    "8",
+    "8",
+    "cleanse"
+   ],
+   "p1": "END_ROD",
+   "p2": "GLOW",
+   "snd": "block.beacon.power_select"
+  },
+  {
+   "id": "CLERIC_SL3",
+   "line": "CLERIC",
+   "slot": "SL",
+   "rank": 3,
+   "level": 30,
+   "name": "수호의 빛",
+   "desc": "주변 동료에게 보호막.",
+   "kind": "buff",
+   "mp": 35,
+   "cd": 22,
+   "val": [
+    "absorption:2,resistance:0",
+    "12",
+    "8"
+   ],
+   "p1": "END_ROD",
+   "p2": "GLOW",
+   "snd": "block.beacon.power_select"
+  },
+  {
+   "id": "CLERIC_SL4",
+   "line": "CLERIC",
+   "slot": "SL",
+   "rank": 4,
+   "level": 45,
+   "name": "기적",
+   "desc": "주변 동료를 크게 회복하고 나쁜 효과 제거.",
+   "kind": "heal",
+   "mp": 50,
+   "cd": 32,
+   "val": [
+    "30",
+    "10",
+    "cleanse"
+   ],
+   "p1": "END_ROD",
+   "p2": "GLOW",
+   "snd": "block.beacon.power_select"
+  },
+  {
+   "id": "CLERIC_SR2",
+   "line": "CLERIC",
+   "slot": "SR",
+   "rank": 2,
+   "level": 20,
+   "name": "신의 은총",
+   "desc": "체력이 서서히 회복됨.",
+   "kind": "buff",
+   "mp": 25,
+   "cd": 16,
+   "val": [
+    "regeneration:2",
+    "10",
+    "8"
+   ],
+   "p1": "END_ROD",
+   "p2": "GLOW",
+   "snd": "block.beacon.power_select"
+  },
+  {
+   "id": "CLERIC_SR3",
+   "line": "CLERIC",
+   "slot": "SR",
+   "rank": 3,
+   "level": 30,
+   "name": "천벌의 망치",
+   "desc": "앞의 적을 신성한 망치로 내려침.",
+   "kind": "cone",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "6",
+    "20"
+   ],
+   "p1": "END_ROD",
+   "p2": "GLOW",
+   "snd": "block.beacon.power_select"
+  },
+  {
+   "id": "CLERIC_SR4",
+   "line": "CLERIC",
+   "slot": "SR",
+   "rank": 4,
+   "level": 45,
+   "name": "심판의 불꽃",
+   "desc": "넓은 곳에 신성한 불꽃.",
+   "kind": "nova",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "7",
+    "26",
+    "fire"
+   ],
+   "p1": "END_ROD",
+   "p2": "GLOW",
+   "snd": "block.beacon.power_select"
+  },
+  {
+   "id": "CLERIC_SS2",
+   "line": "CLERIC",
+   "slot": "SS",
+   "rank": 2,
+   "level": 20,
+   "name": "빛의 장막",
+   "desc": "주변 동료 재생·저항.",
+   "kind": "buff",
+   "mp": 40,
+   "cd": 56,
+   "val": [
+    "regeneration:1,resistance:1",
+    "12",
+    "10"
+   ],
+   "p1": "END_ROD",
+   "p2": "GLOW",
+   "snd": "block.beacon.power_select"
+  },
+  {
+   "id": "CLERIC_SS3_HIGH_PRIEST",
+   "line": "CLERIC",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "SANCTUARY",
+   "branch": "HIGH_PRIEST"
+  },
+  {
+   "id": "CLERIC_SS3_JUDGE",
+   "line": "CLERIC",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "DIVINE_STORM",
+   "branch": "JUDGE"
+  },
+  {
+   "id": "CLERIC_SS4_SAINT",
+   "line": "CLERIC",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "성인의 기적",
+   "desc": "주변 모두를 되살리듯 완전 회복.",
+   "kind": "heal",
+   "mp": 70,
+   "cd": 96,
+   "val": [
+    "60",
+    "12",
+    "cleanse"
+   ],
+   "p1": "END_ROD",
+   "p2": "GLOW",
+   "snd": "block.beacon.power_select",
+   "branch": "SAINT"
+  },
+  {
+   "id": "CLERIC_SS4_INQUISITOR",
+   "line": "CLERIC",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "이단 심문",
+   "desc": "주변 적을 불태우는 심판의 화염.",
+   "kind": "nova",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "8",
+    "40",
+    "fire"
+   ],
+   "p1": "END_ROD",
+   "p2": "GLOW",
+   "snd": "block.beacon.power_select",
+   "branch": "INQUISITOR"
+  },
+  {
+   "id": "CLERIC_P1",
+   "line": "CLERIC",
+   "slot": "P",
+   "rank": 1,
+   "level": 10,
+   "name": "신앙",
+   "desc": "초당 체력 회복 +0.3",
+   "kind": "passive",
+   "bonus": "reg:0.3"
+  },
+  {
+   "id": "CLERIC_P2",
+   "line": "CLERIC",
+   "slot": "P",
+   "rank": 2,
+   "level": 20,
+   "name": "기도",
+   "desc": "최대 MP +30",
+   "kind": "passive",
+   "bonus": "mp:30"
+  },
+  {
+   "id": "CLERIC_P3",
+   "line": "CLERIC",
+   "slot": "P",
+   "rank": 3,
+   "level": 30,
+   "name": "가호",
+   "desc": "받는 피해 -8%",
+   "kind": "passive",
+   "bonus": "def:8"
+  },
+  {
+   "id": "CLERIC_P4",
+   "line": "CLERIC",
+   "slot": "P",
+   "rank": 4,
+   "level": 45,
+   "name": "성자의 빛",
+   "desc": "초당 체력 회복 +0.6, 스킬 피해 +15%",
+   "kind": "passive",
+   "bonus": "reg:0.6,skl:15"
+  },
+  {
+   "id": "SWORDSMAN_F1",
+   "line": "SWORDSMAN",
+   "slot": "F",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "CROSS_SLASH"
+  },
+  {
+   "id": "SWORDSMAN_SL1",
+   "line": "SWORDSMAN",
+   "slot": "SL",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "DRAW_SLASH"
+  },
+  {
+   "id": "SWORDSMAN_SR1",
+   "line": "SWORDSMAN",
+   "slot": "SR",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "PARRY"
+  },
+  {
+   "id": "SWORDSMAN_F2",
+   "line": "SWORDSMAN",
+   "slot": "F",
+   "rank": 2,
+   "level": 20,
+   "name": "삼연격",
+   "desc": "앞을 세 번 연속 벰.",
+   "kind": "cone",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "5",
+    "12"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "ENCHANTED_HIT",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "SWORDSMAN_F3",
+   "line": "SWORDSMAN",
+   "slot": "F",
+   "rank": 3,
+   "level": 30,
+   "name": "월광참",
+   "desc": "달빛 같은 검기로 주변을 벰.",
+   "kind": "nova",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "4.5",
+    "18"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "ENCHANTED_HIT",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "SWORDSMAN_F4",
+   "line": "SWORDSMAN",
+   "slot": "F",
+   "rank": 4,
+   "level": 45,
+   "name": "오러 블레이드",
+   "desc": "검기를 날려 일직선을 가름.",
+   "kind": "beam",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "24",
+    "30"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "ENCHANTED_HIT",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "SWORDSMAN_SL2",
+   "line": "SWORDSMAN",
+   "slot": "SL",
+   "rank": 2,
+   "level": 20,
+   "name": "섬광 베기",
+   "desc": "빛처럼 앞으로 돌진하며 벰.",
+   "kind": "dash",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "9",
+    "12"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "ENCHANTED_HIT",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "SWORDSMAN_SL3",
+   "line": "SWORDSMAN",
+   "slot": "SL",
+   "rank": 3,
+   "level": 30,
+   "name": "검기 폭풍",
+   "desc": "주변을 검기로 휩쓸어버림.",
+   "kind": "nova",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "6",
+    "20"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "ENCHANTED_HIT",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "SWORDSMAN_SL4",
+   "line": "SWORDSMAN",
+   "slot": "SL",
+   "rank": 4,
+   "level": 45,
+   "name": "천지 일검",
+   "desc": "하늘에서 떨어지며 땅을 가르는 일검.",
+   "kind": "leap",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "8",
+    "32"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "ENCHANTED_HIT",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "SWORDSMAN_SR2",
+   "line": "SWORDSMAN",
+   "slot": "SR",
+   "rank": 2,
+   "level": 20,
+   "name": "간파",
+   "desc": "적의 움직임을 읽어 몸을 지킴.",
+   "kind": "buff",
+   "mp": 25,
+   "cd": 16,
+   "val": [
+    "resistance:2",
+    "5",
+    "0"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "ENCHANTED_HIT",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "SWORDSMAN_SR3",
+   "line": "SWORDSMAN",
+   "slot": "SR",
+   "rank": 3,
+   "level": 30,
+   "name": "검의 의지",
+   "desc": "검에 의지를 실어 힘이 강해짐.",
+   "kind": "buff",
+   "mp": 35,
+   "cd": 22,
+   "val": [
+    "strength:1,speed:1",
+    "10",
+    "0"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "ENCHANTED_HIT",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "SWORDSMAN_SR4",
+   "line": "SWORDSMAN",
+   "slot": "SR",
+   "rank": 4,
+   "level": 45,
+   "name": "명상",
+   "desc": "호흡을 가다듬어 회복.",
+   "kind": "heal",
+   "mp": 50,
+   "cd": 32,
+   "val": [
+    "16",
+    "0"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "ENCHANTED_HIT",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "SWORDSMAN_SS2",
+   "line": "SWORDSMAN",
+   "slot": "SS",
+   "rank": 2,
+   "level": 20,
+   "name": "만검귀종",
+   "desc": "수많은 검기가 하늘에서 떨어짐.",
+   "kind": "rain",
+   "mp": 40,
+   "cd": 35,
+   "val": [
+    "6",
+    "14",
+    "12"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "ENCHANTED_HIT",
+   "snd": "entity.player.attack.sweep"
+  },
+  {
+   "id": "SWORDSMAN_SS3_SWORD_MASTER",
+   "line": "SWORDSMAN",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "IMPERIAL_FALL",
+   "branch": "SWORD_MASTER"
+  },
+  {
+   "id": "SWORDSMAN_SS3_BLADE_SAINT",
+   "line": "SWORDSMAN",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "ABYSS_SLASH",
+   "branch": "BLADE_SAINT"
+  },
+  {
+   "id": "SWORDSMAN_SS4_GRAND_MASTER",
+   "line": "SWORDSMAN",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "오러 엠페러",
+   "desc": "거대한 오러 검을 내리꽂음.",
+   "kind": "beam",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "40",
+    "60"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "ENCHANTED_HIT",
+   "snd": "entity.player.attack.sweep",
+   "branch": "GRAND_MASTER"
+  },
+  {
+   "id": "SWORDSMAN_SS4_SWORD_GOD",
+   "line": "SWORDSMAN",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "천검무",
+   "desc": "하늘을 가르는 천 개의 검.",
+   "kind": "rain",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "8",
+    "24",
+    "14"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "ENCHANTED_HIT",
+   "snd": "entity.player.attack.sweep",
+   "branch": "SWORD_GOD"
+  },
+  {
+   "id": "SWORDSMAN_P1",
+   "line": "SWORDSMAN",
+   "slot": "P",
+   "rank": 1,
+   "level": 10,
+   "name": "검술 수련",
+   "desc": "근접 피해 +10%",
+   "kind": "passive",
+   "bonus": "mel:10"
+  },
+  {
+   "id": "SWORDSMAN_P2",
+   "line": "SWORDSMAN",
+   "slot": "P",
+   "rank": 2,
+   "level": 20,
+   "name": "호흡법",
+   "desc": "초당 MP 회복 +1",
+   "kind": "passive",
+   "bonus": "mpr:1"
+  },
+  {
+   "id": "SWORDSMAN_P3",
+   "line": "SWORDSMAN",
+   "slot": "P",
+   "rank": 3,
+   "level": 30,
+   "name": "일섬",
+   "desc": "치명타 확률 +8%",
+   "kind": "passive",
+   "bonus": "crit:8"
+  },
+  {
+   "id": "SWORDSMAN_P4",
+   "line": "SWORDSMAN",
+   "slot": "P",
+   "rank": 4,
+   "level": 45,
+   "name": "검의 극의",
+   "desc": "근접 피해 +20%, 치명타 +8%",
+   "kind": "passive",
+   "bonus": "mel:20,crit:8"
+  },
+  {
+   "id": "NINJA_F1",
+   "line": "NINJA",
+   "slot": "F",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "DEEP_PIERCE"
+  },
+  {
+   "id": "NINJA_SL1",
+   "line": "NINJA",
+   "slot": "SL",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "SHURIKEN"
+  },
+  {
+   "id": "NINJA_SR1",
+   "line": "NINJA",
+   "slot": "SR",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "BLADE_DASH"
+  },
+  {
+   "id": "NINJA_F2",
+   "line": "NINJA",
+   "slot": "F",
+   "rank": 2,
+   "level": 20,
+   "name": "쿠나이 투척",
+   "desc": "쿠나이를 일직선으로 던짐.",
+   "kind": "beam",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "16",
+    "10"
+   ],
+   "p1": "CLOUD",
+   "p2": "SMOKE",
+   "snd": "entity.ender_dragon.flap"
+  },
+  {
+   "id": "NINJA_F3",
+   "line": "NINJA",
+   "slot": "F",
+   "rank": 3,
+   "level": 30,
+   "name": "화둔: 화염구",
+   "desc": "입에서 화염구를 뿜음.",
+   "kind": "orb",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "3",
+    "16",
+    "fire"
+   ],
+   "p1": "CLOUD",
+   "p2": "SMOKE",
+   "snd": "entity.ender_dragon.flap"
+  },
+  {
+   "id": "NINJA_F4",
+   "line": "NINJA",
+   "slot": "F",
+   "rank": 4,
+   "level": 45,
+   "name": "뇌둔: 천둥",
+   "desc": "번개를 내려 주변을 지짐.",
+   "kind": "rain",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "5",
+    "8",
+    "16"
+   ],
+   "p1": "CLOUD",
+   "p2": "SMOKE",
+   "snd": "entity.ender_dragon.flap"
+  },
+  {
+   "id": "NINJA_SL2",
+   "line": "NINJA",
+   "slot": "SL",
+   "rank": 2,
+   "level": 20,
+   "name": "순보",
+   "desc": "순식간에 앞으로 이동하며 벰.",
+   "kind": "dash",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "10",
+    "10"
+   ],
+   "p1": "CLOUD",
+   "p2": "SMOKE",
+   "snd": "entity.ender_dragon.flap"
+  },
+  {
+   "id": "NINJA_SL3",
+   "line": "NINJA",
+   "slot": "SL",
+   "rank": 3,
+   "level": 30,
+   "name": "연막 분신",
+   "desc": "연막과 함께 주변을 벰.",
+   "kind": "nova",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "4",
+    "14",
+    "blindness:0:2"
+   ],
+   "p1": "CLOUD",
+   "p2": "SMOKE",
+   "snd": "entity.ender_dragon.flap"
+  },
+  {
+   "id": "NINJA_SL4",
+   "line": "NINJA",
+   "slot": "SL",
+   "rank": 4,
+   "level": 45,
+   "name": "팔문 둔갑",
+   "desc": "몸의 한계를 풀어 주변을 쓸어버림.",
+   "kind": "nova",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "6",
+    "30"
+   ],
+   "p1": "CLOUD",
+   "p2": "SMOKE",
+   "snd": "entity.ender_dragon.flap"
+  },
+  {
+   "id": "NINJA_SR2",
+   "line": "NINJA",
+   "slot": "SR",
+   "rank": 2,
+   "level": 20,
+   "name": "변신술",
+   "desc": "모습을 숨기고 빨라짐.",
+   "kind": "buff",
+   "mp": 25,
+   "cd": 16,
+   "val": [
+    "invisibility:0,speed:2",
+    "5",
+    "0"
+   ],
+   "p1": "CLOUD",
+   "p2": "SMOKE",
+   "snd": "entity.ender_dragon.flap"
+  },
+  {
+   "id": "NINJA_SR3",
+   "line": "NINJA",
+   "slot": "SR",
+   "rank": 3,
+   "level": 30,
+   "name": "인술: 회복",
+   "desc": "인술로 상처를 회복.",
+   "kind": "heal",
+   "mp": 35,
+   "cd": 22,
+   "val": [
+    "16",
+    "0"
+   ],
+   "p1": "CLOUD",
+   "p2": "SMOKE",
+   "snd": "entity.ender_dragon.flap"
+  },
+  {
+   "id": "NINJA_SR4",
+   "line": "NINJA",
+   "slot": "SR",
+   "rank": 4,
+   "level": 45,
+   "name": "수리검 폭풍",
+   "desc": "수리검을 비처럼 뿌림.",
+   "kind": "rain",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "5",
+    "12",
+    "8"
+   ],
+   "p1": "CLOUD",
+   "p2": "SMOKE",
+   "snd": "entity.ender_dragon.flap"
+  },
+  {
+   "id": "NINJA_SS2",
+   "line": "NINJA",
+   "slot": "SS",
+   "rank": 2,
+   "level": 20,
+   "name": "나선 수리검",
+   "desc": "회전하는 거대한 수리검이 적을 빨아들임.",
+   "kind": "pull",
+   "mp": 40,
+   "cd": 35,
+   "val": [
+    "6",
+    "20"
+   ],
+   "p1": "CLOUD",
+   "p2": "SMOKE",
+   "snd": "entity.ender_dragon.flap"
+  },
+  {
+   "id": "NINJA_SS3_JONIN",
+   "line": "NINJA",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "SHADOW_CLONE",
+   "branch": "JONIN"
+  },
+  {
+   "id": "NINJA_SS3_PHANTOM",
+   "line": "NINJA",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "PHANTOM_PIERCE",
+   "branch": "PHANTOM"
+  },
+  {
+   "id": "NINJA_SS4_KAGE",
+   "line": "NINJA",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "카게 분신술",
+   "desc": "수많은 분신이 동시에 공격.",
+   "kind": "rain",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "7",
+    "22",
+    "12"
+   ],
+   "p1": "CLOUD",
+   "p2": "SMOKE",
+   "snd": "entity.ender_dragon.flap",
+   "branch": "KAGE"
+  },
+  {
+   "id": "NINJA_SS4_MUYEONG",
+   "line": "NINJA",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "무영참",
+   "desc": "보이지 않는 칼날로 모든 것을 벰.",
+   "kind": "dash",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "16",
+    "50"
+   ],
+   "p1": "CLOUD",
+   "p2": "SMOKE",
+   "snd": "entity.ender_dragon.flap",
+   "branch": "MUYEONG"
+  },
+  {
+   "id": "NINJA_P1",
+   "line": "NINJA",
+   "slot": "P",
+   "rank": 1,
+   "level": 10,
+   "name": "은밀함",
+   "desc": "이동 속도 +6%",
+   "kind": "passive",
+   "bonus": "spd:6"
+  },
+  {
+   "id": "NINJA_P2",
+   "line": "NINJA",
+   "slot": "P",
+   "rank": 2,
+   "level": 20,
+   "name": "암기 달인",
+   "desc": "스킬 피해 +10%",
+   "kind": "passive",
+   "bonus": "skl:10"
+  },
+  {
+   "id": "NINJA_P3",
+   "line": "NINJA",
+   "slot": "P",
+   "rank": 3,
+   "level": 30,
+   "name": "급소",
+   "desc": "치명타 확률 +10%",
+   "kind": "passive",
+   "bonus": "crit:10"
+  },
+  {
+   "id": "NINJA_P4",
+   "line": "NINJA",
+   "slot": "P",
+   "rank": 4,
+   "level": 45,
+   "name": "그림자 인술",
+   "desc": "이동 속도 +8%, 스킬 피해 +15%",
+   "kind": "passive",
+   "bonus": "spd:8,skl:15"
+  },
+  {
+   "id": "MONK_F1",
+   "line": "MONK",
+   "slot": "F",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "IRON_FIST"
+  },
+  {
+   "id": "MONK_SL1",
+   "line": "MONK",
+   "slot": "SL",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "COMBO_RUSH"
+  },
+  {
+   "id": "MONK_SR1",
+   "line": "MONK",
+   "slot": "SR",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "QI_GUARD"
+  },
+  {
+   "id": "MONK_F2",
+   "line": "MONK",
+   "slot": "F",
+   "rank": 2,
+   "level": 20,
+   "name": "정권 찌르기",
+   "desc": "기를 실은 정권을 내지름.",
+   "kind": "cone",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "4",
+    "14"
+   ],
+   "p1": "CRIT",
+   "p2": "POOF",
+   "snd": "entity.player.attack.knockback"
+  },
+  {
+   "id": "MONK_F3",
+   "line": "MONK",
+   "slot": "F",
+   "rank": 3,
+   "level": 30,
+   "name": "선풍각",
+   "desc": "회전하며 주변을 걷어참.",
+   "kind": "nova",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "4",
+    "16"
+   ],
+   "p1": "CRIT",
+   "p2": "POOF",
+   "snd": "entity.player.attack.knockback"
+  },
+  {
+   "id": "MONK_F4",
+   "line": "MONK",
+   "slot": "F",
+   "rank": 4,
+   "level": 45,
+   "name": "붕권",
+   "desc": "산을 무너뜨리는 일격.",
+   "kind": "cone",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "6",
+    "30"
+   ],
+   "p1": "CRIT",
+   "p2": "POOF",
+   "snd": "entity.player.attack.knockback"
+  },
+  {
+   "id": "MONK_SL2",
+   "line": "MONK",
+   "slot": "SL",
+   "rank": 2,
+   "level": 20,
+   "name": "비연각",
+   "desc": "날아올라 앞으로 차며 돌진.",
+   "kind": "dash",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "8",
+    "12"
+   ],
+   "p1": "CRIT",
+   "p2": "POOF",
+   "snd": "entity.player.attack.knockback"
+  },
+  {
+   "id": "MONK_SL3",
+   "line": "MONK",
+   "slot": "SL",
+   "rank": 3,
+   "level": 30,
+   "name": "진각",
+   "desc": "땅을 굴러 주변을 띄움.",
+   "kind": "leap",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "5",
+    "16"
+   ],
+   "p1": "CRIT",
+   "p2": "POOF",
+   "snd": "entity.player.attack.knockback"
+  },
+  {
+   "id": "MONK_SL4",
+   "line": "MONK",
+   "slot": "SL",
+   "rank": 4,
+   "level": 45,
+   "name": "천붕지열",
+   "desc": "하늘이 무너지고 땅이 갈라짐.",
+   "kind": "leap",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "8",
+    "30"
+   ],
+   "p1": "CRIT",
+   "p2": "POOF",
+   "snd": "entity.player.attack.knockback"
+  },
+  {
+   "id": "MONK_SR2",
+   "line": "MONK",
+   "slot": "SR",
+   "rank": 2,
+   "level": 20,
+   "name": "금강불괴",
+   "desc": "몸을 금강처럼 단단하게.",
+   "kind": "buff",
+   "mp": 25,
+   "cd": 16,
+   "val": [
+    "resistance:2,strength:0",
+    "6",
+    "0"
+   ],
+   "p1": "CRIT",
+   "p2": "POOF",
+   "snd": "entity.player.attack.knockback"
+  },
+  {
+   "id": "MONK_SR3",
+   "line": "MONK",
+   "slot": "SR",
+   "rank": 3,
+   "level": 30,
+   "name": "기 회복",
+   "desc": "기를 돌려 체력 회복.",
+   "kind": "heal",
+   "mp": 35,
+   "cd": 22,
+   "val": [
+    "18",
+    "0"
+   ],
+   "p1": "CRIT",
+   "p2": "POOF",
+   "snd": "entity.player.attack.knockback"
+  },
+  {
+   "id": "MONK_SR4",
+   "line": "MONK",
+   "slot": "SR",
+   "rank": 4,
+   "level": 45,
+   "name": "파동권",
+   "desc": "기를 모아 일직선으로 쏨.",
+   "kind": "beam",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "20",
+    "20"
+   ],
+   "p1": "CRIT",
+   "p2": "POOF",
+   "snd": "entity.player.attack.knockback"
+  },
+  {
+   "id": "MONK_SS2",
+   "line": "MONK",
+   "slot": "SS",
+   "rank": 2,
+   "level": 20,
+   "name": "나한권",
+   "desc": "주먹이 비처럼 쏟아짐.",
+   "kind": "rain",
+   "mp": 40,
+   "cd": 35,
+   "val": [
+    "5",
+    "12",
+    "12"
+   ],
+   "p1": "CRIT",
+   "p2": "POOF",
+   "snd": "entity.player.attack.knockback"
+  },
+  {
+   "id": "MONK_SS3_FIST_KING",
+   "line": "MONK",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "HUNDRED_FISTS",
+   "branch": "FIST_KING"
+  },
+  {
+   "id": "MONK_SS3_CHI_MASTER",
+   "line": "MONK",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "QI_BLAST",
+   "branch": "CHI_MASTER"
+  },
+  {
+   "id": "MONK_SS4_FIST_GOD",
+   "line": "MONK",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "권신강림",
+   "desc": "주먹 하나로 주변을 날려버림.",
+   "kind": "nova",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "7",
+    "44"
+   ],
+   "p1": "CRIT",
+   "p2": "POOF",
+   "snd": "entity.player.attack.knockback",
+   "branch": "FIST_GOD"
+  },
+  {
+   "id": "MONK_SS4_SAGE",
+   "line": "MONK",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "천지 합일",
+   "desc": "천지의 기를 모아 거대한 파동을 일으킴.",
+   "kind": "nova",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "9",
+    "36",
+    "regen_self"
+   ],
+   "p1": "CRIT",
+   "p2": "POOF",
+   "snd": "entity.player.attack.knockback",
+   "branch": "SAGE"
+  },
+  {
+   "id": "MONK_P1",
+   "line": "MONK",
+   "slot": "P",
+   "rank": 1,
+   "level": 10,
+   "name": "단련",
+   "desc": "최대 체력 +4",
+   "kind": "passive",
+   "bonus": "hp:4"
+  },
+  {
+   "id": "MONK_P2",
+   "line": "MONK",
+   "slot": "P",
+   "rank": 2,
+   "level": 20,
+   "name": "철권",
+   "desc": "근접 피해 +12%",
+   "kind": "passive",
+   "bonus": "mel:12"
+  },
+  {
+   "id": "MONK_P3",
+   "line": "MONK",
+   "slot": "P",
+   "rank": 3,
+   "level": 30,
+   "name": "내공",
+   "desc": "초당 체력 회복 +0.3",
+   "kind": "passive",
+   "bonus": "reg:0.3"
+  },
+  {
+   "id": "MONK_P4",
+   "line": "MONK",
+   "slot": "P",
+   "rank": 4,
+   "level": 45,
+   "name": "무극",
+   "desc": "근접 피해 +20%, 받는 피해 -8%",
+   "kind": "passive",
+   "bonus": "mel:20,def:8"
+  },
+  {
+   "id": "MOON_PRIEST_F1",
+   "line": "MOON_PRIEST",
+   "slot": "F",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "MOON_CURSE"
+  },
+  {
+   "id": "MOON_PRIEST_SL1",
+   "line": "MOON_PRIEST",
+   "slot": "SL",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "MOON_WEIGHT"
+  },
+  {
+   "id": "MOON_PRIEST_SR1",
+   "line": "MOON_PRIEST",
+   "slot": "SR",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "MOONLIGHT"
+  },
+  {
+   "id": "MOON_PRIEST_F2",
+   "line": "MOON_PRIEST",
+   "slot": "F",
+   "rank": 2,
+   "level": 20,
+   "name": "달빛 화살",
+   "desc": "달빛을 모아 일직선으로 쏨.",
+   "kind": "beam",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "18",
+    "10"
+   ],
+   "p1": "WITCH",
+   "p2": "REVERSE_PORTAL",
+   "snd": "block.amethyst_block.resonate"
+  },
+  {
+   "id": "MOON_PRIEST_F3",
+   "line": "MOON_PRIEST",
+   "slot": "F",
+   "rank": 3,
+   "level": 30,
+   "name": "초승달 낫",
+   "desc": "초승달 모양의 기운으로 주변을 벰.",
+   "kind": "nova",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "5",
+    "14",
+    "weakness:0:4"
+   ],
+   "p1": "WITCH",
+   "p2": "REVERSE_PORTAL",
+   "snd": "block.amethyst_block.resonate"
+  },
+  {
+   "id": "MOON_PRIEST_F4",
+   "line": "MOON_PRIEST",
+   "slot": "F",
+   "rank": 4,
+   "level": 45,
+   "name": "만월 낙하",
+   "desc": "보름달이 떨어지는 듯한 큰 폭발.",
+   "kind": "rain",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "6",
+    "10",
+    "16",
+    "slowness:1:3"
+   ],
+   "p1": "WITCH",
+   "p2": "REVERSE_PORTAL",
+   "snd": "block.amethyst_block.resonate"
+  },
+  {
+   "id": "MOON_PRIEST_SL2",
+   "line": "MOON_PRIEST",
+   "slot": "SL",
+   "rank": 2,
+   "level": 20,
+   "name": "월식 저주",
+   "desc": "주변 적을 나약하게 만듦.",
+   "kind": "nova",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "6",
+    "6",
+    "weakness:1:6"
+   ],
+   "p1": "WITCH",
+   "p2": "REVERSE_PORTAL",
+   "snd": "block.amethyst_block.resonate"
+  },
+  {
+   "id": "MOON_PRIEST_SL3",
+   "line": "MOON_PRIEST",
+   "slot": "SL",
+   "rank": 3,
+   "level": 30,
+   "name": "밤의 장막",
+   "desc": "적을 어둠에 빠뜨림.",
+   "kind": "nova",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "6",
+    "8",
+    "darkness:0:5"
+   ],
+   "p1": "WITCH",
+   "p2": "REVERSE_PORTAL",
+   "snd": "block.amethyst_block.resonate"
+  },
+  {
+   "id": "MOON_PRIEST_SL4",
+   "line": "MOON_PRIEST",
+   "slot": "SL",
+   "rank": 4,
+   "level": 45,
+   "name": "달의 감옥",
+   "desc": "적들을 끌어모아 묶어버림.",
+   "kind": "pull",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "7",
+    "18",
+    "slowness:4:4"
+   ],
+   "p1": "WITCH",
+   "p2": "REVERSE_PORTAL",
+   "snd": "block.amethyst_block.resonate"
+  },
+  {
+   "id": "MOON_PRIEST_SR2",
+   "line": "MOON_PRIEST",
+   "slot": "SR",
+   "rank": 2,
+   "level": 20,
+   "name": "달의 가호",
+   "desc": "달의 힘으로 회복.",
+   "kind": "heal",
+   "mp": 25,
+   "cd": 16,
+   "val": [
+    "16",
+    "0"
+   ],
+   "p1": "WITCH",
+   "p2": "REVERSE_PORTAL",
+   "snd": "block.amethyst_block.resonate"
+  },
+  {
+   "id": "MOON_PRIEST_SR3",
+   "line": "MOON_PRIEST",
+   "slot": "SR",
+   "rank": 3,
+   "level": 30,
+   "name": "야행",
+   "desc": "밤의 힘으로 빨라짐.",
+   "kind": "buff",
+   "mp": 35,
+   "cd": 22,
+   "val": [
+    "speed:1,night_vision:0",
+    "10",
+    "0"
+   ],
+   "p1": "WITCH",
+   "p2": "REVERSE_PORTAL",
+   "snd": "block.amethyst_block.resonate"
+  },
+  {
+   "id": "MOON_PRIEST_SR4",
+   "line": "MOON_PRIEST",
+   "slot": "SR",
+   "rank": 4,
+   "level": 45,
+   "name": "불안의 씨앗",
+   "desc": "적에게 불안을 심어 계속 피해.",
+   "kind": "mark",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "6",
+    "6"
+   ],
+   "p1": "WITCH",
+   "p2": "REVERSE_PORTAL",
+   "snd": "block.amethyst_block.resonate"
+  },
+  {
+   "id": "MOON_PRIEST_SS2",
+   "line": "MOON_PRIEST",
+   "slot": "SS",
+   "rank": 2,
+   "level": 20,
+   "name": "달의 노래",
+   "desc": "달빛이 쏟아져 적을 괴롭힘.",
+   "kind": "rain",
+   "mp": 40,
+   "cd": 35,
+   "val": [
+    "6",
+    "12",
+    "10",
+    "weakness:1:4"
+   ],
+   "p1": "WITCH",
+   "p2": "REVERSE_PORTAL",
+   "snd": "block.amethyst_block.resonate"
+  },
+  {
+   "id": "MOON_PRIEST_SS3_ECLIPSE_PRIEST",
+   "line": "MOON_PRIEST",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "ECLIPSE",
+   "branch": "ECLIPSE_PRIEST"
+  },
+  {
+   "id": "MOON_PRIEST_SS3_CURSE_WEAVER",
+   "line": "MOON_PRIEST",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "LETHARGY",
+   "branch": "CURSE_WEAVER"
+  },
+  {
+   "id": "MOON_PRIEST_SS4_LUNA_ORACLE",
+   "line": "MOON_PRIEST",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "달의 신탁",
+   "desc": "하늘의 달빛이 모든 적을 꿰뚫음.",
+   "kind": "rain",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "8",
+    "20",
+    "14"
+   ],
+   "p1": "WITCH",
+   "p2": "REVERSE_PORTAL",
+   "snd": "block.amethyst_block.resonate",
+   "branch": "LUNA_ORACLE"
+  },
+  {
+   "id": "MOON_PRIEST_SS4_DESPAIR_LORD",
+   "line": "MOON_PRIEST",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "절망",
+   "desc": "모든 감정을 앗아가는 검은 파동.",
+   "kind": "nova",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "8",
+    "32",
+    "wither:1:5"
+   ],
+   "p1": "WITCH",
+   "p2": "REVERSE_PORTAL",
+   "snd": "block.amethyst_block.resonate",
+   "branch": "DESPAIR_LORD"
+  },
+  {
+   "id": "MOON_PRIEST_P1",
+   "line": "MOON_PRIEST",
+   "slot": "P",
+   "rank": 1,
+   "level": 10,
+   "name": "달의 은총",
+   "desc": "최대 MP +30",
+   "kind": "passive",
+   "bonus": "mp:30"
+  },
+  {
+   "id": "MOON_PRIEST_P2",
+   "line": "MOON_PRIEST",
+   "slot": "P",
+   "rank": 2,
+   "level": 20,
+   "name": "저주 숙련",
+   "desc": "스킬 피해 +10%",
+   "kind": "passive",
+   "bonus": "skl:10"
+  },
+  {
+   "id": "MOON_PRIEST_P3",
+   "line": "MOON_PRIEST",
+   "slot": "P",
+   "rank": 3,
+   "level": 30,
+   "name": "밤의 숨결",
+   "desc": "초당 MP 회복 +1",
+   "kind": "passive",
+   "bonus": "mpr:1"
+  },
+  {
+   "id": "MOON_PRIEST_P4",
+   "line": "MOON_PRIEST",
+   "slot": "P",
+   "rank": 4,
+   "level": 45,
+   "name": "달의 화신",
+   "desc": "스킬 피해 +20%, 최대 MP +40",
+   "kind": "passive",
+   "bonus": "skl:20,mp:40"
+  },
+  {
+   "id": "GUNSLINGER_F1",
+   "line": "GUNSLINGER",
+   "slot": "F",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "QUICK_SHOT"
+  },
+  {
+   "id": "GUNSLINGER_SL1",
+   "line": "GUNSLINGER",
+   "slot": "SL",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "SCATTER_SHOT"
+  },
+  {
+   "id": "GUNSLINGER_SR1",
+   "line": "GUNSLINGER",
+   "slot": "SR",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "ROLL"
+  },
+  {
+   "id": "GUNSLINGER_F2",
+   "line": "GUNSLINGER",
+   "slot": "F",
+   "rank": 2,
+   "level": 20,
+   "name": "헤드샷",
+   "desc": "적의 머리를 노린 강한 한 발.",
+   "kind": "beam",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "24",
+    "14"
+   ],
+   "p1": "SMOKE",
+   "p2": "FIREWORK",
+   "snd": "entity.generic.explode"
+  },
+  {
+   "id": "GUNSLINGER_F3",
+   "line": "GUNSLINGER",
+   "slot": "F",
+   "rank": 3,
+   "level": 30,
+   "name": "파쇄탄",
+   "desc": "맞은 곳에서 터지는 탄.",
+   "kind": "orb",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "3",
+    "16"
+   ],
+   "p1": "SMOKE",
+   "p2": "FIREWORK",
+   "snd": "entity.generic.explode"
+  },
+  {
+   "id": "GUNSLINGER_F4",
+   "line": "GUNSLINGER",
+   "slot": "F",
+   "rank": 4,
+   "level": 45,
+   "name": "레일건",
+   "desc": "모든 것을 관통하는 레일건.",
+   "kind": "beam",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "40",
+    "34"
+   ],
+   "p1": "SMOKE",
+   "p2": "FIREWORK",
+   "snd": "entity.generic.explode"
+  },
+  {
+   "id": "GUNSLINGER_SL2",
+   "line": "GUNSLINGER",
+   "slot": "SL",
+   "rank": 2,
+   "level": 20,
+   "name": "난사",
+   "desc": "앞으로 탄을 마구 쏟아냄.",
+   "kind": "cone",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "7",
+    "12"
+   ],
+   "p1": "SMOKE",
+   "p2": "FIREWORK",
+   "snd": "entity.generic.explode"
+  },
+  {
+   "id": "GUNSLINGER_SL3",
+   "line": "GUNSLINGER",
+   "slot": "SL",
+   "rank": 3,
+   "level": 30,
+   "name": "수류탄",
+   "desc": "수류탄을 던져 폭발.",
+   "kind": "orb",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "4",
+    "20"
+   ],
+   "p1": "SMOKE",
+   "p2": "FIREWORK",
+   "snd": "entity.generic.explode"
+  },
+  {
+   "id": "GUNSLINGER_SL4",
+   "line": "GUNSLINGER",
+   "slot": "SL",
+   "rank": 4,
+   "level": 45,
+   "name": "융단 폭격",
+   "desc": "넓은 곳에 포탄이 쏟아짐.",
+   "kind": "rain",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "7",
+    "14",
+    "14"
+   ],
+   "p1": "SMOKE",
+   "p2": "FIREWORK",
+   "snd": "entity.generic.explode"
+  },
+  {
+   "id": "GUNSLINGER_SR2",
+   "line": "GUNSLINGER",
+   "slot": "SR",
+   "rank": 2,
+   "level": 20,
+   "name": "전술 회피",
+   "desc": "몸을 굴려 피하며 빨라짐.",
+   "kind": "dash",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "6",
+    "0"
+   ],
+   "p1": "SMOKE",
+   "p2": "FIREWORK",
+   "snd": "entity.generic.explode"
+  },
+  {
+   "id": "GUNSLINGER_SR3",
+   "line": "GUNSLINGER",
+   "slot": "SR",
+   "rank": 3,
+   "level": 30,
+   "name": "조준",
+   "desc": "숨을 고르고 조준해 강해짐.",
+   "kind": "buff",
+   "mp": 35,
+   "cd": 22,
+   "val": [
+    "strength:1",
+    "10",
+    "0"
+   ],
+   "p1": "SMOKE",
+   "p2": "FIREWORK",
+   "snd": "entity.generic.explode"
+  },
+  {
+   "id": "GUNSLINGER_SR4",
+   "line": "GUNSLINGER",
+   "slot": "SR",
+   "rank": 4,
+   "level": 45,
+   "name": "응급 키트",
+   "desc": "구급 키트로 회복.",
+   "kind": "heal",
+   "mp": 50,
+   "cd": 32,
+   "val": [
+    "16",
+    "0"
+   ],
+   "p1": "SMOKE",
+   "p2": "FIREWORK",
+   "snd": "entity.generic.explode"
+  },
+  {
+   "id": "GUNSLINGER_SS2",
+   "line": "GUNSLINGER",
+   "slot": "SS",
+   "rank": 2,
+   "level": 20,
+   "name": "탄막",
+   "desc": "주변에 탄을 퍼부음.",
+   "kind": "nova",
+   "mp": 40,
+   "cd": 35,
+   "val": [
+    "6",
+    "18"
+   ],
+   "p1": "SMOKE",
+   "p2": "FIREWORK",
+   "snd": "entity.generic.explode"
+  },
+  {
+   "id": "GUNSLINGER_SS3_DEADEYE",
+   "line": "GUNSLINGER",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "DEAD_EYE",
+   "branch": "DEADEYE"
+  },
+  {
+   "id": "GUNSLINGER_SS3_ARTILLERY",
+   "line": "GUNSLINGER",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "CANNON",
+   "branch": "ARTILLERY"
+  },
+  {
+   "id": "GUNSLINGER_SS4_GUN_MASTER",
+   "line": "GUNSLINGER",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "데드샷",
+   "desc": "절대 빗나가지 않는 한 발.",
+   "kind": "beam",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "60",
+    "64"
+   ],
+   "p1": "SMOKE",
+   "p2": "FIREWORK",
+   "snd": "entity.generic.explode",
+   "branch": "GUN_MASTER"
+  },
+  {
+   "id": "GUNSLINGER_SS4_DEMOLISHER",
+   "line": "GUNSLINGER",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "핵탄두",
+   "desc": "거대한 폭발로 모든 것을 날려버림.",
+   "kind": "orb",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "8",
+    "50",
+    "fire"
+   ],
+   "p1": "SMOKE",
+   "p2": "FIREWORK",
+   "snd": "entity.generic.explode",
+   "branch": "DEMOLISHER"
+  },
+  {
+   "id": "GUNSLINGER_P1",
+   "line": "GUNSLINGER",
+   "slot": "P",
+   "rank": 1,
+   "level": 10,
+   "name": "사격 훈련",
+   "desc": "원거리·스킬 피해 +8%",
+   "kind": "passive",
+   "bonus": "rng:8,skl:8"
+  },
+  {
+   "id": "GUNSLINGER_P2",
+   "line": "GUNSLINGER",
+   "slot": "P",
+   "rank": 2,
+   "level": 20,
+   "name": "민첩한 손",
+   "desc": "이동 속도 +5%",
+   "kind": "passive",
+   "bonus": "spd:5"
+  },
+  {
+   "id": "GUNSLINGER_P3",
+   "line": "GUNSLINGER",
+   "slot": "P",
+   "rank": 3,
+   "level": 30,
+   "name": "정조준",
+   "desc": "치명타 확률 +10%",
+   "kind": "passive",
+   "bonus": "crit:10"
+  },
+  {
+   "id": "GUNSLINGER_P4",
+   "line": "GUNSLINGER",
+   "slot": "P",
+   "rank": 4,
+   "level": 45,
+   "name": "총의 신",
+   "desc": "스킬 피해 +20%, 치명타 +5%",
+   "kind": "passive",
+   "bonus": "skl:20,crit:5"
+  },
+  {
+   "id": "LANCER_F1",
+   "line": "LANCER",
+   "slot": "F",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "SPEAR_THRUST"
+  },
+  {
+   "id": "LANCER_SL1",
+   "line": "LANCER",
+   "slot": "SL",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "SPEAR_SWEEP"
+  },
+  {
+   "id": "LANCER_SR1",
+   "line": "LANCER",
+   "slot": "SR",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "CHARGE"
+  },
+  {
+   "id": "LANCER_F2",
+   "line": "LANCER",
+   "slot": "F",
+   "rank": 2,
+   "level": 20,
+   "name": "삼단 찌르기",
+   "desc": "창을 세 번 찔러 앞을 꿰뚫음.",
+   "kind": "beam",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "8",
+    "12"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "item.trident.throw"
+  },
+  {
+   "id": "LANCER_F3",
+   "line": "LANCER",
+   "slot": "F",
+   "rank": 3,
+   "level": 30,
+   "name": "회전창",
+   "desc": "창을 돌려 주변을 휩쓺.",
+   "kind": "nova",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "5",
+    "16"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "item.trident.throw"
+  },
+  {
+   "id": "LANCER_F4",
+   "line": "LANCER",
+   "slot": "F",
+   "rank": 4,
+   "level": 45,
+   "name": "천공창",
+   "desc": "하늘을 꿰뚫는 창.",
+   "kind": "beam",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "24",
+    "30"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "item.trident.throw"
+  },
+  {
+   "id": "LANCER_SL2",
+   "line": "LANCER",
+   "slot": "SL",
+   "rank": 2,
+   "level": 20,
+   "name": "돌격",
+   "desc": "창을 앞세워 돌진.",
+   "kind": "dash",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "10",
+    "12"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "item.trident.throw"
+  },
+  {
+   "id": "LANCER_SL3",
+   "line": "LANCER",
+   "slot": "SL",
+   "rank": 3,
+   "level": 30,
+   "name": "도약 찌르기",
+   "desc": "뛰어올라 창을 내리꽂음.",
+   "kind": "leap",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "5",
+    "18"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "item.trident.throw"
+  },
+  {
+   "id": "LANCER_SL4",
+   "line": "LANCER",
+   "slot": "SL",
+   "rank": 4,
+   "level": 45,
+   "name": "창룡 강림",
+   "desc": "용처럼 떨어지며 땅을 꿰뚫음.",
+   "kind": "leap",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "8",
+    "32"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "item.trident.throw"
+  },
+  {
+   "id": "LANCER_SR2",
+   "line": "LANCER",
+   "slot": "SR",
+   "rank": 2,
+   "level": 20,
+   "name": "방진",
+   "desc": "창을 세워 몸을 지킴.",
+   "kind": "buff",
+   "mp": 25,
+   "cd": 16,
+   "val": [
+    "resistance:2",
+    "6",
+    "0"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "item.trident.throw"
+  },
+  {
+   "id": "LANCER_SR3",
+   "line": "LANCER",
+   "slot": "SR",
+   "rank": 3,
+   "level": 30,
+   "name": "투지",
+   "desc": "싸울 의지로 힘이 솟음.",
+   "kind": "buff",
+   "mp": 35,
+   "cd": 22,
+   "val": [
+    "strength:1,speed:0",
+    "10",
+    "0"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "item.trident.throw"
+  },
+  {
+   "id": "LANCER_SR4",
+   "line": "LANCER",
+   "slot": "SR",
+   "rank": 4,
+   "level": 45,
+   "name": "전장의 숨결",
+   "desc": "숨을 고르고 회복.",
+   "kind": "heal",
+   "mp": 50,
+   "cd": 32,
+   "val": [
+    "18",
+    "0"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "item.trident.throw"
+  },
+  {
+   "id": "LANCER_SS2",
+   "line": "LANCER",
+   "slot": "SS",
+   "rank": 2,
+   "level": 20,
+   "name": "창의 폭풍",
+   "desc": "창이 비처럼 쏟아짐.",
+   "kind": "rain",
+   "mp": 40,
+   "cd": 35,
+   "val": [
+    "6",
+    "12",
+    "12"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "item.trident.throw"
+  },
+  {
+   "id": "LANCER_SS3_WARLORD",
+   "line": "LANCER",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "GOD_OF_WAR",
+   "branch": "WARLORD"
+  },
+  {
+   "id": "LANCER_SS3_VALKYRIE",
+   "line": "LANCER",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "SPEAR_RAIN",
+   "branch": "VALKYRIE"
+  },
+  {
+   "id": "LANCER_SS4_OVERLORD",
+   "line": "LANCER",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "패왕창",
+   "desc": "한 번의 찌르기로 전장을 꿰뚫음.",
+   "kind": "beam",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "40",
+    "56"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "item.trident.throw",
+   "branch": "OVERLORD"
+  },
+  {
+   "id": "LANCER_SS4_BRUNHILD",
+   "line": "LANCER",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "발할라의 창",
+   "desc": "하늘에서 영혼의 창이 쏟아짐.",
+   "kind": "rain",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "8",
+    "22",
+    "14"
+   ],
+   "p1": "SWEEP_ATTACK",
+   "p2": "CRIT",
+   "snd": "item.trident.throw",
+   "branch": "BRUNHILD"
+  },
+  {
+   "id": "LANCER_P1",
+   "line": "LANCER",
+   "slot": "P",
+   "rank": 1,
+   "level": 10,
+   "name": "창술 수련",
+   "desc": "근접 피해 +10%",
+   "kind": "passive",
+   "bonus": "mel:10"
+  },
+  {
+   "id": "LANCER_P2",
+   "line": "LANCER",
+   "slot": "P",
+   "rank": 2,
+   "level": 20,
+   "name": "굳센 몸",
+   "desc": "최대 체력 +4",
+   "kind": "passive",
+   "bonus": "hp:4"
+  },
+  {
+   "id": "LANCER_P3",
+   "line": "LANCER",
+   "slot": "P",
+   "rank": 3,
+   "level": 30,
+   "name": "기세",
+   "desc": "받는 피해 -6%",
+   "kind": "passive",
+   "bonus": "def:6"
+  },
+  {
+   "id": "LANCER_P4",
+   "line": "LANCER",
+   "slot": "P",
+   "rank": 4,
+   "level": 45,
+   "name": "천하무쌍",
+   "desc": "근접 피해 +20%, 최대 체력 +6",
+   "kind": "passive",
+   "bonus": "mel:20,hp:6"
+  },
+  {
+   "id": "BARD_F1",
+   "line": "BARD",
+   "slot": "F",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "SONG_COURAGE"
+  },
+  {
+   "id": "BARD_SL1",
+   "line": "BARD",
+   "slot": "SL",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "SONG_SWIFT"
+  },
+  {
+   "id": "BARD_SR1",
+   "line": "BARD",
+   "slot": "SR",
+   "rank": 1,
+   "level": 10,
+   "kind": "legacy",
+   "legacy": "DISSONANCE"
+  },
+  {
+   "id": "BARD_F2",
+   "line": "BARD",
+   "slot": "F",
+   "rank": 2,
+   "level": 20,
+   "name": "음파",
+   "desc": "음파를 일직선으로 쏨.",
+   "kind": "beam",
+   "mp": 25,
+   "cd": 10,
+   "val": [
+    "16",
+    "10"
+   ],
+   "p1": "NOTE",
+   "p2": "HAPPY_VILLAGER",
+   "snd": "block.note_block.chime"
+  },
+  {
+   "id": "BARD_F3",
+   "line": "BARD",
+   "slot": "F",
+   "rank": 3,
+   "level": 30,
+   "name": "불협 화음",
+   "desc": "주변 적을 괴롭히는 소리.",
+   "kind": "nova",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "5",
+    "12",
+    "nausea:0:4"
+   ],
+   "p1": "NOTE",
+   "p2": "HAPPY_VILLAGER",
+   "snd": "block.note_block.chime"
+  },
+  {
+   "id": "BARD_F4",
+   "line": "BARD",
+   "slot": "F",
+   "rank": 4,
+   "level": 45,
+   "name": "포르티시모",
+   "desc": "가장 큰 소리로 주변을 날려버림.",
+   "kind": "nova",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "7",
+    "26"
+   ],
+   "p1": "NOTE",
+   "p2": "HAPPY_VILLAGER",
+   "snd": "block.note_block.chime"
+  },
+  {
+   "id": "BARD_SL2",
+   "line": "BARD",
+   "slot": "SL",
+   "rank": 2,
+   "level": 20,
+   "name": "행진곡",
+   "desc": "주변 동료가 빨라짐.",
+   "kind": "buff",
+   "mp": 25,
+   "cd": 16,
+   "val": [
+    "speed:1",
+    "12",
+    "8"
+   ],
+   "p1": "NOTE",
+   "p2": "HAPPY_VILLAGER",
+   "snd": "block.note_block.chime"
+  },
+  {
+   "id": "BARD_SL3",
+   "line": "BARD",
+   "slot": "SL",
+   "rank": 3,
+   "level": 30,
+   "name": "자장가",
+   "desc": "적을 잠재워 느리게 함.",
+   "kind": "nova",
+   "mp": 35,
+   "cd": 14,
+   "val": [
+    "6",
+    "6",
+    "slowness:3:5"
+   ],
+   "p1": "NOTE",
+   "p2": "HAPPY_VILLAGER",
+   "snd": "block.note_block.chime"
+  },
+  {
+   "id": "BARD_SL4",
+   "line": "BARD",
+   "slot": "SL",
+   "rank": 4,
+   "level": 45,
+   "name": "광시곡",
+   "desc": "음표가 비처럼 쏟아짐.",
+   "kind": "rain",
+   "mp": 50,
+   "cd": 20,
+   "val": [
+    "6",
+    "12",
+    "12"
+   ],
+   "p1": "NOTE",
+   "p2": "HAPPY_VILLAGER",
+   "snd": "block.note_block.chime"
+  },
+  {
+   "id": "BARD_SR2",
+   "line": "BARD",
+   "slot": "SR",
+   "rank": 2,
+   "level": 20,
+   "name": "치유의 노래",
+   "desc": "주변 동료 회복.",
+   "kind": "heal",
+   "mp": 25,
+   "cd": 16,
+   "val": [
+    "14",
+    "8"
+   ],
+   "p1": "NOTE",
+   "p2": "HAPPY_VILLAGER",
+   "snd": "block.note_block.chime"
+  },
+  {
+   "id": "BARD_SR3",
+   "line": "BARD",
+   "slot": "SR",
+   "rank": 3,
+   "level": 30,
+   "name": "용기의 노래",
+   "desc": "주변 동료에게 힘.",
+   "kind": "buff",
+   "mp": 35,
+   "cd": 22,
+   "val": [
+    "strength:1",
+    "12",
+    "8"
+   ],
+   "p1": "NOTE",
+   "p2": "HAPPY_VILLAGER",
+   "snd": "block.note_block.chime"
+  },
+  {
+   "id": "BARD_SR4",
+   "line": "BARD",
+   "slot": "SR",
+   "rank": 4,
+   "level": 45,
+   "name": "수호의 노래",
+   "desc": "주변 동료에게 보호막.",
+   "kind": "buff",
+   "mp": 50,
+   "cd": 32,
+   "val": [
+    "absorption:2,resistance:0",
+    "12",
+    "8"
+   ],
+   "p1": "NOTE",
+   "p2": "HAPPY_VILLAGER",
+   "snd": "block.note_block.chime"
+  },
+  {
+   "id": "BARD_SS2",
+   "line": "BARD",
+   "slot": "SS",
+   "rank": 2,
+   "level": 20,
+   "name": "앙코르",
+   "desc": "주변 동료 재생·신속.",
+   "kind": "buff",
+   "mp": 40,
+   "cd": 56,
+   "val": [
+    "regeneration:1,speed:1",
+    "12",
+    "10"
+   ],
+   "p1": "NOTE",
+   "p2": "HAPPY_VILLAGER",
+   "snd": "block.note_block.chime"
+  },
+  {
+   "id": "BARD_SS3_MAESTRO",
+   "line": "BARD",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "SYMPHONY",
+   "branch": "MAESTRO"
+  },
+  {
+   "id": "BARD_SS3_DANCER",
+   "line": "BARD",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "SWORD_DANCE",
+   "branch": "DANCER"
+  },
+  {
+   "id": "BARD_SS4_DIVA",
+   "line": "BARD",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "디바의 아리아",
+   "desc": "모두를 살리고 적을 쓰러뜨리는 노래.",
+   "kind": "heal",
+   "mp": 70,
+   "cd": 96,
+   "val": [
+    "40",
+    "12",
+    "cleanse"
+   ],
+   "p1": "NOTE",
+   "p2": "HAPPY_VILLAGER",
+   "snd": "block.note_block.chime",
+   "branch": "DIVA"
+  },
+  {
+   "id": "BARD_SS4_BLADE_DANCER",
+   "line": "BARD",
+   "slot": "SS",
+   "rank": 4,
+   "level": 45,
+   "name": "칼날의 원무",
+   "desc": "칼날과 함께 주변을 휩쓰는 춤.",
+   "kind": "nova",
+   "mp": 70,
+   "cd": 60,
+   "val": [
+    "7",
+    "40"
+   ],
+   "p1": "NOTE",
+   "p2": "HAPPY_VILLAGER",
+   "snd": "block.note_block.chime",
+   "branch": "BLADE_DANCER"
+  },
+  {
+   "id": "BARD_P1",
+   "line": "BARD",
+   "slot": "P",
+   "rank": 1,
+   "level": 10,
+   "name": "맑은 목소리",
+   "desc": "최대 MP +30",
+   "kind": "passive",
+   "bonus": "mp:30"
+  },
+  {
+   "id": "BARD_P2",
+   "line": "BARD",
+   "slot": "P",
+   "rank": 2,
+   "level": 20,
+   "name": "울림",
+   "desc": "스킬 피해 +10%",
+   "kind": "passive",
+   "bonus": "skl:10"
+  },
+  {
+   "id": "BARD_P3",
+   "line": "BARD",
+   "slot": "P",
+   "rank": 3,
+   "level": 30,
+   "name": "박자감",
+   "desc": "이동 속도 +5%",
+   "kind": "passive",
+   "bonus": "spd:5"
+  },
+  {
+   "id": "BARD_P4",
+   "line": "BARD",
+   "slot": "P",
+   "rank": 4,
+   "level": 45,
+   "name": "전설의 음유시인",
+   "desc": "스킬 피해 +15%, 초당 MP 회복 +2",
+   "kind": "passive",
+   "bonus": "skl:15,mpr:2"
+  },
+  {
+   "id": "HIDDEN_DRAGON_BREATH",
+   "line": "HIDDEN",
+   "slot": "SL",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "DRAGON_BREATH",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_DRAGON_DIVE",
+   "line": "HIDDEN",
+   "slot": "SR",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "DRAGON_DIVE",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_DRAGON_ROAR",
+   "line": "HIDDEN",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "DRAGON_ROAR",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_INFERNO_OVERLAY",
+   "line": "HIDDEN",
+   "slot": "F",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "INFERNO_OVERLAY",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_OVERVOLT_DRIVE",
+   "line": "HIDDEN",
+   "slot": "SL",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "OVERVOLT_DRIVE",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_GLACIAL_DOMINION",
+   "line": "HIDDEN",
+   "slot": "SR",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "GLACIAL_DOMINION",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_TEMPEST_CALL",
+   "line": "HIDDEN",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "TEMPEST_CALL",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_BITE",
+   "line": "HIDDEN",
+   "slot": "F",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "BITE",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_BLOOD_RAIN",
+   "line": "HIDDEN",
+   "slot": "SL",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "BLOOD_RAIN",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_BAT_FORM",
+   "line": "HIDDEN",
+   "slot": "SR",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "BAT_FORM",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_BLOOD_MOON",
+   "line": "HIDDEN",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "BLOOD_MOON",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_JUDGMENT_SPEAR",
+   "line": "HIDDEN",
+   "slot": "SL",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "JUDGMENT_SPEAR",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_DIVINE_WING",
+   "line": "HIDDEN",
+   "slot": "SR",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "DIVINE_WING",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_GRACE",
+   "line": "HIDDEN",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "GRACE",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_PRECISION_SHOT",
+   "line": "HIDDEN",
+   "slot": "F",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "PRECISION_SHOT",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_COVER",
+   "line": "HIDDEN",
+   "slot": "SR",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "COVER",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_DIMENSION_SHOT",
+   "line": "HIDDEN",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "DIMENSION_SHOT",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_LIE_DOWN",
+   "line": "HIDDEN",
+   "slot": "F",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "LIE_DOWN",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_MOM_CHANCE",
+   "line": "HIDDEN",
+   "slot": "SL",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "MOM_CHANCE",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_NEET_RAGE",
+   "line": "HIDDEN",
+   "slot": "SR",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "NEET_RAGE",
+   "hidden": true
+  },
+  {
+   "id": "HIDDEN_NEET_ULT",
+   "line": "HIDDEN",
+   "slot": "SS",
+   "rank": 3,
+   "level": 30,
+   "kind": "legacy",
+   "legacy": "NEET_ULT",
+   "hidden": true
+  }
+ ],
+ "third": [
+  {
+   "id": "BLOOD_LORD",
+   "name": "블러드 로드",
+   "parent": "BERSERKER",
+   "desc": "피로 싸우는 광전사의 끝. 체력이 낮을수록 강해진다.",
+   "line": "WARRIOR"
+  },
+  {
+   "id": "CRUSADER",
+   "name": "크루세이더",
+   "parent": "PALADIN",
+   "desc": "빛의 방패로 전장을 지배하는 성기사의 끝.",
+   "line": "WARRIOR"
+  },
+  {
+   "id": "HAWKEYE",
+   "name": "호크아이",
+   "parent": "SNIPER",
+   "desc": "매의 눈으로 단 한 발도 빗나가지 않는 저격수.",
+   "line": "ARCHER"
+  },
+  {
+   "id": "WINDWALKER",
+   "name": "윈드워커",
+   "parent": "RANGER",
+   "desc": "바람을 타고 숲을 누비는 사냥꾼.",
+   "line": "ARCHER"
+  },
+  {
+   "id": "ARCHMAGE",
+   "name": "아크메이지",
+   "parent": "ELEMENTALIST",
+   "desc": "모든 원소를 손끝에 둔 대마법사.",
+   "line": "MAGE"
+  },
+  {
+   "id": "LICH_LORD",
+   "name": "리치 로드",
+   "parent": "WARLOCK",
+   "desc": "죽음마저 부리는 흑마법의 군주.",
+   "line": "MAGE"
+  },
+  {
+   "id": "NIGHTMARE",
+   "name": "나이트메어",
+   "parent": "ASSASSIN",
+   "desc": "악몽처럼 나타나 사라지는 암살자.",
+   "line": "ROGUE"
+  },
+  {
+   "id": "SHADOW_MASTER",
+   "name": "섀도우 마스터",
+   "parent": "SHADOW_DANCER",
+   "desc": "그림자를 군대처럼 부리는 무희.",
+   "line": "ROGUE"
+  },
+  {
+   "id": "SAINT",
+   "name": "세인트",
+   "parent": "HIGH_PRIEST",
+   "desc": "기적을 일으키는 살아 있는 성인.",
+   "line": "CLERIC"
+  },
+  {
+   "id": "INQUISITOR",
+   "name": "인퀴지터",
+   "parent": "JUDGE",
+   "desc": "신의 이름으로 악을 불태우는 심문관.",
+   "line": "CLERIC"
+  },
+  {
+   "id": "GRAND_MASTER",
+   "name": "그랜드 마스터",
+   "parent": "SWORD_MASTER",
+   "desc": "오러 블레이드를 완성한 서양 검술의 정점.",
+   "line": "SWORDSMAN"
+  },
+  {
+   "id": "SWORD_GOD",
+   "name": "검신",
+   "parent": "BLADE_SAINT",
+   "desc": "한 번 휘두르면 하늘이 갈라지는 동양 검의 신.",
+   "line": "SWORDSMAN"
+  },
+  {
+   "id": "KAGE",
+   "name": "카게",
+   "parent": "JONIN",
+   "desc": "마을 하나를 지키는 그림자 닌자의 우두머리.",
+   "line": "NINJA"
+  },
+  {
+   "id": "MUYEONG",
+   "name": "무영",
+   "parent": "PHANTOM",
+   "desc": "그림자조차 남기지 않는 환영검의 끝.",
+   "line": "NINJA"
+  },
+  {
+   "id": "FIST_GOD",
+   "name": "권신",
+   "parent": "FIST_KING",
+   "desc": "주먹 하나로 산을 부수는 권법의 신.",
+   "line": "MONK"
+  },
+  {
+   "id": "SAGE",
+   "name": "선인",
+   "parent": "CHI_MASTER",
+   "desc": "천지의 기를 다루는 깨달은 자.",
+   "line": "MONK"
+  },
+  {
+   "id": "LUNA_ORACLE",
+   "name": "루나 오라클",
+   "parent": "ECLIPSE_PRIEST",
+   "desc": "달의 뜻을 전하는 예언자.",
+   "line": "MOON_PRIEST"
+  },
+  {
+   "id": "DESPAIR_LORD",
+   "name": "절망의 군주",
+   "parent": "CURSE_WEAVER",
+   "desc": "모든 감정을 지배하는 저주의 왕.",
+   "line": "MOON_PRIEST"
+  },
+  {
+   "id": "GUN_MASTER",
+   "name": "건마스터",
+   "parent": "DEADEYE",
+   "desc": "총알 한 발로 승부를 내는 사격의 달인.",
+   "line": "GUNSLINGER"
+  },
+  {
+   "id": "DEMOLISHER",
+   "name": "데몰리셔",
+   "parent": "ARTILLERY",
+   "desc": "전장을 통째로 날려버리는 포격의 왕.",
+   "line": "GUNSLINGER"
+  },
+  {
+   "id": "OVERLORD",
+   "name": "패왕",
+   "parent": "WARLORD",
+   "desc": "천하를 창 하나로 평정한 패자.",
+   "line": "LANCER"
+  },
+  {
+   "id": "BRUNHILD",
+   "name": "브륀힐드",
+   "parent": "VALKYRIE",
+   "desc": "전사자의 영혼을 이끄는 발키리의 여왕.",
+   "line": "LANCER"
+  },
+  {
+   "id": "DIVA",
+   "name": "디바",
+   "parent": "MAESTRO",
+   "desc": "목소리 하나로 전장을 바꾸는 전설의 가수.",
+   "line": "BARD"
+  },
+  {
+   "id": "BLADE_DANCER",
+   "name": "블레이드 댄서",
+   "parent": "DANCER",
+   "desc": "칼날과 함께 춤추는 무희의 끝.",
+   "line": "BARD"
+  }
+ ]
+}

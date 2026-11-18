@@ -1,0 +1,42 @@
+사이렌출몰:
+  Type: 사이렌
+  Worlds: world
+  Chance: 0.2
+  Priority: 1
+  Action: REPLACE
+  Biomes: OCEAN,DEEP_OCEAN,LUKEWARM_OCEAN,WARM_OCEAN,DEEP_LUKEWARM_OCEAN,BEACH
+
+하피출몰:
+  Type: 하피
+  Worlds: world
+  Chance: 0.12
+  Priority: 1
+  Action: REPLACE
+  Biomes: JAGGED_PEAKS,STONY_PEAKS,WINDSWEPT_HILLS,FROZEN_PEAKS,SNOWY_SLOPES,MEADOW
+
+케르베로스출몰:
+  Type: 케르베로스
+  Worlds: world_nether
+  Chance: 0.05
+  Priority: 1
+  Action: REPLACE
+
+키클롭스출몰:
+  Type: 키클롭스
+  Worlds: world
+  Chance: 0.02
+  Priority: 1
+  Action: REPLACE
+  Biomes: WINDSWEPT_HILLS,STONY_PEAKS,SAVANNA_PLATEAU,BADLANDS
+  Conditions:
+  - night true
+
+메두사출몰:
+  Type: 보스_메두사
+  Worlds: world
+  Chance: 0.003
+  Priority: 2
+  Action: REPLACE
+  Biomes: DESERT
+  Conditions:
+  - night true

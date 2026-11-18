@@ -59,16 +59,19 @@ final class Skills {
 
     /** 레벨에 비례해 강해지는 피해 */
     double scale(Player p, double base) {
-        double cls = switch (plugin.rpg().rpgClass(p)) {
+        double cls = switch (plugin.rpg().rpgClass(p).base()) {
             case GUNSLINGER -> 1.1; case DEADEYE -> 1.2; case ARTILLERY -> 1.15; case DIMENSION_SNIPER -> 1.3;
             default -> 1.0;
         };
-        return base * (1 + plugin.rpg().level(p) * 0.03) * cls * (1 + Rpg.statInt(p) * 0.02);   // 지능 1당 스킬 피해 +2%
+        return base * (1 + plugin.rpg().level(p) * 0.03) * cls * (1 + Rpg.statInt(p) * 0.02)   // 지능 1당 스킬 피해 +2%
+                * (1 + plugin.tree().bonus(p, "skl") / 100.0);
     }
 
     /** 스킬 피해. Skript 능력치가 근접(힘)·원거리(민첩) 보너스를 붙이지 않도록 표시해 둔다 (지능은 scale()에서 반영) */
     void hit(Player p, LivingEntity t, double dmg) {
         p.setMetadata("skill_hit", new org.bukkit.metadata.FixedMetadataValue(plugin, true));
+        // 진화한 스킬: 피해 +60% (발동 후 4초 동안 표시가 남아 있다)
+        if (p.hasMetadata("skill_evo") && p.getMetadata("skill_evo").get(0).asLong() > System.currentTimeMillis()) dmg *= 1.6;
         try { t.damage(dmg, p); }
         finally { p.removeMetadata("skill_hit", plugin); }
     }
