@@ -309,8 +309,18 @@ function dStart(leader: player, id: text, d: number):
     set {_max} to 10 if {_raid} is true, otherwise 5
     set {_cdm} to 60 if {_raid} is true, otherwise 10
     delete {dg::%{_id}%::party::*}
-    loop all players in radius {_r} of {_leader}:
-        set {_p} to loop-player
+    # 근처 사람 + (파티가 있으면) 60칸 안의 파티원 (파티.sk)
+    set {_cands::*} to all players in radius {_r} of {_leader}
+    set {_ptl} to {-pt::of::%uuid of {_leader}%}
+    if {_ptl} is set:
+        loop {-pt::m::%uuid of {_ptl}%::*}:
+            loop-value is online
+            world of loop-value is world of {_leader}
+            distance between loop-value and {_leader} < 60
+            {_cands::*} does not contain loop-value
+            add loop-value to {_cands::*}
+    loop {_cands::*}:
+        set {_p} to loop-value
         {dg::of::%uuid of {_p}%} is not set
         size of {dg::%{_id}%::party::*} < {_max}
         if dLv({_p}) < dNeed({_id}, {_d}):

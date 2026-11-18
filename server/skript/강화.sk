@@ -1,0 +1,166 @@
+# ─────────────────────────────────────────────
+#  장비 강화 — /강화 (손에 든 무기·방어구, +1 ~ +10)
+#  · 강화할 때마다 추가 능력치 (무기 +3, 방어구 +2) — 능력치.sk 가 "▸ 힘 +N" 줄을 읽어 합산
+#  · 비용: 돈 + (+6부터) 별의 조각. +6 이상에서 실패하면 한 단계 내려간다 (부서지지는 않음)
+# ─────────────────────────────────────────────
+
+options:
+    p: &6[강화] &f
+    title: &f&6&l⚒ 장비 강화
+
+function enLevel(it: item) :: number:
+    {_it} is set
+    loop lore of {_it}:
+        set {_u} to uncolored loop-value
+        if {_u} contains "강화 단계 +":
+            set {_t} to {_u}
+            replace all "✦ 강화 단계 +" with "" in {_t}
+            return ({_t} parsed as number) ? 0
+    return 0
+
+# 장비 종류 → 강화로 오르는 능력치 이름 (없으면 "")
+function enStat(it: item) :: text:
+    {_it} is set
+    set {_n} to uncolored name of {_it} ? ""
+    set {_t} to "%type of {_it}%"
+    if {_t} contains "helmet" or "chestplate" or "leggings" or "boots":
+        return "체력"
+    if {_t} contains "bow":
+        return "민첩"
+    if {_n} contains "단검":
+        return "민첩"
+    if {_t} contains "blaze rod" or "book" or "stick":
+        return "지능"
+    if {_t} contains "pickaxe":
+        return ""
+    if {_t} contains "sword" or "axe" or "trident" or "mace":
+        return "힘"
+    return ""
+
+function enChance(n: number) :: number:
+    set {_c::*} to 100, 95, 90, 80, 70, 60, 50, 40, 30 and 20
+    return {_c::%{_n} + 1%}
+
+function enCost(n: number) :: number:
+    return 1000 * ({_n} + 1) * ({_n} + 1)
+
+function enShards(n: number) :: number:
+    return max(0, {_n} - 4)
+
+function enShardCount(p: player) :: number:
+    set {_c} to 0
+    loop items in {_p}'s inventory:
+        uncolored name of loop-item is "별의 조각"
+        add item amount of loop-item to {_c}
+    return {_c}
+
+function enTakeShards(p: player, n: number):
+    set {_left} to {_n}
+    loop items in {_p}'s inventory:
+        {_left} > 0
+        uncolored name of loop-item is "별의 조각"
+        set {_take} to min({_left}, item amount of loop-item)
+        set {_one} to loop-item
+        set item amount of {_one} to 1
+        remove {_take} of {_one} from {_p}'s inventory
+        remove {_take} from {_left}
+
+# 강화 단계 n 으로 다시 쓰기 (이름 뒤 +n, 설명 두 줄)
+function enApply(it: item, n: number) :: item:
+    set {_stat} to enStat({_it})
+    set {_per} to 2 if {_stat} is "체력", otherwise 3
+    set {_name} to name of {_it} ? "&f%type of {_it}%"
+    loop 10 times:
+        replace all " §6+%11 - loop-number%" with "" in {_name}
+    if {_n} > 0:
+        set name of {_it} to "%{_name}% §6+%{_n}%"
+    else:
+        set name of {_it} to {_name}
+    set {_lore::*} to lore of {_it}
+    loop {_lore::*}:
+        set {_u} to uncolored loop-value
+        if {_u} contains "강화 단계 +" or "▸ 강화":
+            remove loop-value from {_lore::*}
+    if {_n} > 0:
+        add colored "&6✦ 강화 단계 +%{_n}%" to {_lore::*}
+        add colored "&8 ▸ &6강화 &f%{_stat}% &f+%{_n} * {_per}%" to {_lore::*}
+    set lore of {_it} to {_lore::*}
+    return {_it}
+
+function enMenu(p: player):
+    set {_it} to tool of {_p}
+    if enStat({_it}) is "":
+        send colored "{@p}&c강화할 무기나 방어구를 손에 들고 /강화 를 입력하세요." to {_p}
+        stop
+    set {_n} to enLevel({_it})
+    set {_gui} to chest inventory with 3 rows named "{@title}"
+    set slot 11 of {_gui} to {_it}
+    if {_n} >= 10:
+        set slot 13 of {_gui} to nether star named colored "&6&l최대 강화 (+10)" with lore colored "&7더 이상 강화할 수 없어요."
+        open {_gui} to {_p}
+        stop
+    set {_stat} to enStat({_it})
+    set {_per} to 2 if {_stat} is "체력", otherwise 3
+    set {_sh} to enShards({_n})
+    set {_l::*} to colored "&7지금: &f+%{_n}% &7→ 다음: &e+%{_n} + 1%", colored "&7성공 확률: &a%enChance({_n})%%%", colored "&7오르는 능력치: &f%{_stat}% +%{_per}%", "" and colored "&7비용: &6%enCost({_n})%원"
+    if {_sh} > 0:
+        add colored "&7재료: &b별의 조각 %{_sh}%개 &8(가진 것 %enShardCount({_p})%개)" to {_l::*}
+    if {_n} >= 6:
+        add "" to {_l::*}
+        add colored "&c실패하면 한 단계 내려가요." to {_l::*}
+    set slot 13 of {_gui} to paper named colored "&e&l강화 정보" with lore {_l::*}
+    set slot 15 of {_gui} to anvil named colored "&6&l▶ 강화하기" with lore colored "&7눌러서 강화를 시도해요."
+    set slot 22 of {_gui} to barrier named colored "&c닫기"
+    open {_gui} to {_p}
+
+function enTry(p: player):
+    set {_it} to tool of {_p}
+    if enStat({_it}) is "":
+        stop
+    set {_n} to enLevel({_it})
+    {_n} < 10
+    set {_cost} to enCost({_n})
+    set {_sh} to enShards({_n})
+    if {_p}'s balance < {_cost}:
+        send colored "{@p}&c돈이 모자라요. (%{_cost}%원)" to {_p}
+        play sound "block.note_block.bass" to {_p}
+        stop
+    if enShardCount({_p}) < {_sh}:
+        send colored "{@p}&c별의 조각이 모자라요. (%{_sh}%개 필요)" to {_p}
+        play sound "block.note_block.bass" to {_p}
+        stop
+    remove {_cost} from {_p}'s balance
+    if {_sh} > 0:
+        enTakeShards({_p}, {_sh})
+    play sound "block.anvil.use" to {_p}
+    if random integer between 1 and 100 <= enChance({_n}):
+        set tool of {_p} to enApply({_it}, {_n} + 1)
+        send title colored "&a&l강화 성공!" with subtitle colored "&e+%{_n} + 1%" to {_p} for 2 seconds
+        play sound "entity.player.levelup" with pitch 1.4 to {_p}
+        execute console command "execute at %{_p}% run particle minecraft:happy_villager ~ ~1.2 ~ 0.5 0.6 0.5 0.1 30"
+        if {_n} + 1 >= 7:
+            broadcast colored "{@p}&e%{_p}%&f님이 &6%uncolored name of tool of {_p}%&f 강화에 성공했어요!"
+    else:
+        if {_n} >= 6:
+            set tool of {_p} to enApply({_it}, {_n} - 1)
+            send title colored "&c&l강화 실패" with subtitle colored "&7+%{_n}% → +%{_n} - 1%" to {_p} for 2 seconds
+        else:
+            send title colored "&c&l강화 실패" with subtitle colored "&7단계는 그대로예요" to {_p} for 2 seconds
+        play sound "block.anvil.destroy" to {_p}
+    wait 2 ticks
+    enMenu({_p})
+
+command /강화:
+    aliases: /enhance, /장비강화
+    trigger:
+        enMenu(player)
+
+on inventory click:
+    name of event-inventory is "{@title}"
+    cancel event
+    event-inventory is not player's inventory
+    set {_s} to index of event-slot
+    if {_s} = 15:
+        enTry(player)
+    else if {_s} = 22:
+        close player's inventory

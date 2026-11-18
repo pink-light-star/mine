@@ -1,0 +1,122 @@
+# ─────────────────────────────────────────────
+#  월드 보스 — 2시간마다 (접속자가 있을 때) 정해진 자리에 강해진 보스가 나타난다
+#  · 5분 전에 예고, 30분 안에 못 잡으면 떠난다
+#  · 피해를 준 모두에게 보상, 가장 많이 때린 사람은 추가 보상
+#  /월드보스 : 상태·위치(나침반이 가리킴) · 관리: /월드보스 소환 · /월드보스 위치설정
+# ─────────────────────────────────────────────
+
+options:
+    p: &c[월드 보스] &f
+
+function wbLoc() :: location:
+    if {wb::loc} is set:
+        return {wb::loc}
+    set {_s} to spawn of world "world"
+    set {_l} to location(x-coordinate of {_s} + 60, 0, z-coordinate of {_s} + 60, world "world")
+    return location of block above highest block at {_l}
+
+function wbPick() :: text:
+    set {_b::*} to "보스_흑기사", "보스_데몬나이트", "보스_미노타우로스", "보스_메두사" and "보스_오크대족장"
+    return random element out of {_b::*}
+
+function wbAnnounce(when: text):
+    set {_l} to wbLoc()
+    broadcast colored "{@p}&f%{_when}% &c월드 보스&f가 나타나요! &7위치: %rounded x-coordinate of {_l}%, %rounded y-coordinate of {_l}%, %rounded z-coordinate of {_l}% &8(/월드보스)"
+
+function wbSpawn():
+    {-wb::boss} is not set
+    set {_id} to wbPick()
+    set {_l} to wbLoc()
+    execute console command "mm mobs spawn %{_id}%:3 1 world,%x-coordinate of {_l}%,%y-coordinate of {_l}%,%z-coordinate of {_l}%"
+    wait 5 ticks
+    loop all living entities in radius 6 of {_l}:
+        loop-entity is not a player
+        {_boss} is not set
+        set {_boss} to loop-entity
+    if {_boss} is not set:
+        broadcast colored "{@p}&c보스를 소환하지 못했어요. (위치를 확인해 주세요)"
+        stop
+    set {-wb::boss} to {_boss}
+    set metadata value "worldboss" of {_boss} to true
+    set max health of {_boss} to max health of {_boss} * 4
+    heal {_boss}
+    set {-wb::name} to uncolored name of {_boss} ? {_id}
+    delete {-wb::dmg::*}
+    delete {-wb::who::*}
+    set {-wb::since} to now
+    loop all players:
+        send title colored "&4&l☠ 월드 보스 출현 ☠" with subtitle colored "&f%{-wb::name}%" to loop-player for 3 seconds
+        play sound "entity.ender_dragon.growl" with volume 0.6 to loop-player
+    wbAnnounce("지금")
+    # 30분 안에 못 잡으면 떠난다
+    wait 30 minutes
+    if {-wb::boss} = {_boss}:
+        {_boss} is alive
+        kill {_boss}
+        delete {-wb::boss}
+        broadcast colored "{@p}&7%{-wb::name}%이(가) 사라졌어요... 다음 기회에!"
+
+on load:
+    set {-wb::next} to now + 2 hours
+
+every 2 hours:
+    set {-wb::next} to now + 2 hours
+    number of all players >= 1
+    {-wb::boss} is not set
+    wbAnnounce("5분 뒤")
+    wait 5 minutes
+    wbSpawn()
+
+# 피해 기록 (화살 등도 쏜 사람으로)
+on damage:
+    metadata value "worldboss" of victim is true
+    attacker is a player
+    add damage to {-wb::dmg::%uuid of attacker%}
+    set {-wb::who::%uuid of attacker%} to attacker
+
+on death:
+    metadata value "worldboss" of victim is true
+    victim = {-wb::boss}
+    delete {-wb::boss}
+    set {_top} to 0
+    loop {-wb::dmg::*}:
+        if loop-value > {_top}:
+            set {_top} to loop-value
+            set {_topu} to loop-index
+    broadcast colored "{@p}&a&l%{-wb::name}% 처치!&f 함께 싸운 모두에게 보상을 줬어요."
+    loop indices of {-wb::dmg::*}:
+        set {_pl} to {-wb::who::%loop-value%}
+        {_pl} is online
+        add 20000 to {_pl}'s balance
+        execute console command "mm items give %{_pl}% 별의조각 5"
+        send colored "{@p}보상: &620,000원 &f+ &b별의 조각 5개 &7(준 피해 %rounded {-wb::dmg::%loop-value%}%)" to {_pl}
+        play sound "ui.toast.challenge_complete" to {_pl}
+    if {_topu} is set:
+        set {_tp} to {-wb::who::%{_topu}%}
+        broadcast colored "{@p}가장 큰 피해: &e%{_tp}% &7(%rounded {_top}%) &f→ 펫 뽑기권 2장 추가!"
+        if {_tp} is online:
+            execute console command "starrpg give %{_tp}% ticket 2"
+    delete {-wb::dmg::*}
+    delete {-wb::who::*}
+
+command /월드보스 [<text>]:
+    aliases: /worldboss
+    trigger:
+        set {_l} to wbLoc()
+        if arg-1 is "소환":
+            player has permission "starrpg.admin"
+            wbSpawn()
+            stop
+        if arg-1 is "위치설정":
+            player has permission "starrpg.admin"
+            set {wb::loc} to location of player
+            send colored "{@p}월드 보스 위치를 여기로 정했어요." to player
+            stop
+        send colored "&c&m      &r &c&l월드 보스 &c&m      " to player
+        if {-wb::boss} is set:
+            send colored "&f지금: &4%{-wb::name}% &7(체력 %rounded health of {-wb::boss}%/%rounded max health of {-wb::boss}%)" to player
+        else:
+            send colored "&f다음 출현: &e%difference between now and {-wb::next}% 뒤 &7(접속자가 있을 때)" to player
+        send colored "&f위치: &7%rounded x-coordinate of {_l}%, %rounded y-coordinate of {_l}%, %rounded z-coordinate of {_l}% &8(나침반이 가리켜요)" to player
+        send colored "&7보상: 함께 싸운 모두 20,000원 + 별의 조각 5개, 가장 큰 피해를 준 사람은 펫 뽑기권 2장" to player
+        set compass target of player to {_l}

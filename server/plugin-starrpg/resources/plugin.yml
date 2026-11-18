@@ -69,6 +69,9 @@ commands:
   daily:
     description: 일일 의뢰 열기
     aliases: [일일의뢰, 일일퀘스트, 일퀘]
+  rank:
+    description: 레벨 순위
+    aliases: [레벨순위, 랭킹]
 permissions:
   starrpg.admin:
     default: op

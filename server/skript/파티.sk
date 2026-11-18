@@ -1,0 +1,177 @@
+# ─────────────────────────────────────────────
+#  파티 — /파티 (최대 5명)
+#  · 근처(32칸) 파티원이 몹을 잡으면 나도 경험치 30%를 나눠 받는다
+#  · 파티장이 던전에 들어가면 근처(60칸) 파티원이 함께 들어간다 (던전.sk)
+#  · /파티 채팅 <말> 또는 채팅 앞에 ! 를 붙이면 파티 채팅
+# ─────────────────────────────────────────────
+
+options:
+    p: &d[파티] &f
+    max: 5
+
+function ptLeader(p: player) :: player:
+    return {-pt::of::%uuid of {_p}%}
+
+function ptMembers(p: player) :: players:
+    set {_ld} to {-pt::of::%uuid of {_p}%}
+    {_ld} is set
+    return {-pt::m::%uuid of {_ld}%::*}
+
+function ptSay(ld: player, msg: text):
+    loop {-pt::m::%uuid of {_ld}%::*}:
+        loop-value is online
+        send colored "{@p}%{_msg}%" to loop-value
+
+function ptLeave(p: player):
+    set {_ld} to {-pt::of::%uuid of {_p}%}
+    {_ld} is set
+    remove {_p} from {-pt::m::%uuid of {_ld}%::*}
+    delete {-pt::of::%uuid of {_p}%}
+    send colored "{@p}파티에서 나왔어요." to {_p}
+    if size of {-pt::m::%uuid of {_ld}%::*} = 0:
+        stop
+    if {_p} = {_ld}:
+        # 파티장이 나가면 다음 사람이 파티장
+        set {_new} to first element of {-pt::m::%uuid of {_ld}%::*}
+        set {-pt::m::%uuid of {_new}%::*} to {-pt::m::%uuid of {_ld}%::*}
+        delete {-pt::m::%uuid of {_ld}%::*}
+        loop {-pt::m::%uuid of {_new}%::*}:
+            set {-pt::of::%uuid of loop-value%} to {_new}
+        ptSay({_new}, "&e%{_p}%&f님이 나가서 &e%{_new}%&f님이 파티장이 됐어요.")
+    else:
+        ptSay({_ld}, "&e%{_p}%&f님이 파티에서 나갔어요.")
+
+function ptInfo(p: player):
+    set {_ld} to {-pt::of::%uuid of {_p}%}
+    if {_ld} is not set:
+        send colored "{@p}아직 파티가 없어요." to {_p}
+        send colored "&7 /파티 만들기 · /파티 초대 <닉네임> · /파티 수락 · /파티 나가기 · /파티 추방 <닉네임> · /파티 채팅 <말>" to {_p}
+        stop
+    send colored "&d&m      &r &d&l파티 &7(%size of {-pt::m::%uuid of {_ld}%::*}%/{@max}) &d&m      " to {_p}
+    loop {-pt::m::%uuid of {_ld}%::*}:
+        set {_mark} to "&6★ " if loop-value = {_ld}, otherwise "&7• "
+        set {_st} to "&a접속" if loop-value is online, otherwise "&8오프라인"
+        set {_lv} to metadata value "rpg_level" of loop-value
+        if {_lv} is not set:
+            set {_lv} to "?"
+        send colored " %{_mark}%&f%loop-value% &7Lv.%{_lv}% %{_st}%" to {_p}
+    send colored "&7채팅 앞에 &f! &7를 붙이면 파티 채팅이에요." to {_p}
+
+command /파티 [<text>] [<text>]:
+    aliases: /party, /pt
+    trigger:
+        set {_a} to arg-1 ? "정보"
+        if {_a} is "정보":
+            ptInfo(player)
+        else if {_a} is "만들기" or "생성":
+            if {-pt::of::%uuid of player%} is set:
+                send colored "{@p}&c이미 파티에 있어요. 먼저 /파티 나가기" to player
+                stop
+            set {-pt::of::%uuid of player%} to player
+            add player to {-pt::m::%uuid of player%::*}
+            send colored "{@p}파티를 만들었어요! &e/파티 초대 <닉네임>&f으로 친구를 불러요." to player
+        else if {_a} is "초대":
+            if {-pt::of::%uuid of player%} is not set:
+                set {-pt::of::%uuid of player%} to player
+                add player to {-pt::m::%uuid of player%::*}
+            if {-pt::of::%uuid of player%} is not player:
+                send colored "{@p}&c파티장만 초대할 수 있어요." to player
+                stop
+            set {_t} to arg-2 parsed as player
+            if {_t} is not set:
+                send colored "{@p}&c그 사람을 찾을 수 없어요. (접속 중이어야 해요)" to player
+                stop
+            if {_t} = player:
+                stop
+            if {-pt::of::%uuid of {_t}%} is set:
+                send colored "{@p}&c%{_t}%님은 이미 다른 파티에 있어요." to player
+                stop
+            if size of {-pt::m::%uuid of player%::*} >= {@max}:
+                send colored "{@p}&c파티는 최대 {@max}명이에요." to player
+                stop
+            set {-pt::inv::%uuid of {_t}%} to player
+            send colored "{@p}&e%{_t}%&f님을 초대했어요." to player
+            send colored "{@p}&e%player%&f님이 파티에 초대했어요. &a/파티 수락 &7(60초)" to {_t}
+            play sound "entity.experience_orb.pickup" to {_t}
+            wait 60 seconds
+            if {-pt::inv::%uuid of {_t}%} = player:
+                delete {-pt::inv::%uuid of {_t}%}
+        else if {_a} is "수락":
+            set {_ld} to {-pt::inv::%uuid of player%}
+            delete {-pt::inv::%uuid of player%}
+            if {_ld} is not set:
+                send colored "{@p}&c받은 초대가 없어요." to player
+                stop
+            if {-pt::of::%uuid of {_ld}%} is not {_ld}:
+                send colored "{@p}&c그 파티가 없어졌어요." to player
+                stop
+            if size of {-pt::m::%uuid of {_ld}%::*} >= {@max}:
+                send colored "{@p}&c파티가 꽉 찼어요." to player
+                stop
+            if {-pt::of::%uuid of player%} is set:
+                ptLeave(player)
+            set {-pt::of::%uuid of player%} to {_ld}
+            add player to {-pt::m::%uuid of {_ld}%::*}
+            ptSay({_ld}, "&e%player%&f님이 파티에 들어왔어요!")
+        else if {_a} is "나가기" or "탈퇴":
+            if {-pt::of::%uuid of player%} is not set:
+                send colored "{@p}&c파티에 있지 않아요." to player
+                stop
+            ptLeave(player)
+        else if {_a} is "추방":
+            if {-pt::of::%uuid of player%} is not player:
+                send colored "{@p}&c파티장만 추방할 수 있어요." to player
+                stop
+            loop {-pt::m::%uuid of player%::*}:
+                if "%loop-value%" is arg-2:
+                    set {_t} to loop-value
+            if {_t} is not set:
+                send colored "{@p}&c파티에 그런 사람이 없어요." to player
+                stop
+            if {_t} = player:
+                stop
+            remove {_t} from {-pt::m::%uuid of player%::*}
+            delete {-pt::of::%uuid of {_t}%}
+            ptSay(player, "&e%{_t}%&f님을 파티에서 내보냈어요.")
+            if {_t} is online:
+                send colored "{@p}&c파티에서 추방됐어요." to {_t}
+        else if {_a} is "채팅":
+            set {_ld} to {-pt::of::%uuid of player%}
+            if {_ld} is not set:
+                send colored "{@p}&c파티에 있지 않아요." to player
+                stop
+            ptSay({_ld}, "&e%player%&7: &f%arg-2 ? """"%")
+        else:
+            ptInfo(player)
+
+# 채팅 앞에 ! → 파티 채팅
+on chat:
+    message starts with "!"
+    set {_ld} to {-pt::of::%uuid of player%}
+    {_ld} is set
+    cancel event
+    set {_m} to message
+    replace first "!" with "" in {_m}
+    ptSay({_ld}, "&e%player%&7: &f%{_m}%")
+
+# 파티 경험치 나누기: 근처 파티원에게 30%
+on death:
+    victim is not a player
+    attacker is a player
+    set {_ld} to {-pt::of::%uuid of attacker%}
+    {_ld} is set
+    set {_max} to max health of victim
+    set {_xp} to rounded down ({_max} * 2 * 0.3)
+    if {_max} >= 300:
+        set {_xp} to {_xp} * 3
+    {_xp} >= 1
+    loop {-pt::m::%uuid of {_ld}%::*}:
+        loop-value is online
+        loop-value is not attacker
+        world of loop-value is world of attacker
+        distance between loop-value and attacker < 32
+        execute console command "rpg addxp %loop-value% %{_xp}%"
+        send action bar colored "&d+%{_xp}% 파티 EXP &7(%attacker%)" to loop-value
+
+on quit:
+    delete {-pt::inv::%uuid of player%}

@@ -722,6 +722,7 @@ public class StarRPG extends JavaPlugin implements Listener {
             }
             case "명령어" -> { helpKo(s); return true; }
             case "menu" -> { if (s instanceof Player pl) menu.open(pl); return true; }
+            case "rank" -> { rpg.showRank(s); return true; }
             case "daily" -> { if (s instanceof Player pl) quests.openDaily(pl); return true; }
             case "gacha" -> {
                 if (a.length > 0 && (a[0].equals("확률") || a[0].equalsIgnoreCase("info"))) { gacha.info(s); return true; }
@@ -737,8 +738,9 @@ public class StarRPG extends JavaPlugin implements Listener {
         s.sendMessage("§e기본 §f/메뉴 /명령어 /내정보 /도감");
         s.sendMessage("§e이동 §f/스폰 /집 /집설정 /집삭제 /돌아가기 /워프 /텔포 /텔포부르기 /수락 /거절");
         s.sendMessage("§e성장 §f/전직 /스킬 /능력치 /칭호 /이름꾸미기");
-        s.sendMessage("§e퀘스트 §f/퀘스트 /월드퀘스트 /일일의뢰");
-        s.sendMessage("§e전투·장비 §f/던전 §7(나가기: /던전 나가기) §f/대장간 /장비 /잡화점");
+        s.sendMessage("§e퀘스트 §f/퀘스트 /월드퀘스트 /일일의뢰 /출석");
+        s.sendMessage("§e함께하기 §f/파티 §7(채팅 앞에 ! 는 파티 채팅) §f/결투 /월드보스 /레벨순위");
+        s.sendMessage("§e전투·장비 §f/던전 §7(나가기: /던전 나가기) §f/대장간 /강화 /장비 /잡화점");
         s.sendMessage("§e도감 §f/도감 §7(탈것·펫·보스, 누르면 3D 모델) §f/장비도감 /물고기도감");
         s.sendMessage("§e펫·탈것 §f/뽑기 /뽑기 확률 /펫목록 /탈것도감 /그물상점");
         s.sendMessage("§e돈 §f/돈 /송금 /돈순위 /상점 /판매 /판매창 /키트");
@@ -747,7 +749,7 @@ public class StarRPG extends JavaPlugin implements Listener {
         s.sendMessage("§e대화 §f/귓 /답장 /메일 /접속자 /잠수 /음성채팅");
         if (s.hasPermission("starrpg.admin")) {
             s.sendMessage("§c관리 §f/관리 지급 /레벨관리 /능력치관리 /대장간관리 지급 /던전관리 /보물상자관리 /퀘스트npc");
-            s.sendMessage("§c관리 §f/몹소환 /모델리로드 /팩업로드 /크리 /서바 /낮 /밤");
+            s.sendMessage("§c관리 §f/몹소환 /모델리로드 /팩업로드 /크리 /서바 /낮 /밤 /월드보스 소환 /월드보스 위치설정");
         }
     }
 

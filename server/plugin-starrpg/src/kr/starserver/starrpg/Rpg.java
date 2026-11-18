@@ -163,7 +163,52 @@ final class Rpg implements Listener {
         if (up) levelUp(p, lv);
     }
 
+    // ================================================================== 레벨 순위
+
+    private final java.io.File rankFile = new java.io.File("plugins/StarRPG/ranks.yml");
+    private org.bukkit.configuration.file.YamlConfiguration ranks;
+
+    private org.bukkit.configuration.file.YamlConfiguration ranks() {
+        if (ranks == null) ranks = org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(rankFile);
+        return ranks;
+    }
+
+    /** 순위표에 지금 레벨을 기록 */
+    void recordRank(Player p) {
+        String k = p.getUniqueId().toString();
+        ranks().set(k + ".name", p.getName());
+        ranks().set(k + ".level", level(p));
+        ranks().set(k + ".xp", xp(p));
+        ranks().set(k + ".class", rpgClass(p).korean);
+        try { ranks().save(rankFile); } catch (java.io.IOException ignored) { }
+    }
+
+    void showRank(CommandSender s) {
+        java.util.List<String[]> list = new java.util.ArrayList<>();
+        for (String k : ranks().getKeys(false)) {
+            list.add(new String[]{ranks().getString(k + ".name", "?"), String.valueOf(ranks().getInt(k + ".level", 1)),
+                    String.valueOf(ranks().getInt(k + ".xp", 0)), ranks().getString(k + ".class", "")});
+        }
+        list.sort((a, b) -> {
+            int c = Integer.compare(Integer.parseInt(b[1]), Integer.parseInt(a[1]));
+            return c != 0 ? c : Integer.compare(Integer.parseInt(b[2]), Integer.parseInt(a[2]));
+        });
+        s.sendMessage("§6§m        §r §e§l레벨 순위 §6§m        ");
+        String[] medal = {"§6§l1위", "§7§l2위", "§c§l3위"};
+        for (int i = 0; i < Math.min(10, list.size()); i++) {
+            String[] r = list.get(i);
+            s.sendMessage(" " + (i < 3 ? medal[i] : "§f" + (i + 1) + "위") + " §f" + r[0] + " §7· §eLv." + r[1] + " §7· " + r[3]);
+        }
+        if (list.isEmpty()) s.sendMessage("§7아직 기록이 없어요.");
+        if (s instanceof Player p) {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i)[0].equals(p.getName())) { s.sendMessage("§7내 순위: §f" + (i + 1) + "위 §7(Lv." + level(p) + ")"); break; }
+            }
+        }
+    }
+
     private void levelUp(Player p, int lv) {
+        recordRank(p);
         applyStats(p);
         mp.put(p.getUniqueId(), maxMp(p));
         p.setHealth(p.getAttribute(Attribute.MAX_HEALTH).getValue());
@@ -505,6 +550,7 @@ final class Rpg implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
+        Bukkit.getScheduler().runTaskLater(plugin, () -> { if (e.getPlayer().isOnline()) recordRank(e.getPlayer()); }, 40L);
         Player p = e.getPlayer();
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (!p.isOnline()) return;

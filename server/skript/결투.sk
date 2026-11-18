@@ -1,0 +1,107 @@
+# ─────────────────────────────────────────────
+#  결투 — /결투 <닉네임> → 상대가 /결투 수락
+#  · 체력이 바닥나면 죽지 않고 결투가 끝난다 (아이템도 안 떨어짐)
+#  · 3분이 지나면 무승부, 던전 안에서는 결투할 수 없음
+#  /결투 전적 : 내 승·패
+# ─────────────────────────────────────────────
+
+options:
+    p: &e[결투] &f
+
+function duelEnd(w: player, l: player, draw: boolean):
+    delete {-duel::with::%uuid of {_w}%}
+    delete {-duel::with::%uuid of {_l}%}
+    heal {_w}
+    heal {_l}
+    if {_draw} is true:
+        send title colored "&7무승부" with subtitle colored "&7시간이 다 됐어요" to {_w} and {_l} for 3 seconds
+        stop
+    add 1 to {duel::win::%uuid of {_w}%}
+    add 1 to {duel::lose::%uuid of {_l}%}
+    send title colored "&6&l승리!" with subtitle colored "&f%{_l}%님을 이겼어요" to {_w} for 3 seconds
+    send title colored "&c&l패배" with subtitle colored "&f%{_w}%님에게 졌어요" to {_l} for 3 seconds
+    play sound "ui.toast.challenge_complete" to {_w}
+    loop all players in radius 40 of {_w}:
+        send colored "{@p}&e%{_w}%&f님이 결투에서 &7%{_l}%&f님을 이겼어요!" to loop-player
+
+command /결투 [<text>]:
+    aliases: /duel
+    trigger:
+        if arg-1 is not set:
+            send colored "{@p}/결투 <닉네임> · /결투 수락 · /결투 거절 · /결투 전적" to player
+            stop
+        if arg-1 is "전적":
+            send colored "{@p}전적: &a%{duel::win::%uuid of player%} ? 0%승 &c%{duel::lose::%uuid of player%} ? 0%패" to player
+            stop
+        if arg-1 is "거절":
+            set {_r} to {-duel::req::%uuid of player%}
+            delete {-duel::req::%uuid of player%}
+            if {_r} is online:
+                send colored "{@p}&7%player%님이 결투를 거절했어요." to {_r}
+            stop
+        if arg-1 is "수락":
+            set {_r} to {-duel::req::%uuid of player%}
+            delete {-duel::req::%uuid of player%}
+            if {_r} is not online:
+                send colored "{@p}&c받은 결투 신청이 없어요." to player
+                stop
+            if world of {_r} is not world of player:
+                send colored "{@p}&c같은 월드에 있어야 해요." to player
+                stop
+            if distance between {_r} and player > 30:
+                send colored "{@p}&c30칸 안에 있어야 해요." to player
+                stop
+            if {-duel::with::%uuid of {_r}%} is set:
+                send colored "{@p}&c상대가 이미 결투 중이에요." to player
+                stop
+            loop 3 times:
+                send title colored "&e&l%4 - loop-number%" with subtitle colored "&f%{_r}% vs %player%" to player and {_r} for 1 second
+                play sound "block.note_block.pling" to player and {_r}
+                wait 1 second
+            set {-duel::with::%uuid of player%} to {_r}
+            set {-duel::with::%uuid of {_r}%} to player
+            send title colored "&c&l결투 시작!" to player and {_r} for 1 second
+            play sound "entity.ender_dragon.growl" with volume 0.4 to player and {_r}
+            set {_me} to player
+            wait 3 minutes
+            if {-duel::with::%uuid of {_me}%} = {_r}:
+                duelEnd({_me}, {_r}, true)
+            stop
+        set {_t} to arg-1 parsed as player
+        if {_t} is not set:
+            send colored "{@p}&c그 사람을 찾을 수 없어요." to player
+            stop
+        if {_t} = player:
+            stop
+        if "%world of player%" starts with "dungeon":
+            send colored "{@p}&c던전 안에서는 결투할 수 없어요." to player
+            stop
+        if {-duel::with::%uuid of player%} is set:
+            send colored "{@p}&c이미 결투 중이에요." to player
+            stop
+        set {-duel::req::%uuid of {_t}%} to player
+        send colored "{@p}&e%{_t}%&f님에게 결투를 신청했어요." to player
+        send colored "{@p}&e%player%&f님이 결투를 신청했어요! &a/결투 수락 &7· &c/결투 거절 &7(30초)" to {_t}
+        play sound "item.trident.thunder" with volume 0.4 to {_t}
+        wait 30 seconds
+        if {-duel::req::%uuid of {_t}%} = player:
+            delete {-duel::req::%uuid of {_t}%}
+
+# 결투 상대끼리는 서로 때릴 수 있고, 체력이 바닥나면 죽지 않고 끝난다
+on damage of player:
+    attacker is a player
+    {-duel::with::%uuid of victim%} = attacker
+    uncancel event
+    if damage >= health of victim:
+        cancel event
+        duelEnd(attacker, victim, false)
+
+on quit:
+    set {_o} to {-duel::with::%uuid of player%}
+    {_o} is set
+    duelEnd({_o}, player, false)
+
+on death of player:
+    set {_o} to {-duel::with::%uuid of victim%}
+    {_o} is set
+    duelEnd({_o}, victim, false)

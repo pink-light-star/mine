@@ -1,0 +1,102 @@
+# ─────────────────────────────────────────────
+#  출석 체크 — /출석 (하루 한 번, 7일 주기로 보상이 커진다)
+#  어제도 출석했으면 연속 출석, 하루라도 빠지면 1일차부터 다시
+# ─────────────────────────────────────────────
+
+options:
+    p: &a[출석] &f
+    title: &f&a&l✔ 출석 체크
+
+function attReward(d: number) :: text:
+    set {_r::*} to "3,000원", "펫 뽑기권 1장", "8,000원", "별의 조각 2개", "15,000원", "펫 뽑기권 2장" and "30,000원 + 별의 조각 5개 + 뽑기권 1장"
+    return {_r::%{_d}%}
+
+function attGive(p: player, d: number):
+    if {_d} = 1:
+        add 3000 to {_p}'s balance
+    else if {_d} = 2:
+        execute console command "starrpg give %{_p}% ticket 1"
+    else if {_d} = 3:
+        add 8000 to {_p}'s balance
+    else if {_d} = 4:
+        execute console command "mm items give %{_p}% 별의조각 2"
+    else if {_d} = 5:
+        add 15000 to {_p}'s balance
+    else if {_d} = 6:
+        execute console command "starrpg give %{_p}% ticket 2"
+    else:
+        add 30000 to {_p}'s balance
+        execute console command "mm items give %{_p}% 별의조각 5"
+        execute console command "starrpg give %{_p}% ticket 1"
+
+function attMenu(p: player):
+    set {_u} to "%uuid of {_p}%"
+    set {_today} to now formatted as "yyyy-MM-dd"
+    set {_st} to {att::streak::%{_u}%} ? 0
+    set {_done} to true if {att::last::%{_u}%} is {_today}, otherwise false
+    set {_gui} to chest inventory with 3 rows named "{@title}"
+    set {_cur} to mod({_st} - 1, 7) + 1 if {_done} is true, otherwise mod({_st}, 7) + 1
+    if {_done} is false:
+        set {_y} to (now - 1 day) formatted as "yyyy-MM-dd"
+        if {att::last::%{_u}%} is not {_y}:
+            set {_cur} to 1
+    loop 7 times:
+        set {_d} to loop-number
+        if {_d} < {_cur}:
+            set {_ic} to lime stained glass pane named colored "&a%{_d}%일차 &7(받음)" with lore colored "&7%attReward({_d})%"
+        else if {_d} = {_cur}:
+            if {_done} is true:
+                set {_ic} to lime stained glass pane named colored "&a&l%{_d}%일차 &7(오늘 받음)" with lore colored "&7%attReward({_d})%"
+            else:
+                set {_ic} to chest named colored "&e&l%{_d}%일차 &a(오늘!)" with lore colored "&f%attReward({_d})%", "" and colored "&a▶ 클릭해서 받기"
+        else:
+            set {_ic} to gray stained glass pane named colored "&7%{_d}%일차" with lore colored "&8%attReward({_d})%"
+        set slot (9 + loop-number) of {_gui} to {_ic}
+    set slot 4 of {_gui} to clock named colored "&e연속 출석 &f%{_st}%일" with lore colored "&7누적 출석: &f%{att::total::%{_u}%} ? 0%일", colored "&77일차를 받으면 다시 1일차부터 시작해요." and colored "&7하루라도 빠지면 1일차부터 다시 시작해요."
+    set slot 22 of {_gui} to barrier named colored "&c닫기"
+    open {_gui} to {_p}
+
+function attClaim(p: player):
+    set {_u} to "%uuid of {_p}%"
+    set {_today} to now formatted as "yyyy-MM-dd"
+    if {att::last::%{_u}%} is {_today}:
+        send colored "{@p}오늘은 이미 출석했어요. 내일 또 와요!" to {_p}
+        stop
+    set {_y} to (now - 1 day) formatted as "yyyy-MM-dd"
+    if {att::last::%{_u}%} is {_y}:
+        add 1 to {att::streak::%{_u}%}
+    else:
+        set {att::streak::%{_u}%} to 1
+    set {att::last::%{_u}%} to {_today}
+    add 1 to {att::total::%{_u}%}
+    set {_d} to mod({att::streak::%{_u}%} - 1, 7) + 1
+    attGive({_p}, {_d})
+    send title colored "&a&l출석 완료!" with subtitle colored "&f%{_d}%일차 · %attReward({_d})%" to {_p} for 3 seconds
+    send colored "{@p}&f%{_d}%일차 보상: &e%attReward({_d})% &7(연속 %{att::streak::%{_u}%}%일)" to {_p}
+    play sound "entity.player.levelup" to {_p}
+    wait 2 ticks
+    attMenu({_p})
+
+command /출석:
+    aliases: /출석체크, /attendance
+    trigger:
+        attMenu(player)
+
+on inventory click:
+    name of event-inventory is "{@title}"
+    cancel event
+    event-inventory is not player's inventory
+    set {_s} to index of event-slot
+    if {_s} = 22:
+        close player's inventory
+    else if {_s} >= 10:
+        {_s} <= 16
+        event-item is a chest
+        attClaim(player)
+
+on join:
+    wait 5 seconds
+    player is online
+    set {_today} to now formatted as "yyyy-MM-dd"
+    {att::last::%uuid of player%} is not {_today}
+    send colored "{@p}오늘 출석 체크를 아직 안 했어요! &e/출석 &7(Shift+F 메뉴에도 있어요)" to player
